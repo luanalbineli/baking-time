@@ -1,6 +1,6 @@
 package com.albineli.udacity.popularmovies.movielist;
 
-import com.albineli.udacity.popularmovies.enums.SortMovieListEnum;
+import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public interface MovieListContract {
         void start();
         void onStop();
         void loadMovieList(boolean startOver);
-        SortMovieListEnum getSortListEnum();
-        void setOrderByEnum(SortMovieListEnum sortMovieListEnum);
+        @SortMovieListDescriptor.SortMovieListDef int getSortListDef();
+        void setOrderByEnum(int sortMovieListEnum);
         void openMovieDetail(MovieModel movieModel);
         void onListEndReached();
 

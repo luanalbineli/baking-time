@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
-import com.albineli.udacity.popularmovies.enums.SortMovieListEnum;
+import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.modules.MovieListModule;
 import com.albineli.udacity.popularmovies.injector.components.DaggerMovieListComponent;
@@ -32,6 +32,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
+import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.RATING;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
 
@@ -77,7 +79,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(mMovieListAdapter.getItemViewType(position)){
+                switch (mMovieListAdapter.getItemViewType(position)) {
                     case MovieListAdapter.ITEM_TYPE_GRID_STATUS:
                         return itensPerRow;
                     default: // Normal item.
@@ -90,7 +92,8 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
 
         // https://codentrick.com/load-more-recyclerview-bottom-progressbar
         mMovieListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy == 0) { // Check if the user scrolled down.
                     return;
@@ -98,7 +101,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
                 int totalItemCount = gridLayoutManager.getItemCount();
                 int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
                 if (totalItemCount <= (lastVisibleItem + itensPerRow)) {
-                   mPresenter.onListEndReached();
+                    mPresenter.onListEndReached();
                 }
             }
         });
@@ -133,7 +136,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
         if (item.getItemId() == R.id.action_sort_movie_list) {
             requestListOrdenation();
             return true;
-        }  else if (item.getItemId() == R.id.action_refresh) {
+        } else if (item.getItemId() == R.id.action_refresh) {
             mPresenter.loadMovieList(true);
         }
         return super.onOptionsItemSelected(item);
@@ -163,10 +166,10 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
     @Override
     public void requestListOrdenation() {
         Context context = mMovieListRecyclerView.getContext();
-        int selectedIndex = mPresenter.getSortListEnum().ordinal();
+        int selectedIndex = mPresenter.getSortListDef();
         CharSequence[] values = {
-                context.getString(SortMovieListEnum.POPULAR.getDescriptionRes()),
-                context.getString(SortMovieListEnum.RATING.getDescriptionRes())
+                context.getString(R.string.sortby_popular),
+                context.getString(R.string.sortby_rating)
         };
 
         new MaterialDialog.Builder(context)
@@ -175,8 +178,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
                 .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        SortMovieListEnum sortMovieListEnum = SortMovieListEnum.values()[which];
-                        reloadListWithNewSort(sortMovieListEnum);
+                        reloadListWithNewSort(which);
                         return true;
                     }
                 })
@@ -188,7 +190,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
     @Override
     public void changeSortTitle() {
         @StringRes int sortTitleRes = R.string.sortby_rating;
-        if (mPresenter.getSortListEnum() == SortMovieListEnum.POPULAR) {
+        if (mPresenter.getSortListDef() == POPULAR) {
             sortTitleRes = R.string.sortby_popular;
         }
 
@@ -210,7 +212,7 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
         mMovieListAdapter.hideErrorLoadingContent();
     }
 
-    private void reloadListWithNewSort(SortMovieListEnum sortMovieListEnum) {
+    private void reloadListWithNewSort(@SortMovieListDescriptor.SortMovieListDef int sortMovieListEnum) {
         mPresenter.setOrderByEnum(sortMovieListEnum);
     }
 

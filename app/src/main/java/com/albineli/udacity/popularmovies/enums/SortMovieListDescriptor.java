@@ -9,17 +9,17 @@ public class SortMovieListDescriptor {
     public static final int POPULAR = 0;
     public static final int RATING = 1;
 
-    private final int sortType;
+    public final int sortType;
 
     // Describes when the annotation will be discarded
     @Retention(RetentionPolicy.SOURCE)
     // Enumerate valid values for this interface
     @IntDef({POPULAR, RATING})
     // Create an interface for validating int types
-    public @interface ItemTypeDef {
+    public @interface SortMovieListDef {
     }
 
-    public SortMovieListDescriptor(@ItemTypeDef int sortType) {
+    public SortMovieListDescriptor(@SortMovieListDef int sortType) {
         this.sortType = sortType;
     }
 }

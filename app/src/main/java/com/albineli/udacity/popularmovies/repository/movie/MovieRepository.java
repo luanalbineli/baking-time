@@ -3,12 +3,11 @@ package com.albineli.udacity.popularmovies.repository.movie;
 
 import android.content.SharedPreferences;
 
-import com.albineli.udacity.popularmovies.enums.SortMovieListEnum;
+import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.RepositoryBase;
 
-import java.security.InvalidKeyException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,6 +16,9 @@ import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import retrofit2.Retrofit;
+
+import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
+import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.RATING;
 
 public class MovieRepository extends RepositoryBase {
     private static IMovieService mMovieService;
@@ -38,13 +40,17 @@ public class MovieRepository extends RepositoryBase {
         return mMovieService;
     }
 
-    public void saveMovieListSort(SortMovieListEnum sortMovieListEnum) {
-        mSharedPreferences.edit().putInt(MOVIE_LIST_SORT_KEY, sortMovieListEnum.ordinal()).apply();
+    public void saveMovieListSort(@SortMovieListDescriptor.SortMovieListDef int sortMovieListDef) {
+        mSharedPreferences.edit().putInt(MOVIE_LIST_SORT_KEY, sortMovieListDef).apply();
     }
 
-    public SortMovieListEnum getMovieListSort(SortMovieListEnum defaultSort) {
-        int sort = mSharedPreferences.getInt(MOVIE_LIST_SORT_KEY, defaultSort.ordinal());
-        return SortMovieListEnum.values()[sort];
+    public @SortMovieListDescriptor.SortMovieListDef int getMovieListSort(@SortMovieListDescriptor.SortMovieListDef int defaultSort) {
+        int sort = mSharedPreferences.getInt(MOVIE_LIST_SORT_KEY, defaultSort);
+        if (sort == RATING) {
+            return RATING;
+        }
+
+        return POPULAR;
     }
 
     public Observable<List<MovieModel>> getTopRatedList(final int pageIndex) {

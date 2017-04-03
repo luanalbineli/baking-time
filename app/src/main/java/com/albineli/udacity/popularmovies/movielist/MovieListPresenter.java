@@ -3,20 +3,15 @@ package com.albineli.udacity.popularmovies.movielist;
 import android.support.annotation.NonNull;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
-import com.albineli.udacity.popularmovies.enums.SortMovieListEnum;
+import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
-
-import org.reactivestreams.Subscription;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.observers.DefaultObserver;
-import io.reactivex.observers.DisposableObserver;
 
 import static com.albineli.udacity.popularmovies.util.LogUtils.LOGE;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
@@ -29,7 +24,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     private static final String TAG = makeLogTag(MovieListPresenter.class);
 
     private final MovieListContract.View mView;
-    private SortMovieListEnum mSortMovieListEnum;
+    private @SortMovieListDescriptor.SortMovieListDef int mSortMovieListDef;
 
     private boolean mIsLoadingMovieList = false;
     private boolean mHasError = false;
@@ -43,7 +38,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         super(movieRepository);
         mView = view;
 
-        mSortMovieListEnum = movieRepository.getMovieListSort(SortMovieListEnum.POPULAR);
+        mSortMovieListDef = movieRepository.getMovieListSort(SortMovieListDescriptor.POPULAR);
     }
 
     @Override
@@ -73,7 +68,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         }
 
         Observable<List<MovieModel>> observable;
-        if (mSortMovieListEnum == SortMovieListEnum.POPULAR) {
+        if (mSortMovieListDef == SortMovieListDescriptor.POPULAR) {
             observable = mMovieRepository.getPopularList(mPageIndex);
         } else {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
@@ -102,19 +97,19 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     @Override
-    public SortMovieListEnum getSortListEnum() {
-        return mSortMovieListEnum;
+    public @SortMovieListDescriptor.SortMovieListDef int getSortListDef() {
+        return mSortMovieListDef;
     }
 
     @Override
-    public void setOrderByEnum(SortMovieListEnum sortMovieListEnum) {
-        if (mSortMovieListEnum == sortMovieListEnum) { // If it's the same order, do nothing.
+    public void setOrderByEnum(int sortMovieListEnum) {
+        if (mSortMovieListDef == sortMovieListEnum) { // If it's the same order, do nothing.
             return;
         }
 
         // Set the new order and save it.
-        mSortMovieListEnum = sortMovieListEnum;
-        mMovieRepository.saveMovieListSort(mSortMovieListEnum);
+        mSortMovieListDef = sortMovieListEnum;
+        mMovieRepository.saveMovieListSort(mSortMovieListDef);
         // Change the title.
         mView.changeSortTitle();
         // Reload the movie list.
