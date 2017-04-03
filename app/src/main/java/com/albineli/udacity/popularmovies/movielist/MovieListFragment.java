@@ -1,6 +1,7 @@
 package com.albineli.udacity.popularmovies.movielist;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -108,8 +109,12 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
     }
 
     private int getItensPerRow() {
-        // TODO: Get 5 when tablet.
-        return 3;
+        boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
+        if (isTablet) {
+            return isPortrait ? 5 : 6;
+        }
+        return isPortrait ? 3 : 4;
     }
 
     @Override
