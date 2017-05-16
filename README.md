@@ -1,4 +1,4 @@
-This is the first project of the Android Nanodegree. Built using MVP pattern.
+This is the first project of the Android Nanodegree. Built using Dagger2, RxJava, MVP pattern, Retrofit and so on.
 
 #### Adding your DB Movie API Key
  

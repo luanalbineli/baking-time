@@ -19,8 +19,8 @@ import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
 import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
-import com.albineli.udacity.popularmovies.injector.modules.MovieListModule;
 import com.albineli.udacity.popularmovies.injector.components.DaggerMovieListComponent;
+import com.albineli.udacity.popularmovies.injector.modules.MovieListModule;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
 
@@ -33,7 +33,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
-import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.RATING;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
 
