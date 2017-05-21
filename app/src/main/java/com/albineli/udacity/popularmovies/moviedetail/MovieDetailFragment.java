@@ -22,6 +22,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.albineli.udacity.popularmovies.util.LogUtils.LOGI;
+import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
+
 
 public class MovieDetailFragment extends BaseFragment implements MovieDetailContract.View {
     public static MovieDetailFragment getInstance(MovieModel movieModel) {
@@ -34,6 +37,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
     }
 
     private static String MOVIE_KEY = "movie_model";
+    private static String TAG = makeLogTag(MovieDetailFragment.class);
 
     @Inject
     MovieDetailContract.Presenter mPresenter;
@@ -62,6 +66,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
         Picasso.with(getActivity())
                 .load(posterUrl)
                 .into(mPosterImageView);
+
+        LOGI(TAG, "Url: " + posterUrl);
 
         mOriginalTitleTextView.setText(movieModel.getOriginalTitle());
         mSynopsisTextView.setText(movieModel.getOverview());

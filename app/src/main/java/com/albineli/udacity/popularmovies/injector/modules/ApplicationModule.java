@@ -3,17 +3,22 @@ package com.albineli.udacity.popularmovies.injector.modules;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.albineli.udacity.popularmovies.BuildConfig;
 import com.albineli.udacity.popularmovies.PopularMovieApplication;
-import com.albineli.udacity.popularmovies.injector.PerFragment;
-import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
 import com.albineli.udacity.popularmovies.util.LogUtils;
+
+import java.io.IOException;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -45,6 +50,17 @@ public class ApplicationModule {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logging);
         }
+
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request.Builder requestBuilder = chain.request().newBuilder();
+                HttpUrl.Builder urlBuilder = chain.request().url().newBuilder();
+                urlBuilder.addQueryParameter("api_url", BuildConfig.API_KEY);
+                requestBuilder.url(urlBuilder.build());
+                return chain.proceed(requestBuilder.build());
+            }
+        });
 
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)

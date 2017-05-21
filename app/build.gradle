@@ -27,19 +27,19 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile 'com.android.support:appcompat-v7:25.3.0'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "com.android.support:appcompat-v7:$rootProject.support_version"
+    compile "com.android.support:design:$rootProject.support_version"
+    compile "com.android.support.constraint:constraint-layout:$rootProject.constraint_layout_version"
 
     // Retrofit + Gson + Logging
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit_version"
+    compile "com.google.code.gson:gson:$rootProject.gson_version"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit_version"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp_logging_interceptor_version"
 
     // Butterknife
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile "com.jakewharton:butterknife:$rootProject.butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknife_version"
 
     // RxJava + RxAndroid
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
