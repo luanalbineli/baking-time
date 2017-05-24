@@ -29,6 +29,15 @@ public class MovieModel implements Parcelable {
     @SerializedName("release_date")
     private String releaseDate;
 
+    @SerializedName("backdrop_path")
+    private String backdropPath;
+
+    @SerializedName("id")
+    private int id;
+
+    @SerializedName("vote_count")
+    private int voteCount;
+
     public String getPosterPath() {
         return posterPath;
     }
@@ -95,4 +104,28 @@ public class MovieModel implements Parcelable {
             return new MovieModel[size];
         }
     };
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
 }

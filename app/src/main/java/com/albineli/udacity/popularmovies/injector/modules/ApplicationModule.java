@@ -56,7 +56,7 @@ public class ApplicationModule {
             public Response intercept(Chain chain) throws IOException {
                 Request.Builder requestBuilder = chain.request().newBuilder();
                 HttpUrl.Builder urlBuilder = chain.request().url().newBuilder();
-                urlBuilder.addQueryParameter("api_url", BuildConfig.API_KEY);
+                urlBuilder.addQueryParameter("api_key", BuildConfig.API_KEY);
                 requestBuilder.url(urlBuilder.build());
                 return chain.proceed(requestBuilder.build());
             }
