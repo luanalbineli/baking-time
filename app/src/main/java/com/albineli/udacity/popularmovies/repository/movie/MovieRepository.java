@@ -57,6 +57,10 @@ public class MovieRepository extends RepositoryBase {
         return reduceMovieList(getMovieServiceInstance().getTopRatedList(pageIndex));
     }
 
+    public Observable<List<MovieModel>> getFavoriteList(final int pageIndex) {
+        return reduceMovieList(getMovieServiceInstance().getTopRatedList(pageIndex));
+    }
+
     public Observable<List<MovieModel>> getPopularList(final int pageIndex) {
         return reduceMovieList(getMovieServiceInstance().getPopularList(pageIndex));
     }

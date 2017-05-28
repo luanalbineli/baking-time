@@ -14,4 +14,8 @@
     <string name="user_rate">User rate</string>
     <string name="cancel">Cancel</string>
     <string name="movie_detail_poster_content_description">This is the poster of the detailed movie</string>
+    <string name="tab_popular">Popular</string>
+    <string name="tab_rating">Rating</string>
+    <string name="tab_favorite">Favorite</string>
+    <string name="movie_detail_backdrop_content_description">Backdrop of the movie\'s detail</string>
 </resources>

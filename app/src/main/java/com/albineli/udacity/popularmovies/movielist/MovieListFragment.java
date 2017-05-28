@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
+import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerMovieListComponent;
@@ -24,6 +25,7 @@ import com.albineli.udacity.popularmovies.injector.modules.MovieListModule;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,16 +34,22 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.provider.Contacts.SettingsColumns.KEY;
 import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
 
 public class MovieListFragment extends BaseFragment implements MovieListContract.View, MovieListAdapter.OnMovieClickListener, MovieListAdapter.onTryAgainListener {
-    public static MovieListFragment getInstance() {
-        return new MovieListFragment();
-    }
+    private static final String FILTER_BUNDLE_KEY = "movie_list_filter_bundle";
 
-    private static final String TAG = makeLogTag(MovieListFragment.class);
+    public static MovieListFragment getInstance(@MovieListFilterDescriptor.MovieListFilter int filter) {
+        Bundle bundle = new Bundle();
+        bundle.putInt(FILTER_BUNDLE_KEY, filter);
+        MovieListFragment movieListFragment = new MovieListFragment();
+        movieListFragment.setArguments(bundle);
+
+        return movieListFragment;
+    }
 
     /*
      Injects the presenter
@@ -54,6 +62,9 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
 
     MovieListAdapter mMovieListAdapter;
 
+    @MovieListFilterDescriptor.MovieListFilter
+    private int mFilter;
+
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
         DaggerMovieListComponent.builder()
@@ -61,6 +72,17 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
                 .movieListModule(new MovieListModule(this))
                 .build()
                 .inject(this);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (getArguments() == null || !getArguments().containsKey(FILTER_BUNDLE_KEY)) {
+            throw new InvalidParameterException("filter");
+        }
+
+        mFilter = MovieListFilterDescriptor.parseFromInt(getArguments().getInt(FILTER_BUNDLE_KEY));
     }
 
     @Nullable
@@ -122,25 +144,8 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPresenter.start();
+        mPresenter.start(mFilter);
     }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.movie_list, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_sort_movie_list) {
-            requestListOrdenation();
-            return true;
-        } else if (item.getItemId() == R.id.action_refresh) {
-            mPresenter.loadMovieList(true);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -160,40 +165,6 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
         } else {
             mMovieListAdapter.addData(movieList);
         }
-    }
-
-    @Override
-    public void requestListOrdenation() {
-        Context context = mMovieListRecyclerView.getContext();
-        int selectedIndex = mPresenter.getSortListDef();
-        CharSequence[] values = {
-                context.getString(R.string.sortby_popular),
-                context.getString(R.string.sortby_rating)
-        };
-
-        new MaterialDialog.Builder(context)
-                .title(R.string.orderby_dialog_title)
-                .items(values)
-                .itemsCallbackSingleChoice(selectedIndex, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        reloadListWithNewSort(which);
-                        return true;
-                    }
-                })
-                .positiveText(R.string.select)
-                .negativeText(R.string.cancel)
-                .show();
-    }
-
-    @Override
-    public void changeSortTitle() {
-        @StringRes int sortTitleRes = R.string.sortby_rating;
-        if (mPresenter.getSortListDef() == POPULAR) {
-            sortTitleRes = R.string.sortby_popular;
-        }
-
-        getActivity().setTitle(sortTitleRes);
     }
 
     @Override

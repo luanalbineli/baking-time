@@ -21,11 +21,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
@@ -62,6 +57,17 @@ dependencies {
     // Dagger
     compile "com.google.dagger:dagger:$rootProject.dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger_version"
+
+    // Material RatingBar
+    compile "me.zhanghai.android.materialratingbar:library:$rootProject.materialratingbar_version"
+
+    // Like Button
+    compile "com.github.jd-alexander:LikeButton:$rootProject.likebutton_version"
+
+    // BottomBar
+    compile "com.roughike:bottom-bar:$rootProject.bottombar_version"
+
+    compile "com.jakewharton.timber:timber:$rootProject.timber_version"
 
     // LeakCanary
     debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"

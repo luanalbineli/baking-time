@@ -9,6 +9,8 @@ import com.albineli.udacity.popularmovies.injector.components.DaggerApplicationC
 import com.albineli.udacity.popularmovies.injector.modules.ApplicationModule;
 import com.squareup.leakcanary.LeakCanary;
 
+import timber.log.Timber;
+
 public class PopularMovieApplication extends Application {
     private ApplicationComponent mApplicationComponent;
 
@@ -20,7 +22,11 @@ public class PopularMovieApplication extends Application {
             // You should not init your app in this process.
             return;
         }
+        // Timber
+        Timber.plant(new Timber.DebugTree());
+        // LeakCanary
         LeakCanary.install(this);
+        // Dagger2
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();

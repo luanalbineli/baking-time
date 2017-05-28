@@ -15,12 +15,14 @@ import com.albineli.udacity.popularmovies.injector.components.DaggerMovieDetailC
 import com.albineli.udacity.popularmovies.injector.modules.MovieDetailModule;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
+import com.like.LikeButton;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 import static com.albineli.udacity.popularmovies.util.LogUtils.LOGI;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
@@ -44,20 +46,26 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
 
     private MovieModel mMovieModel;
 
-    @BindView(R.id.iv_movie_detail_poster)
+    @BindView(R.id.ivMovieDetailBackdrop)
+    ImageView mBackdropImageView;
+
+    @BindView(R.id.lbMovieDetailFavorite)
+    LikeButton mFavoriteButton;
+
+    @BindView(R.id.ivMovieDetailPoster)
     ImageView mPosterImageView;
 
-    @BindView(R.id.tv_movie_detail_original_title)
-    TextView mOriginalTitleTextView;
+    @BindView(R.id.tvMovieDetailTitle)
+    TextView mTitleTextView;
 
-    @BindView(R.id.tv_movie_detail_synopsis)
+    @BindView(R.id.mrbMovieDetailRatingStar)
+    MaterialRatingBar mRatingBar;
+
+    @BindView(R.id.tvMovieDetailRating)
+    TextView mRatingTextView;
+
+    @BindView(R.id.tvMovieDetailSynopsis)
     TextView mSynopsisTextView;
-
-    @BindView(R.id.tv_movie_detail_user_rate)
-    TextView mUserRateTextView;
-
-    @BindView(R.id.tv_movie_detail_release_date)
-    TextView mReleaseDateTextView;
 
     @Override
     public void showMovieDetail(MovieModel movieModel) {
@@ -67,13 +75,22 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
                 .load(posterUrl)
                 .into(mPosterImageView);
 
-        LOGI(TAG, "Url: " + posterUrl);
+        String backdropWidth = ApiUtil.getDefaultPosterSize(mBackdropImageView.getWidth());
+        String backdropUrl = ApiUtil.buildPosterImageUrl(movieModel.getBackdropPath(), backdropWidth);
+        Picasso.with(getActivity())
+                .load(backdropUrl)
+                .into(mBackdropImageView);
 
-        mOriginalTitleTextView.setText(movieModel.getOriginalTitle());
+        mTitleTextView.setText(movieModel.getOriginalTitle());
         mSynopsisTextView.setText(movieModel.getOverview());
 
-        mUserRateTextView.setText(String.valueOf(movieModel.getVoteAverage()));
-        mReleaseDateTextView.setText(movieModel.getReleaseDate());
+        float rating = (float) movieModel.getVoteAverage() / 2f;
+        mRatingBar.setRating(rating);
+
+        mRatingTextView.setText(String.valueOf(movieModel.getVoteAverage()));
+
+        /*mUserRateTextView.setText(String.valueOf(movieModel.getVoteAverage()));
+        mReleaseDateTextView.setText(movieModel.getReleaseDate());*/
     }
 
     @Override

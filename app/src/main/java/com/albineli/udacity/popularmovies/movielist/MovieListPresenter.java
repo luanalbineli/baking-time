@@ -3,6 +3,7 @@ package com.albineli.udacity.popularmovies.movielist;
 import android.support.annotation.NonNull;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
+import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
@@ -13,6 +14,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
+import static android.R.attr.filter;
 import static com.albineli.udacity.popularmovies.util.LogUtils.LOGE;
 import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
@@ -25,6 +27,8 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
 
     private final MovieListContract.View mView;
     private @SortMovieListDescriptor.SortMovieListDef int mSortMovieListDef;
+
+    private @SortMovieListDescriptor.SortMovieListDef int mMovieListFilter;
 
     private boolean mIsLoadingMovieList = false;
     private boolean mHasError = false;
@@ -42,10 +46,8 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     @Override
-    public void start() {
+    public void start(@MovieListFilterDescriptor.MovieListFilter int filter) {
         loadMovieList(true);
-
-        mView.changeSortTitle();
     }
 
     @Override
@@ -57,8 +59,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         mIsLoadingMovieList = false;
     }
 
-    @Override
-    public void loadMovieList(final boolean startOver) {
+    private void loadMovieList(final boolean startOver, @MovieListFilterDescriptor.MovieListFilter int filter) {
         mIsLoadingMovieList = true;
 
         if (startOver) {
@@ -68,10 +69,12 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         }
 
         Observable<List<MovieModel>> observable;
-        if (mSortMovieListDef == SortMovieListDescriptor.POPULAR) {
+        if (filter == MovieListFilterDescriptor.POPULAR) {
             observable = mMovieRepository.getPopularList(mPageIndex);
-        } else {
+        } else if (filter == MovieListFilterDescriptor.RATING) {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
+        } else {
+            observable = mMovieRepository.getFavoriteList(mPageIndex);
         }
 
         mSubscription = observable.subscribe(new Consumer<List<MovieModel>>() {
@@ -97,6 +100,11 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     @Override
+    public void loadMovieList(final boolean startOver) {
+        loadMovieList(startOver, mMovieListFilter);
+    }
+
+    @Override
     public @SortMovieListDescriptor.SortMovieListDef int getSortListDef() {
         return mSortMovieListDef;
     }
@@ -110,8 +118,6 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         // Set the new order and save it.
         mSortMovieListDef = sortMovieListEnum;
         mMovieRepository.saveMovieListSort(mSortMovieListDef);
-        // Change the title.
-        mView.changeSortTitle();
         // Reload the movie list.
         loadMovieList(true);
     }
