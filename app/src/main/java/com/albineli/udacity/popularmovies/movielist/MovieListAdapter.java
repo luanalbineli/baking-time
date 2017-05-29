@@ -21,13 +21,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
-
 class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHolder> {
     static final int ITEM_TYPE_ITEM = 0;
     static final int ITEM_TYPE_GRID_STATUS = 1;
-
-    private static final String TAG = makeLogTag(MovieListAdapter.class);
 
     private static String mPosterWidth;
     private final OnMovieClickListener mOnMovieClickListener;

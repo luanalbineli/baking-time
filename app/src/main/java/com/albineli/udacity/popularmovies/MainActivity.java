@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(R.layout.activity_main);
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
+        setTitle(null);
 
         ButterKnife.bind(this);
 
@@ -46,12 +47,12 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                Timber.i("Selected item: " + tabId);
-                if (tabId == R.id.tab_popular) {
-
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
+                if (mMovieListFragment == null) {
+                    return;
                 }
+                Timber.i("Selected item: " + tabId);
+                @MovieListFilterDescriptor.MovieListFilter int filter = getFilterBySelectedTab(tabId);
+                mMovieListFragment.reloadListWithNewSort(filter);
             }
         });
 

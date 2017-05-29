@@ -4,31 +4,25 @@ import android.support.annotation.NonNull;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
-import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
-
-import static android.R.attr.filter;
-import static com.albineli.udacity.popularmovies.util.LogUtils.LOGE;
-import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
+import timber.log.Timber;
 
 /**
  * Presenter of the movie list fragment.
  */
 
 public class MovieListPresenter extends BasePresenterImpl implements MovieListContract.Presenter {
-    private static final String TAG = makeLogTag(MovieListPresenter.class);
-
-    private final MovieListContract.View mView;
-    private @SortMovieListDescriptor.SortMovieListDef int mSortMovieListDef;
-
-    private @SortMovieListDescriptor.SortMovieListDef int mMovieListFilter;
+    private MovieListContract.View mView;
+    private @MovieListFilterDescriptor.MovieListFilter int mFilter;
 
     private boolean mIsLoadingMovieList = false;
     private boolean mHasError = false;
@@ -38,11 +32,16 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
      */
     private int mPageIndex = 1;
 
-    public MovieListPresenter(@NonNull MovieListContract.View view, @NonNull MovieRepository movieRepository) {
+    @Inject
+    public MovieListPresenter(@NonNull MovieRepository movieRepository) {
         super(movieRepository);
-        mView = view;
 
-        mSortMovieListDef = movieRepository.getMovieListSort(SortMovieListDescriptor.POPULAR);
+        mFilter = movieRepository.getMovieListSort(MovieListFilterDescriptor.POPULAR);
+    }
+
+    @Override
+    public void setView(MovieListContract.View view) {
+        mView = view;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         } else if (filter == MovieListFilterDescriptor.RATING) {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
         } else {
-            observable = mMovieRepository.getFavoriteList(mPageIndex);
+            observable = mMovieRepository.getFavoriteList();
         }
 
         mSubscription = observable.subscribe(new Consumer<List<MovieModel>>() {
@@ -85,10 +84,10 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             }
         }, new Consumer<Throwable>() {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull Throwable throwable) {
+            public void accept(@NonNull Throwable throwable) {
                 mIsLoadingMovieList = false;
                 mHasError = true;
-                LOGE(TAG, "An error occurred while tried to get the movies", throwable);
+                Timber.e(throwable, "An error occurred while tried to get the movies");
 
                 if (mPageIndex > 1) { // If something got wrong, reverse to the original position.
                     mPageIndex--;
@@ -101,23 +100,18 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
 
     @Override
     public void loadMovieList(final boolean startOver) {
-        loadMovieList(startOver, mMovieListFilter);
+        loadMovieList(startOver, mFilter);
     }
 
     @Override
-    public @SortMovieListDescriptor.SortMovieListDef int getSortListDef() {
-        return mSortMovieListDef;
-    }
-
-    @Override
-    public void setOrderByEnum(int sortMovieListEnum) {
-        if (mSortMovieListDef == sortMovieListEnum) { // If it's the same order, do nothing.
+    public void setFilter(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
+        if (mFilter == movieListFilter) { // If it's the same order, do nothing.
             return;
         }
 
         // Set the new order and save it.
-        mSortMovieListDef = sortMovieListEnum;
-        mMovieRepository.saveMovieListSort(mSortMovieListDef);
+        mFilter = movieListFilter;
+        mMovieRepository.saveMovieListSort(mFilter);
         // Reload the movie list.
         loadMovieList(true);
     }

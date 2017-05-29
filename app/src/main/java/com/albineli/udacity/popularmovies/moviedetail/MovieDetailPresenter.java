@@ -11,16 +11,20 @@ import javax.inject.Inject;
 
 public class MovieDetailPresenter extends BasePresenterImpl implements MovieDetailContract.Presenter {
 
-    private final MovieDetailContract.View mView;
+    private MovieDetailContract.View mView;
 
     @Inject
-    public MovieDetailPresenter(@NonNull MovieDetailContract.View view, @NonNull MovieRepository movieRepository) {
+    public MovieDetailPresenter(@NonNull MovieRepository movieRepository) {
         super(movieRepository);
-        mView = view;
     }
 
     @Override
     public void start(MovieModel movieModel) {
         mView.showMovieDetail(movieModel);
+    }
+
+    @Override
+    public void setView(MovieDetailContract.View view) {
+        mView = view;
     }
 }

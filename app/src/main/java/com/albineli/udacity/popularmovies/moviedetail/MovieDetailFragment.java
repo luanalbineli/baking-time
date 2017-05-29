@@ -10,9 +10,9 @@ import android.widget.TextView;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
+import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
-import com.albineli.udacity.popularmovies.injector.components.DaggerMovieDetailComponent;
-import com.albineli.udacity.popularmovies.injector.modules.MovieDetailModule;
+import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.like.LikeButton;
@@ -24,11 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
-import static com.albineli.udacity.popularmovies.util.LogUtils.LOGI;
-import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
-
-public class MovieDetailFragment extends BaseFragment implements MovieDetailContract.View {
+public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> implements MovieDetailContract.View {
     public static MovieDetailFragment getInstance(MovieModel movieModel) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(MOVIE_KEY, movieModel);
@@ -38,11 +35,20 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
         return movieDetailFragment;
     }
 
+    @Override
+    protected BasePresenter<MovieDetailContract.View> getPresenterImplementation() {
+        return mPresenter;
+    }
+
+    @Override
+    protected MovieDetailContract.View getViewImplementation() {
+        return this;
+    }
+
     private static String MOVIE_KEY = "movie_model";
-    private static String TAG = makeLogTag(MovieDetailFragment.class);
 
     @Inject
-    MovieDetailContract.Presenter mPresenter;
+    MovieDetailPresenter mPresenter;
 
     private MovieModel mMovieModel;
 
@@ -81,7 +87,7 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
                 .load(backdropUrl)
                 .into(mBackdropImageView);
 
-        mTitleTextView.setText(movieModel.getOriginalTitle());
+        mTitleTextView.setText(movieModel.getTitle());
         mSynopsisTextView.setText(movieModel.getOverview());
 
         float rating = (float) movieModel.getVoteAverage() / 2f;
@@ -95,9 +101,8 @@ public class MovieDetailFragment extends BaseFragment implements MovieDetailCont
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
-        DaggerMovieDetailComponent.builder()
+        DaggerFragmentComponent.builder()
                 .applicationComponent(applicationComponent)
-                .movieDetailModule(new MovieDetailModule(this))
                 .build()
                 .inject(this);
     }

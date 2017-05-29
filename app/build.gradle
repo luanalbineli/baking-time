@@ -67,7 +67,12 @@ dependencies {
     // BottomBar
     compile "com.roughike:bottom-bar:$rootProject.bottombar_version"
 
+    // Timber
     compile "com.jakewharton.timber:timber:$rootProject.timber_version"
+
+    // Room
+    compile "android.arch.persistence.room:runtime:$rootProject.room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room_version"
 
     // LeakCanary
     debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"

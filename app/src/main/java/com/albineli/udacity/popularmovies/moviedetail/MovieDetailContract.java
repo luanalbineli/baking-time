@@ -1,5 +1,6 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
+import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 
 /**
@@ -12,7 +13,7 @@ public abstract class MovieDetailContract {
         void showMovieDetail(MovieModel movieModel);
     }
 
-    public interface Presenter {
+    public interface Presenter extends BasePresenter<View> {
         void start(MovieModel movieModel);
     }
 }

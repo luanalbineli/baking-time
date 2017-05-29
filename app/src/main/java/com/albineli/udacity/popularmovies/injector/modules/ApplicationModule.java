@@ -1,11 +1,7 @@
 package com.albineli.udacity.popularmovies.injector.modules;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.albineli.udacity.popularmovies.BuildConfig;
 import com.albineli.udacity.popularmovies.PopularMovieApplication;
-import com.albineli.udacity.popularmovies.util.LogUtils;
 
 import java.io.IOException;
 
@@ -27,7 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class ApplicationModule {
     private static final String BASE_URL = "https://api.themoviedb.org/3/";
-    private static final String SP_KEY = "sp_popular_movies";
     private final PopularMovieApplication mPopularMovieApplication;
 
     public ApplicationModule(PopularMovieApplication popularMovieApplication) {
@@ -45,7 +40,7 @@ public class ApplicationModule {
     Retrofit providesRetrofit() {
         // Add a log interceptor
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        if (LogUtils.LOGGING_ENABLED) {
+        if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             httpClient.addInterceptor(logging);
@@ -65,14 +60,8 @@ public class ApplicationModule {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.newThread()))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(httpClient.build())
                 .build();
-    }
-
-    @Provides
-    @Singleton
-    SharedPreferences providesSharedPreferences(PopularMovieApplication popularMovieApplication) {
-        return popularMovieApplication.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
     }
 }

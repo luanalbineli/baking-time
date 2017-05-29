@@ -1,36 +1,49 @@
 package com.albineli.udacity.popularmovies.repository.movie;
 
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 
-import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
+import com.albineli.udacity.popularmovies.PopularMovieApplication;
+import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.RepositoryBase;
+import com.albineli.udacity.popularmovies.repository.data.MovieContract;
 
+import java.sql.SQLDataException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
-import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.RATING;
+import static com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor.POPULAR;
+import static com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor.RATING;
 
 public class MovieRepository extends RepositoryBase {
     private static IMovieService mMovieService;
-    private static String MOVIE_LIST_SORT_KEY = "movie_list_sort";
+    private static String MOVIE_LIST_FILTER_KEY = "movie_list_filter";
+    private static final String SP_KEY = "sp_popular_movies";
 
     private final Retrofit mRetrofit;
     private final SharedPreferences mSharedPreferences;
+    private final PopularMovieApplication mApplicationContext;
 
     @Inject
-    public MovieRepository(Retrofit retrofit, SharedPreferences sharedPreferences) {
+    public MovieRepository(Retrofit retrofit, PopularMovieApplication applicationContext) {
         mRetrofit = retrofit;
-        mSharedPreferences = sharedPreferences;
+        mApplicationContext = applicationContext;
+        mSharedPreferences = applicationContext.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
     }
 
     private IMovieService getMovieServiceInstance() {
@@ -40,12 +53,13 @@ public class MovieRepository extends RepositoryBase {
         return mMovieService;
     }
 
-    public void saveMovieListSort(@SortMovieListDescriptor.SortMovieListDef int sortMovieListDef) {
-        mSharedPreferences.edit().putInt(MOVIE_LIST_SORT_KEY, sortMovieListDef).apply();
+    public void saveMovieListSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
+        mSharedPreferences.edit().putInt(MOVIE_LIST_FILTER_KEY, movieListFilter).apply();
     }
 
-    public @SortMovieListDescriptor.SortMovieListDef int getMovieListSort(@SortMovieListDescriptor.SortMovieListDef int defaultSort) {
-        int sort = mSharedPreferences.getInt(MOVIE_LIST_SORT_KEY, defaultSort);
+    public @MovieListFilterDescriptor.MovieListFilter
+    int getMovieListSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
+        int sort = mSharedPreferences.getInt(MOVIE_LIST_FILTER_KEY, movieListFilter);
         if (sort == RATING) {
             return RATING;
         }
@@ -57,8 +71,36 @@ public class MovieRepository extends RepositoryBase {
         return reduceMovieList(getMovieServiceInstance().getTopRatedList(pageIndex));
     }
 
-    public Observable<List<MovieModel>> getFavoriteList(final int pageIndex) {
-        return reduceMovieList(getMovieServiceInstance().getTopRatedList(pageIndex));
+    public Observable<List<MovieModel>> getFavoriteList() {
+        return observeOnMainThread(Observable.create(new ObservableOnSubscribe<List<MovieModel>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<MovieModel>> emitter) throws Exception {
+                final ContentResolver contentResolver = mApplicationContext.getContentResolver();
+                if (contentResolver == null) {
+                    emitter.onError(new RuntimeException("Cannot get the ContentResolver"));
+                    return;
+                }
+
+                final Cursor cursor = contentResolver.query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
+                if (cursor == null) {
+                    emitter.onError(new SQLDataException("An internal error occurred."));
+                    return;
+                }
+
+                List<MovieModel> favoriteMovieModelList = new ArrayList<>(cursor.getCount());
+                try {
+                    while (cursor.moveToNext()) {
+                        favoriteMovieModelList.add(MovieModel.fromCursor(cursor));
+                    }
+
+                    emitter.onNext(favoriteMovieModelList);
+                } catch (Exception ex) {
+                    emitter.onError(ex);
+                } finally {
+                    cursor.close();
+                }
+            }
+        }).subscribeOn(Schedulers.io()));
     }
 
     public Observable<List<MovieModel>> getPopularList(final int pageIndex) {

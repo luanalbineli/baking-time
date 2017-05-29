@@ -1,10 +1,8 @@
 package com.albineli.udacity.popularmovies.injector.components;
 
 
-import android.content.SharedPreferences;
-
+import com.albineli.udacity.popularmovies.PopularMovieApplication;
 import com.albineli.udacity.popularmovies.injector.modules.ApplicationModule;
-import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
 
 import javax.inject.Singleton;
 
@@ -15,6 +13,5 @@ import retrofit2.Retrofit;
 @Component(modules = ApplicationModule.class)
 public interface ApplicationComponent {
     Retrofit retrofit();
-
-    SharedPreferences sharedPreferences();
+    PopularMovieApplication popularMovieApplicationContext();
 }

@@ -4,24 +4,18 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
+import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
-import com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
-import com.albineli.udacity.popularmovies.injector.components.DaggerMovieListComponent;
-import com.albineli.udacity.popularmovies.injector.modules.MovieListModule;
+import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
 
@@ -34,12 +28,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static android.provider.Contacts.SettingsColumns.KEY;
-import static com.albineli.udacity.popularmovies.enums.SortMovieListDescriptor.POPULAR;
-import static com.albineli.udacity.popularmovies.util.LogUtils.makeLogTag;
 
-
-public class MovieListFragment extends BaseFragment implements MovieListContract.View, MovieListAdapter.OnMovieClickListener, MovieListAdapter.onTryAgainListener {
+public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View, MovieListAdapter.OnMovieClickListener, MovieListAdapter.onTryAgainListener {
     private static final String FILTER_BUNDLE_KEY = "movie_list_filter_bundle";
 
     public static MovieListFragment getInstance(@MovieListFilterDescriptor.MovieListFilter int filter) {
@@ -51,11 +41,18 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
         return movieListFragment;
     }
 
-    /*
-     Injects the presenter
-     */
+    @Override
+    protected BasePresenter<MovieListContract.View> getPresenterImplementation() {
+        return mPresenter;
+    }
+
+    @Override
+    protected MovieListContract.View getViewImplementation() {
+        return this;
+    }
+
     @Inject
-    MovieListContract.Presenter mPresenter;
+    MovieListPresenter mPresenter;
 
     @BindView(R.id.rv_movie_list)
     RecyclerView mMovieListRecyclerView;
@@ -67,9 +64,8 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
-        DaggerMovieListComponent.builder()
+        DaggerFragmentComponent.builder()
                 .applicationComponent(applicationComponent)
-                .movieListModule(new MovieListModule(this))
                 .build()
                 .inject(this);
     }
@@ -127,8 +123,6 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
             }
         });
 
-        setHasOptionsMenu(true);
-
         return rootView;
     }
 
@@ -178,12 +172,18 @@ public class MovieListFragment extends BaseFragment implements MovieListContract
     }
 
     @Override
+    public void showEmptyListMessage() {
+        //mMovieListAdapter.empty
+    }
+
+    @Override
     public void hideLoadingMovieListError() {
         mMovieListAdapter.hideErrorLoadingContent();
     }
 
-    private void reloadListWithNewSort(@SortMovieListDescriptor.SortMovieListDef int sortMovieListEnum) {
-        mPresenter.setOrderByEnum(sortMovieListEnum);
+    public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
+        mFilter = movieListFilter;
+        mPresenter.setFilter(movieListFilter);
     }
 
     @Override
