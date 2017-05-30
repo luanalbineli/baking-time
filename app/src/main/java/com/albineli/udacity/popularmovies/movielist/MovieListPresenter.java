@@ -78,9 +78,14 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
 
         mSubscription = observable.subscribe(new Consumer<List<MovieModel>>() {
             @Override
-            public void accept(@io.reactivex.annotations.NonNull List<MovieModel> movieModels) {
+            public void accept(@NonNull List<MovieModel> movieModels) {
                 mIsLoadingMovieList = false;
-                mView.showMovieList(movieModels, startOver);
+                if (movieModels.size() == 0) {
+                    mView.clearMovieList(); // Make sure that the list is empty.
+                    mView.showEmptyListMessage();
+                } else {
+                    mView.showMovieList(movieModels, startOver);
+                }
             }
         }, new Consumer<Throwable>() {
             @Override

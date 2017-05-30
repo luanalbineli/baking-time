@@ -11,6 +11,9 @@ public interface MovieListContract {
         void showLoadingMovieListError();
         void showMovieList(List<MovieModel> movieList, boolean replaceData);
         void showMovieDetail(MovieModel movieModel);
+
+        void clearMovieList();
+
         void showEmptyListMessage();
         void hideLoadingMovieListError();
     }

@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View, MovieListAdapter.OnMovieClickListener, MovieListAdapter.onTryAgainListener {
+public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View, MovieListAdapter.OnMovieClickListener {
     private static final String FILTER_BUNDLE_KEY = "movie_list_filter_bundle";
 
     public static MovieListFragment getInstance(@MovieListFilterDescriptor.MovieListFilter int filter) {
@@ -89,7 +89,6 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
         // List.
         mMovieListAdapter = new MovieListAdapter(new ArrayList<MovieModel>(0), this);
-        mMovieListAdapter.setOnTryAgainListener(this);
 
         final int itensPerRow = getItensPerRow();
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(mMovieListRecyclerView.getContext(), itensPerRow);
@@ -97,10 +96,10 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
             @Override
             public int getSpanSize(int position) {
                 switch (mMovieListAdapter.getItemViewType(position)) {
-                    case MovieListAdapter.ITEM_TYPE_GRID_STATUS:
-                        return itensPerRow;
-                    default: // Normal item.
+                    case MovieListAdapter.ITEM_TYPE_ITEM:
                         return 1;
+                    default: // Grid status.
+                        return itensPerRow;
                 }
             }
         });
@@ -172,23 +171,23 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
     }
 
     @Override
+    public void clearMovieList() {
+        mMovieListAdapter.clearData();
+    }
+
+    @Override
     public void showEmptyListMessage() {
-        //mMovieListAdapter.empty
+        mMovieListAdapter.showEmptyMessage();
     }
 
     @Override
     public void hideLoadingMovieListError() {
-        mMovieListAdapter.hideErrorLoadingContent();
+        mMovieListAdapter.hideStatus();
     }
 
     public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         mFilter = movieListFilter;
         mPresenter.setFilter(movieListFilter);
-    }
-
-    @Override
-    public void tryAgain() {
-        mPresenter.tryAgain();
     }
 
     @Override

@@ -5,14 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.albineli.udacity.popularmovies.R;
+import com.albineli.udacity.popularmovies.enums.RequestStatusDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.squareup.picasso.Picasso;
 
@@ -23,13 +21,12 @@ import butterknife.ButterKnife;
 
 class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHolder> {
     static final int ITEM_TYPE_ITEM = 0;
-    static final int ITEM_TYPE_GRID_STATUS = 1;
+    private static final int ITEM_TYPE_GRID_STATUS = 1;
 
     private static String mPosterWidth;
     private final OnMovieClickListener mOnMovieClickListener;
-    private onTryAgainListener mOnTryAgainListener;
     private List<MovieModel> mMovieList;
-    private int mGridStatus = GridStatus.LOADING;
+    private @RequestStatusDescriptor.RequestStatus int mGridStatus = RequestStatusDescriptor.LOADING;
 
     MovieListAdapter(@NonNull List<MovieModel> movieList, OnMovieClickListener onMovieClickListener) {
         mMovieList = movieList;
@@ -49,7 +46,7 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
     @Override
     public void onBindViewHolder(final BaseViewHolder baseViewHolder, int position) {
         if (baseViewHolder.getItemViewType() == ITEM_TYPE_GRID_STATUS) {
-            handleGridStatus((GridStatusViewHolder) baseViewHolder);
+            bindGridStatus((GridStatusViewHolder) baseViewHolder);
             return;
         }
 
@@ -74,34 +71,8 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
         });
     }
 
-    private void handleGridStatus(GridStatusViewHolder gridStatusViewHolder) {
-        if (mGridStatus == GridStatus.LOADING) {
-            toggleGridStatus(gridStatusViewHolder, true);
-        } else {
-            toggleGridStatus(gridStatusViewHolder, false);
-            gridStatusViewHolder.mTryAgainButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mOnTryAgainListener != null) {
-                        mOnTryAgainListener.tryAgain();
-                    }
-                }
-            });
-        }
-
-        // Handle the grid status size.
-        int gridStatusHeight = FrameLayout.LayoutParams.WRAP_CONTENT;
-        if (mMovieList.size() == 0) {
-            gridStatusHeight = FrameLayout.LayoutParams.MATCH_PARENT;
-        }
-        ViewGroup.LayoutParams layoutParams = gridStatusViewHolder.itemView.getLayoutParams();
-        layoutParams.height = gridStatusHeight;
-        gridStatusViewHolder.itemView.setLayoutParams(layoutParams);
-    }
-
-    private void toggleGridStatus(GridStatusViewHolder gridStatusViewHolder, boolean loadingVisible) {
-        gridStatusViewHolder.mLoadingProgressBar.setVisibility(loadingVisible ? View.VISIBLE : View.INVISIBLE);
-        gridStatusViewHolder.mErrorContainerView.setVisibility(loadingVisible ? View.INVISIBLE : View.VISIBLE);
+    private void bindGridStatus(GridStatusViewHolder gridStatusViewHolder) {
+        gridStatusViewHolder.mRequestStatusView.setRequestStatus(mGridStatus, mMovieList.size() == 0 && mGridStatus != RequestStatusDescriptor.HIDDEN);
     }
 
     @Override
@@ -119,14 +90,9 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
     }
 
     void replaceData(List<MovieModel> movieList) {
-        if (mMovieList.size() > 0) {
-            notifyItemRangeRemoved(0, mMovieList.size());
-        }
-        mMovieList.clear();
+        clearData();
         mMovieList.addAll(movieList);
         notifyItemRangeChanged(0, movieList.size());
-
-        redrawGridStatus(GridStatus.LOADING);
     }
 
     void addData(List<MovieModel> movieList) {
@@ -134,38 +100,34 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
 
         mMovieList.addAll(movieList);
         notifyItemRangeInserted(startIndexInserted, movieList.size());
-
-        redrawGridStatus(GridStatus.LOADING);
     }
 
     void showErrorLoadingContent() {
-        redrawGridStatus(GridStatus.ERROR);
+        redrawGridStatus(RequestStatusDescriptor.ERROR);
     }
 
-    private void redrawGridStatus(int status) {
+    void showEmptyMessage() {
+        redrawGridStatus(RequestStatusDescriptor.EMPTY);
+    }
+
+    void hideStatus() {
+        redrawGridStatus(RequestStatusDescriptor.HIDDEN);
+    }
+
+    private void redrawGridStatus(@RequestStatusDescriptor.RequestStatus int status) {
         mGridStatus = status;
         notifyItemChanged(mMovieList.size());
     }
 
-    public void setOnTryAgainListener(onTryAgainListener onTryAgainListener) {
-        this.mOnTryAgainListener = onTryAgainListener;
-    }
-
-    void hideErrorLoadingContent() {
-        redrawGridStatus(GridStatus.LOADING);
+    void clearData() {
+        if (mMovieList.size() > 0) {
+            notifyItemRangeRemoved(0, mMovieList.size());
+        }
+        mMovieList.clear();
     }
 
     interface OnMovieClickListener {
         void onClick(int index, MovieModel movieModel);
-    }
-
-    interface onTryAgainListener {
-        void tryAgain();
-    }
-
-    interface GridStatus {
-        int LOADING = 1;
-        int ERROR = 2;
     }
 
     class ItemViewHolder extends BaseViewHolder {
@@ -181,14 +143,8 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
     }
 
     class GridStatusViewHolder extends BaseViewHolder {
-        @BindView(R.id.ll_grid_status_error)
-        LinearLayout mErrorContainerView;
-
-        @BindView(R.id.bt_grid_status_retry)
-        Button mTryAgainButton;
-
-        @BindView(R.id.pb_grid_status_loading)
-        ProgressBar mLoadingProgressBar;
+        @BindView(R.id.rsvRequestStatus)
+        RequestStatusView mRequestStatusView;
 
         GridStatusViewHolder(View itemView) {
             super(itemView);
