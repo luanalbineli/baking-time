@@ -1,6 +1,7 @@
 package com.albineli.udacity.popularmovies.movielist;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,12 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
     private static String mPosterWidth;
     private final OnMovieClickListener mOnMovieClickListener;
     private List<MovieModel> mMovieList;
-    private @RequestStatusDescriptor.RequestStatus int mGridStatus = RequestStatusDescriptor.LOADING;
+
+    private @RequestStatusDescriptor.RequestStatus
+    int mGridStatus = RequestStatusDescriptor.LOADING;
+
+    private @StringRes
+    int mEmptyMessageResId;
 
     MovieListAdapter(@NonNull List<MovieModel> movieList, OnMovieClickListener onMovieClickListener) {
         mMovieList = movieList;
@@ -73,6 +79,9 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
 
     private void bindGridStatus(GridStatusViewHolder gridStatusViewHolder) {
         gridStatusViewHolder.mRequestStatusView.setRequestStatus(mGridStatus, mMovieList.size() == 0 && mGridStatus != RequestStatusDescriptor.HIDDEN);
+        if (mGridStatus == RequestStatusDescriptor.EMPTY) {
+            gridStatusViewHolder.mRequestStatusView.setEmptyMessage(mEmptyMessageResId);
+        }
     }
 
     @Override
@@ -106,7 +115,8 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
         redrawGridStatus(RequestStatusDescriptor.ERROR);
     }
 
-    void showEmptyMessage() {
+    void showEmptyMessage(@StringRes int emptyMessageResId) {
+        mEmptyMessageResId = emptyMessageResId;
         redrawGridStatus(RequestStatusDescriptor.EMPTY);
     }
 

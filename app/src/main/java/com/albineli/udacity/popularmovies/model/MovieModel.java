@@ -48,10 +48,6 @@ public class MovieModel implements Parcelable {
         if (contentValues.containsKey(MovieContract.MovieEntry.COLUMN_VOTE_COUNT)) {
             voteCount = contentValues.getAsInteger(MovieContract.MovieEntry.COLUMN_VOTE_COUNT);
         }
-
-        if (contentValues.containsKey(MovieContract.MovieEntry.COLUMN_FAVORITE)) {
-            favorite = contentValues.getAsBoolean(MovieContract.MovieEntry.COLUMN_FAVORITE);
-        }
     }
 
     public MovieModel() {
@@ -67,7 +63,6 @@ public class MovieModel implements Parcelable {
         releaseDate = new Date(cursor.getLong(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_RELEASE_DATE)));
         backdropPath = cursor.getString(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH));
         voteCount = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_VOTE_COUNT));
-        favorite = cursor.getInt(cursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_FAVORITE)) == 1;
     }
 
     private MovieModel(Parcel in) {
@@ -113,9 +108,6 @@ public class MovieModel implements Parcelable {
     @ColumnInfo(name = MovieContract.MovieEntry.COLUMN_VOTE_COUNT)
     @SerializedName("vote_count")
     private int voteCount;
-
-    @ColumnInfo(name = MovieContract.MovieEntry.COLUMN_FAVORITE)
-    private transient boolean favorite;
 
     public String getPosterPath() {
         return posterPath;
@@ -212,19 +204,32 @@ public class MovieModel implements Parcelable {
         this.voteCount = voteCount;
     }
 
-    public boolean isFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
-
     public static MovieModel fromContentValues(ContentValues contentValues) {
         return new MovieModel(contentValues);
     }
 
     public static MovieModel fromCursor(Cursor cursor) {
         return new MovieModel(cursor);
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MovieContract.MovieEntry._ID, id);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_POSTER_PATH, posterPath);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, id);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, releaseDate.getTime());
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
+
+        contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE_COUNT, voteCount);
+
+        return contentValues;
     }
 }

@@ -89,7 +89,7 @@ public class MovieProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
         switch (URI_MATCHER.match(uri)) {
             case CODE_MOVIES:
-                throw new IllegalArgumentException("You can only insert a movie using the /movie/:movieId path.");
+                throw new IllegalArgumentException("You can only remove a movie using the /movie/:movieId path.");
             case CODE_MOVIE_DETAIL:
                 final Context context = getContext();
                 if (context == null) {

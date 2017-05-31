@@ -3,6 +3,7 @@ package com.albineli.udacity.popularmovies.ui;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,10 @@ public class RequestStatusView extends FrameLayout {
     public void setRequestStatus(int requestStatus, boolean matchParentHeight) {
         this.mRequestStatus = requestStatus;
         redrawStatus(matchParentHeight);
+    }
+
+    public void setEmptyMessage(@StringRes int messageResId) {
+        mEmptyMessageTextView.setText(messageResId);
     }
 
     private void redrawStatus(boolean matchParentHeight) {

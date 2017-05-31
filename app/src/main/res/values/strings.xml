@@ -18,4 +18,5 @@
     <string name="tab_rating">Rating</string>
     <string name="tab_favorite">Favorite</string>
     <string name="movie_detail_backdrop_content_description">Backdrop of the movie\'s detail</string>
+    <string name="empty_favorite_list">Your favorite movie list is empty. \nYou can add movies tapping on the heart in detail\'s screen :)</string>
 </resources>

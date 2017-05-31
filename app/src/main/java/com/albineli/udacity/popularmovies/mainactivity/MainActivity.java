@@ -1,4 +1,4 @@
-package com.albineli.udacity.popularmovies;
+package com.albineli.udacity.popularmovies.mainactivity;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
+import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.movielist.MovieListFragment;
 import com.roughike.bottombar.BottomBar;
@@ -22,6 +24,9 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @BindView(R.id.bb_bottom_menu)
     BottomBar mBottomBar;
+
+    @BindView(R.id.toolbar_title)
+    TextView mToobarTitle;
 
     private
     @IdRes
@@ -104,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     private @MovieListFilterDescriptor.MovieListFilter int getFilterBySelectedTab(@IdRes int selectedTabId) {
+        // TODO: MVP PLEASE
+        mToobarTitle.setText(mBottomBar.getTabWithId(selectedTabId).getTitle());
         switch (selectedTabId) {
             case R.id.tab_popular:
                 return MovieListFilterDescriptor.POPULAR;

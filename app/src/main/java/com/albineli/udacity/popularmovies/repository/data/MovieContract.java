@@ -32,6 +32,10 @@ public abstract class MovieContract {
 
         public static final String COLUMN_VOTE_COUNT = "voteCount";
 
-        public static final String COLUMN_FAVORITE = "favorite";
+        public static Uri buildMovieWithId(int id) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(String.valueOf(id))
+                    .build();
+        }
     }
 }

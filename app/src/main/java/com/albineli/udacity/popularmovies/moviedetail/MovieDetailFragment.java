@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
@@ -16,6 +17,7 @@ import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComp
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
@@ -74,32 +76,6 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     TextView mSynopsisTextView;
 
     @Override
-    public void showMovieDetail(MovieModel movieModel) {
-        String posterWidth = ApiUtil.getDefaultPosterSize(mPosterImageView.getWidth());
-        String posterUrl = ApiUtil.buildPosterImageUrl(movieModel.getPosterPath(), posterWidth);
-        Picasso.with(getActivity())
-                .load(posterUrl)
-                .into(mPosterImageView);
-
-        String backdropWidth = ApiUtil.getDefaultPosterSize(mBackdropImageView.getWidth());
-        String backdropUrl = ApiUtil.buildPosterImageUrl(movieModel.getBackdropPath(), backdropWidth);
-        Picasso.with(getActivity())
-                .load(backdropUrl)
-                .into(mBackdropImageView);
-
-        mTitleTextView.setText(movieModel.getTitle());
-        mSynopsisTextView.setText(movieModel.getOverview());
-
-        float rating = (float) movieModel.getVoteAverage() / 2f;
-        mRatingBar.setRating(rating);
-
-        mRatingTextView.setText(String.valueOf(movieModel.getVoteAverage()));
-
-        /*mUserRateTextView.setText(String.valueOf(movieModel.getVoteAverage()));
-        mReleaseDateTextView.setText(movieModel.getReleaseDate());*/
-    }
-
-    @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
         DaggerFragmentComponent.builder()
                 .applicationComponent(applicationComponent)
@@ -132,7 +108,70 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     }
 
     @Override
+    public void showMovieDetail(final MovieModel movieModel) {
+        String posterWidth = ApiUtil.getDefaultPosterSize(mPosterImageView.getWidth());
+        String posterUrl = ApiUtil.buildPosterImageUrl(movieModel.getPosterPath(), posterWidth);
+        Picasso.with(getActivity())
+                .load(posterUrl)
+                .into(mPosterImageView);
+
+        String backdropWidth = ApiUtil.getDefaultPosterSize(mBackdropImageView.getWidth());
+        String backdropUrl = ApiUtil.buildPosterImageUrl(movieModel.getBackdropPath(), backdropWidth);
+        Picasso.with(getActivity())
+                .load(backdropUrl)
+                .into(mBackdropImageView);
+
+        mTitleTextView.setText(movieModel.getTitle());
+        mSynopsisTextView.setText(movieModel.getOverview());
+
+        float rating = (float) movieModel.getVoteAverage() / 2f;
+        mRatingBar.setRating(rating);
+
+        mRatingTextView.setText(String.valueOf(movieModel.getVoteAverage()));
+
+        mFavoriteButton.setOnLikeListener(new OnLikeListener() {
+            @Override
+            public void liked(LikeButton likeButton) {
+                mPresenter.saveFavoriteMovie(movieModel);
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                mPresenter.removeFavoriteMovie(movieModel);
+            }
+        });
+
+        /*mUserRateTextView.setText(String.valueOf(movieModel.getVoteAverage()));
+        mReleaseDateTextView.setText(movieModel.getReleaseDate());*/
+    }
+
+    @Override
     public void setTitle() {
         getActivity().setTitle(R.string.movie_detail);
+    }
+
+    @Override
+    public void setFavoriteButtonState(boolean favorite) {
+        mFavoriteButton.setLiked(favorite);
+    }
+
+    @Override
+    public void showSuccessMessageAddFavoriteMovie() {
+        Toast.makeText(getActivity(), "Success add favorite movie", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSuccessMessageRemoveFavoriteMovie() {
+        Toast.makeText(getActivity(), "Success remove favorite movie", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showErrorMessageAddFavoriteMovie() {
+        Toast.makeText(getActivity(), "Error add favorite movie", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showErrorMessageRemoveFavoriteMovie() {
+        Toast.makeText(getActivity(), "Error remove favorite movie", Toast.LENGTH_LONG).show();
     }
 }

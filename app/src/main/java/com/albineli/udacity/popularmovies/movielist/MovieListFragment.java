@@ -177,7 +177,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
     @Override
     public void showEmptyListMessage() {
-        mMovieListAdapter.showEmptyMessage();
+        mMovieListAdapter.showEmptyMessage(R.string.empty_favorite_list );
     }
 
     @Override
