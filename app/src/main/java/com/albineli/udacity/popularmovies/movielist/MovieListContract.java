@@ -15,7 +15,9 @@ public interface MovieListContract {
         void clearMovieList();
 
         void showEmptyListMessage();
-        void hideLoadingMovieListError();
+        void hideRequestStatus();
+
+        void showLoadingIndicator();
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 /**
@@ -22,7 +21,8 @@ import timber.log.Timber;
 
 public class MovieListPresenter extends BasePresenterImpl implements MovieListContract.Presenter {
     private MovieListContract.View mView;
-    private @MovieListFilterDescriptor.MovieListFilter int mFilter;
+    private @MovieListFilterDescriptor.MovieListFilter
+    int mFilter;
 
     private boolean mIsLoadingMovieList = false;
     private boolean mHasError = false;
@@ -33,7 +33,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     private int mPageIndex = 1;
 
     @Inject
-    public MovieListPresenter(@NonNull MovieRepository movieRepository) {
+    MovieListPresenter(@NonNull MovieRepository movieRepository) {
         super(movieRepository);
 
         mFilter = movieRepository.getMovieListSort(MovieListFilterDescriptor.POPULAR);
@@ -59,6 +59,12 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     private void loadMovieList(final boolean startOver, @MovieListFilterDescriptor.MovieListFilter int filter) {
+        if (mIsLoadingMovieList) {
+            return;
+        }
+
+        mView.showLoadingIndicator();
+
         mIsLoadingMovieList = true;
 
         if (startOver) {
@@ -76,31 +82,37 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             observable = mMovieRepository.getFavoriteList();
         }
 
-        mSubscription = observable.subscribe(new Consumer<List<MovieModel>>() {
-            @Override
-            public void accept(@NonNull List<MovieModel> movieModels) {
-                mIsLoadingMovieList = false;
-                if (movieModels.size() == 0) {
-                    mView.clearMovieList(); // Make sure that the list is empty.
-                    mView.showEmptyListMessage();
-                } else {
-                    mView.showMovieList(movieModels, startOver);
-                }
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(@NonNull Throwable throwable) {
-                mIsLoadingMovieList = false;
-                mHasError = true;
-                Timber.e(throwable, "An error occurred while tried to get the movies");
+        mSubscription = observable.subscribe(
+                movieModels -> handleSuccessLoadMovieList(movieModels, startOver),
+                this::handleErrorLoadMovieList);
+    }
 
-                if (mPageIndex > 1) { // If something got wrong, reverse to the original position.
-                    mPageIndex--;
-                }
+    private void handleSuccessLoadMovieList(List<MovieModel> movieList, boolean startOver) {
+        if (mFilter == MovieListFilterDescriptor.FAVORITE) {
+            mView.hideRequestStatus();
+        } else {
+            mView.showLoadingIndicator(); // Show again to draw again (and wrap content).
+        }
 
-                mView.showLoadingMovieListError();
-            }
-        });
+        mIsLoadingMovieList = false;
+        if (movieList.size() == 0) {
+            mView.clearMovieList(); // Make sure that the list is empty.
+            mView.showEmptyListMessage();
+        } else {
+            mView.showMovieList(movieList, startOver);
+        }
+    }
+
+    private void handleErrorLoadMovieList(Throwable throwable) {
+        mIsLoadingMovieList = false;
+        mHasError = true;
+        Timber.e(throwable, "An error occurred while tried to get the movies");
+
+        if (mPageIndex > 1) { // If something got wrong, reverse to the original position.
+            mPageIndex--;
+        }
+
+        mView.showLoadingMovieListError();
     }
 
     @Override
@@ -128,7 +140,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
 
     @Override
     public void onListEndReached() {
-        if (mIsLoadingMovieList || mHasError) {
+        if (mHasError) {
             return;
         }
         loadMovieList(false);
@@ -137,7 +149,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     @Override
     public void tryAgain() {
         mHasError = false;
-        mView.hideLoadingMovieListError();
+        mView.hideRequestStatus();
 
         loadMovieList(false);
     }

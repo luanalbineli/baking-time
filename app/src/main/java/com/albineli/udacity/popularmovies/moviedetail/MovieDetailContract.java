@@ -2,6 +2,9 @@ package com.albineli.udacity.popularmovies.moviedetail;
 
 import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+
+import java.util.List;
 
 /**
  * Presenter of the Movie Detail Fragment.
@@ -9,6 +12,8 @@ import com.albineli.udacity.popularmovies.model.MovieModel;
 
 public abstract class MovieDetailContract {
     public interface View {
+        void showMovieReview(List<MovieReviewModel> movieReviewModelList);
+
         void setTitle();
         void showMovieDetail(MovieModel movieModel);
 
@@ -22,6 +27,8 @@ public abstract class MovieDetailContract {
         void showErrorMessageAddFavoriteMovie();
 
         void showErrorMessageRemoveFavoriteMovie();
+
+        void showErrorMessageLoadReviews();
     }
 
     public interface Presenter extends BasePresenter<View> {

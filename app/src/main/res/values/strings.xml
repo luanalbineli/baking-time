@@ -19,4 +19,10 @@
     <string name="tab_favorite">Favorite</string>
     <string name="movie_detail_backdrop_content_description">Backdrop of the movie\'s detail</string>
     <string name="empty_favorite_list">Your favorite movie list is empty. \nYou can add movies tapping on the heart in detail\'s screen :)</string>
+    <string name="reviews">Reviews</string>
+    <string name="error_remove_favorite_movie">An error occurred while tried to remove the favorite movie :(</string>
+    <string name="error_add_favorite_movie">An error occurred while tried to add the favorite movie :(</string>
+    <string name="success_remove_favorite_movie">Removed the movie from favorite list</string>
+    <string name="success_add_favorite_movie">Added the movie to the favorite list</string>
+    <string name="read_more">Read more</string>
 </resources>

@@ -1,7 +1,11 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +19,21 @@ import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
+import timber.log.Timber;
 
 
 public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> implements MovieDetailContract.View {
@@ -75,6 +84,13 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @BindView(R.id.tvMovieDetailSynopsis)
     TextView mSynopsisTextView;
 
+    @BindView(R.id.rvMovieDetailReviews)
+    RecyclerView mReviewRecyclerView;
+
+    private MovieReviewAdapter mMovieReviewAdapter;
+
+    private Toast mToast;
+
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
         DaggerFragmentComponent.builder()
@@ -104,7 +120,34 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        configureReviewRecyclerView();
+
         mPresenter.start(mMovieModel);
+    }
+
+    private void configureReviewRecyclerView() {
+        mMovieReviewAdapter = new MovieReviewAdapter();
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mReviewRecyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+        mReviewRecyclerView.setLayoutManager(linearLayoutManager);
+        mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
+
+        // https://codentrick.com/load-more-recyclerview-bottom-progressbar
+        mReviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy == 0) { // Check if the user scrolled down.
+                    return;
+                }
+                int totalItemCount = linearLayoutManager.getItemCount();
+                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                if (totalItemCount <= (lastVisibleItem + 1)) {
+                    //mPresenter.onListEndReached();
+                }
+            }
+        });
     }
 
     @Override
@@ -140,9 +183,12 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
                 mPresenter.removeFavoriteMovie(movieModel);
             }
         });
+    }
 
-        /*mUserRateTextView.setText(String.valueOf(movieModel.getVoteAverage()));
-        mReleaseDateTextView.setText(movieModel.getReleaseDate());*/
+    @Override
+    public void showMovieReview(List<MovieReviewModel> movieReviewModelList) {
+        Timber.i("Review list size: " + movieReviewModelList.size());
+        mMovieReviewAdapter.addItems(movieReviewModelList);
     }
 
     @Override
@@ -157,21 +203,38 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showSuccessMessageAddFavoriteMovie() {
-        Toast.makeText(getActivity(), "Success add favorite movie", Toast.LENGTH_LONG).show();
+        showToastMessage(R.string.success_add_favorite_movie);
     }
 
     @Override
     public void showSuccessMessageRemoveFavoriteMovie() {
-        Toast.makeText(getActivity(), "Success remove favorite movie", Toast.LENGTH_LONG).show();
+        showToastMessage(R.string.success_remove_favorite_movie);
     }
 
     @Override
     public void showErrorMessageAddFavoriteMovie() {
-        Toast.makeText(getActivity(), "Error add favorite movie", Toast.LENGTH_LONG).show();
+        showToastMessage(R.string.error_add_favorite_movie);
     }
 
     @Override
     public void showErrorMessageRemoveFavoriteMovie() {
-        Toast.makeText(getActivity(), "Error remove favorite movie", Toast.LENGTH_LONG).show();
+        showToastMessage(R.string.error_remove_favorite_movie);
+    }
+
+    @Override
+    public void showErrorMessageLoadReviews() {
+        mMovieReviewAdapter.showErrorMessage();
+    }
+
+    @SuppressLint("ShowToast")
+    private void showToastMessage(@StringRes int messageResId) {
+        if (mToast == null) {
+            mToast = Toast.makeText(getActivity(), messageResId, Toast.LENGTH_LONG);
+        } else {
+            mToast.cancel();
+            mToast.setText(messageResId);
+        }
+
+        mToast.show();
     }
 }

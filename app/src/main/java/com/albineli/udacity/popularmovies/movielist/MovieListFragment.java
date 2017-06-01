@@ -18,9 +18,9 @@ import com.albineli.udacity.popularmovies.injector.components.ApplicationCompone
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
+import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View, MovieListAdapter.OnMovieClickListener {
+public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View {
     private static final String FILTER_BUNDLE_KEY = "movie_list_filter_bundle";
 
     public static MovieListFragment getInstance(@MovieListFilterDescriptor.MovieListFilter int filter) {
@@ -88,7 +88,8 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         ButterKnife.bind(this, rootView);
 
         // List.
-        mMovieListAdapter = new MovieListAdapter(new ArrayList<MovieModel>(0), this);
+        mMovieListAdapter = new MovieListAdapter();
+        mMovieListAdapter.setOnItemClickListener((position, movieModel) -> mPresenter.openMovieDetail(movieModel));
 
         final int itensPerRow = getItensPerRow();
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(mMovieListRecyclerView.getContext(), itensPerRow);
@@ -96,7 +97,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
             @Override
             public int getSpanSize(int position) {
                 switch (mMovieListAdapter.getItemViewType(position)) {
-                    case MovieListAdapter.ITEM_TYPE_ITEM:
+                    case CustomRecyclerViewAdapter.ViewType.ITEM:
                         return 1;
                     default: // Grid status.
                         return itensPerRow;
@@ -148,15 +149,15 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
     @Override
     public void showLoadingMovieListError() {
-        mMovieListAdapter.showErrorLoadingContent();
+        mMovieListAdapter.showErrorMessage();
     }
 
     @Override
     public void showMovieList(List<MovieModel> movieList, boolean replaceData) {
         if (replaceData) {
-            mMovieListAdapter.replaceData(movieList);
+            mMovieListAdapter.replaceItems(movieList);
         } else {
-            mMovieListAdapter.addData(movieList);
+            mMovieListAdapter.addItems(movieList);
         }
     }
 
@@ -172,26 +173,31 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
     @Override
     public void clearMovieList() {
-        mMovieListAdapter.clearData();
+        mMovieListAdapter.clearItems();
     }
 
     @Override
     public void showEmptyListMessage() {
-        mMovieListAdapter.showEmptyMessage(R.string.empty_favorite_list );
+        // TODO: SET EMPTY MESSAGE.
+        mMovieListAdapter.showEmptyMessage();
     }
 
     @Override
-    public void hideLoadingMovieListError() {
-        mMovieListAdapter.hideStatus();
+    public void hideRequestStatus() {
+        mMovieListAdapter.hideRequestStatus();
+    }
+
+    @Override
+    public void showLoadingIndicator() {
+        mMovieListAdapter.showLoading();
     }
 
     public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         mFilter = movieListFilter;
         mPresenter.setFilter(movieListFilter);
-    }
 
-    @Override
-    public void onClick(int index, MovieModel movieModel) {
-        mPresenter.openMovieDetail(movieModel);
+        if (getFragmentManager().getBackStackEntryCount() > 0) { // Are at detail screen
+            getFragmentManager().popBackStack();
+        }
     }
 }

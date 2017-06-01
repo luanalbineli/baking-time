@@ -1,5 +1,7 @@
 package com.albineli.udacity.popularmovies.util;
 
+import timber.log.Timber;
+
 public abstract class ApiUtil {
     private static final String BASE_URL_POSTER = "http://image.tmdb.org/t/p/";
     private static final int[] POSTER_SIZE = {92, 154, 185, 342, 500, 780, Integer.MAX_VALUE}; // TODO: Hardcoded, we should call /configuration.
@@ -9,6 +11,7 @@ public abstract class ApiUtil {
     }
 
     public static String getDefaultPosterSize(int widthPx) {
+        Timber.i("widthPx: " + widthPx);
         if (widthPx > POSTER_SIZE[POSTER_SIZE.length - 1]) {
             return "original";
         }

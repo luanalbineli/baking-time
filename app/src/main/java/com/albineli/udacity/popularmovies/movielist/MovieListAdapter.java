@@ -1,26 +1,39 @@
 package com.albineli.udacity.popularmovies.movielist;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.albineli.udacity.popularmovies.R;
-import com.albineli.udacity.popularmovies.enums.RequestStatusDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
-import com.albineli.udacity.popularmovies.ui.RequestStatusView;
+import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+class MovieListAdapter extends CustomRecyclerViewAdapter<MovieModel, MovieListViewHolder> {
+    private String mPosterWidth;
+    @Override
+    protected MovieListViewHolder onCreateItemViewHolder(ViewGroup parent) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
+        return new MovieListViewHolder(itemView);
+    }
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+    @Override
+    protected void onBindItemViewHolder(MovieListViewHolder movieListViewHolder, int position) {
+        if (mPosterWidth == null) { // TODO: Hardcoded
+            mPosterWidth = ApiUtil.getDefaultPosterSize(movieListViewHolder.mMoviePosterImageView.getWidth());
+        }
 
-class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHolder> {
+        final MovieModel movieModel = getItemByPosition(position);
+
+        String posterUrl = ApiUtil.buildPosterImageUrl(movieModel.getPosterPath(), mPosterWidth);
+        Picasso.with(movieListViewHolder.getContext())
+                .load(posterUrl)
+                .into(movieListViewHolder.mMoviePosterImageView);
+    }
+}
+
+/*class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHolder> {
     static final int ITEM_TYPE_ITEM = 0;
     private static final int ITEM_TYPE_GRID_STATUS = 1;
 
@@ -133,7 +146,7 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
         if (mMovieList.size() > 0) {
             notifyItemRangeRemoved(0, mMovieList.size());
         }
-        mMovieList.clear();
+        mMovieList.clearItems();
     }
 
     interface OnMovieClickListener {
@@ -168,4 +181,4 @@ class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.BaseViewHol
             super(itemView);
         }
     }
-}
+}*/
