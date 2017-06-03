@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComp
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
+import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -32,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import timber.log.Timber;
 
@@ -87,6 +90,9 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @BindView(R.id.rvMovieDetailReviews)
     RecyclerView mReviewRecyclerView;
 
+    @BindView(R.id.btMovieDetailShowAllReviews)
+    Button mShowAllReviewsButton;
+
     private MovieReviewAdapter mMovieReviewAdapter;
 
     private Toast mToast;
@@ -128,7 +134,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     private void configureReviewRecyclerView() {
         mMovieReviewAdapter = new MovieReviewAdapter();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mReviewRecyclerView.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mReviewRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 
         mReviewRecyclerView.setLayoutManager(linearLayoutManager);
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
@@ -148,6 +154,12 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
                 }
             }
         });
+    }
+
+    @OnClick(R.id.btMovieDetailShowAllReviews)
+    void onShowAllReviewsButtonClick() {
+        MovieReviewListDialog movieReviewListDialog = new MovieReviewListDialog();
+        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
     }
 
     @Override
@@ -189,11 +201,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     public void showMovieReview(List<MovieReviewModel> movieReviewModelList) {
         Timber.i("Review list size: " + movieReviewModelList.size());
         mMovieReviewAdapter.addItems(movieReviewModelList);
-    }
-
-    @Override
-    public void setTitle() {
-        getActivity().setTitle(R.string.movie_detail);
+        mMovieReviewAdapter.hideRequestStatus();
     }
 
     @Override
@@ -224,6 +232,16 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @Override
     public void showErrorMessageLoadReviews() {
         mMovieReviewAdapter.showErrorMessage();
+    }
+
+    @Override
+    public void setShowAllReviewsButtonVisibility(boolean visible) {
+        mShowAllReviewsButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showLoadingReviewsIndicator() {
+        mMovieReviewAdapter.showLoading();
     }
 
     @SuppressLint("ShowToast")

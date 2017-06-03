@@ -14,7 +14,6 @@ public abstract class MovieDetailContract {
     public interface View {
         void showMovieReview(List<MovieReviewModel> movieReviewModelList);
 
-        void setTitle();
         void showMovieDetail(MovieModel movieModel);
 
         void setFavoriteButtonState(boolean favorite);
@@ -29,6 +28,10 @@ public abstract class MovieDetailContract {
         void showErrorMessageRemoveFavoriteMovie();
 
         void showErrorMessageLoadReviews();
+
+        void setShowAllReviewsButtonVisibility(boolean visible);
+
+        void showLoadingReviewsIndicator();
     }
 
     public interface Presenter extends BasePresenter<View> {

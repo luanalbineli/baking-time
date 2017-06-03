@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -133,6 +135,15 @@
             app:layout_constraintEnd_toStartOf="@+id/guidelineMovieDetailRight"
             app:layout_constraintStart_toStartOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Button
+            android:id="@+id/btMovieDetailShowAllReviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Show all"
+            app:layout_constraintStart_toStartOf="@+id/rvMovieDetailReviews"
+            app:layout_constraintTop_toBottomOf="@+id/rvMovieDetailReviews" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

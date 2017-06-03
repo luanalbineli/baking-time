@@ -5,15 +5,18 @@ import android.support.annotation.NonNull;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
 import timber.log.Timber;
 
 public class MovieDetailPresenter extends BasePresenterImpl implements MovieDetailContract.Presenter {
-
     private MovieDetailContract.View mView;
+    private List<MovieReviewModel> mMovieReviewList;
 
     @Inject
     MovieDetailPresenter(@NonNull MovieRepository movieRepository) {
@@ -26,12 +29,24 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
 
         mMovieRepository.getMovieDetailById(movieModel.getId()).subscribe(movieModel1 -> mView.setFavoriteButtonState(true));
 
+        mView.showLoadingReviewsIndicator();
         mMovieRepository.getReviewsByMovieId(1, movieModel.getId()).subscribe(
-                movieReviewModels -> mView.showMovieReview(movieReviewModels),
+                this::handleMovieReviewRequestSuccess,
                 throwable -> {
                     Timber.e(throwable, "An error occurred while tried to get the movie reviews");
                     mView.showErrorMessageLoadReviews();
                 });
+    }
+
+    private void handleMovieReviewRequestSuccess(List<MovieReviewModel> movieReviewList) {
+        mMovieReviewList = movieReviewList;
+        if (movieReviewList.size() > 2) {
+            mView.showMovieReview(mMovieReviewList.subList(0, 2));
+            mView.setShowAllReviewsButtonVisibility(true);
+        } else {
+            mView.showMovieReview(mMovieReviewList);
+            mView.setShowAllReviewsButtonVisibility(false);
+        }
     }
 
     @Override
