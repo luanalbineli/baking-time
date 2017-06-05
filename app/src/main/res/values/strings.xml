@@ -25,4 +25,5 @@
     <string name="success_remove_favorite_movie">Removed the movie from favorite list</string>
     <string name="success_add_favorite_movie">Added the movie to the favorite list</string>
     <string name="read_more">Read more</string>
+    <string name="show_all_reviews">Show all reviews</string>
 </resources>

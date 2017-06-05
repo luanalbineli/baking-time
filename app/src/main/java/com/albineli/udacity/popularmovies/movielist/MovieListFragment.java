@@ -165,8 +165,8 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
     public void showMovieDetail(MovieModel movieModel) {
         MovieDetailFragment movieDetailFragment = MovieDetailFragment.getInstance(movieModel);
         getFragmentManager().beginTransaction()
-                .replace(R.id.fl_main_content, movieDetailFragment)
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .replace(R.id.fl_main_content, movieDetailFragment)
                 .addToBackStack(null)
                 .commit();
     }

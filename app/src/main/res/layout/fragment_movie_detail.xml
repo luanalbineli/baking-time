@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/clMovieDetailContainer">
 
         <ImageView
             android:id="@+id/ivMovieDetailBackdrop"
@@ -31,26 +33,22 @@
             android:id="@+id/lbMovieDetailFavorite"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_marginTop="140dp"
             android:background="@drawable/background_favorite"
             app:icon_size="25dp"
             app:icon_type="heart"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/guidelineMovieDetailRight"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.25" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ivMovieDetailPoster"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="130dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_detail_poster_content_description"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.248"
             app:srcCompat="@drawable/poster" />
 
         <TextView
@@ -136,12 +134,14 @@
             app:layout_constraintStart_toStartOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <Button
+        <TextView
             android:id="@+id/btMovieDetailShowAllReviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Show all"
+            android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent"
+            android:text="@string/show_all_reviews"
             app:layout_constraintStart_toStartOf="@+id/rvMovieDetailReviews"
             app:layout_constraintTop_toBottomOf="@+id/rvMovieDetailReviews" />
 

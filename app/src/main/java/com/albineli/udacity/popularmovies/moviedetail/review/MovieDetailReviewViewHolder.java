@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewHolder;
+import com.borjabravo.readmoretextview.ReadMoreTextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +16,7 @@ public class MovieDetailReviewViewHolder extends CustomRecyclerViewHolder {
     TextView mAuthorTextView;
 
     @BindView(R.id.tvMovieReviewContent)
-    TextView mContentTextView;
+    ReadMoreTextView mContentTextView;
 
     MovieDetailReviewViewHolder(View itemView) {
         super(itemView);

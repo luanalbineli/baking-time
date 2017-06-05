@@ -24,7 +24,6 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     private @MovieListFilterDescriptor.MovieListFilter
     int mFilter;
 
-    private boolean mIsLoadingMovieList = false;
     private boolean mHasError = false;
     private Disposable mSubscription;
     /*
@@ -54,18 +53,14 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         if (mSubscription != null && !mSubscription.isDisposed()) {
             mSubscription.dispose();
         }
-
-        mIsLoadingMovieList = false;
     }
 
     private void loadMovieList(final boolean startOver, @MovieListFilterDescriptor.MovieListFilter int filter) {
-        if (mIsLoadingMovieList) {
+        if (mSubscription != null) {
             return;
         }
 
         mView.showLoadingIndicator();
-
-        mIsLoadingMovieList = true;
 
         if (startOver) {
             mPageIndex = 1;
@@ -94,7 +89,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             mView.showLoadingIndicator(); // Show again to draw again (and wrap content).
         }
 
-        mIsLoadingMovieList = false;
+        mSubscription = null;
         if (movieList.size() == 0) {
             mView.clearMovieList(); // Make sure that the list is empty.
             mView.showEmptyListMessage();
@@ -104,7 +99,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     private void handleErrorLoadMovieList(Throwable throwable) {
-        mIsLoadingMovieList = false;
+        mSubscription = null;
         mHasError = true;
         Timber.e(throwable, "An error occurred while tried to get the movies");
 
@@ -124,6 +119,10 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     public void setFilter(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         if (mFilter == movieListFilter) { // If it's the same order, do nothing.
             return;
+        }
+
+        if (mSubscription != null && !mSubscription.isDisposed()) {
+            mSubscription.dispose();
         }
 
         // Set the new order and save it.

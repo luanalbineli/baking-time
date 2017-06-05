@@ -4,15 +4,15 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
@@ -23,11 +23,13 @@ import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
+import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,6 +68,9 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     private MovieModel mMovieModel;
 
+    @BindView(R.id.clMovieDetailContainer)
+    View mContainer;
+
     @BindView(R.id.ivMovieDetailBackdrop)
     ImageView mBackdropImageView;
 
@@ -91,11 +96,9 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     RecyclerView mReviewRecyclerView;
 
     @BindView(R.id.btMovieDetailShowAllReviews)
-    Button mShowAllReviewsButton;
+    TextView mShowAllReviewsButton;
 
     private MovieReviewAdapter mMovieReviewAdapter;
-
-    private Toast mToast;
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
@@ -108,7 +111,9 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (getArguments() == null || !getArguments().containsKey(MOVIE_KEY)) {
+            throw new InvalidParameterException("movie");
+        }
         mMovieModel = getArguments().getParcelable(MOVIE_KEY);
     }
 
@@ -134,9 +139,13 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     private void configureReviewRecyclerView() {
         mMovieReviewAdapter = new MovieReviewAdapter();
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mReviewRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
-
+        // LayoutManager.
+        NonScrollableLLM linearLayoutManager = new NonScrollableLLM(mReviewRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
         mReviewRecyclerView.setLayoutManager(linearLayoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mReviewRecyclerView.getContext(), linearLayoutManager.getOrientation());
+        mReviewRecyclerView.addItemDecoration(dividerItemDecoration);
+
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
 
         // https://codentrick.com/load-more-recyclerview-bottom-progressbar
@@ -158,7 +167,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @OnClick(R.id.btMovieDetailShowAllReviews)
     void onShowAllReviewsButtonClick() {
-        MovieReviewListDialog movieReviewListDialog = new MovieReviewListDialog();
+        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance();
         movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
     }
 
@@ -236,7 +245,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void setShowAllReviewsButtonVisibility(boolean visible) {
-        mShowAllReviewsButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        //mShowAllReviewsButton.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -246,13 +255,6 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @SuppressLint("ShowToast")
     private void showToastMessage(@StringRes int messageResId) {
-        if (mToast == null) {
-            mToast = Toast.makeText(getActivity(), messageResId, Toast.LENGTH_LONG);
-        } else {
-            mToast.cancel();
-            mToast.setText(messageResId);
-        }
-
-        mToast.show();
+        Snackbar.make(mContainer, messageResId, Snackbar.LENGTH_SHORT).show();
     }
 }
