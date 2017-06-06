@@ -5,9 +5,8 @@ import android.support.annotation.NonNull;
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -68,21 +67,22 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             mPageIndex++;
         }
 
-        Observable<List<MovieModel>> observable;
+        Observable<ArrayRequestAPI<MovieModel>> observable;
         if (filter == MovieListFilterDescriptor.POPULAR) {
             observable = mMovieRepository.getPopularList(mPageIndex);
         } else if (filter == MovieListFilterDescriptor.RATING) {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
-        } else {
-            observable = mMovieRepository.getFavoriteList();
+        } else { // TODO: FIX
+            observable = mMovieRepository.getTopRatedList(mPageIndex);
+            //observable = mMovieRepository.getFavoriteList();
         }
 
         mSubscription = observable.subscribe(
-                movieModels -> handleSuccessLoadMovieList(movieModels, startOver),
+                response -> handleSuccessLoadMovieList(response, startOver),
                 this::handleErrorLoadMovieList);
     }
 
-    private void handleSuccessLoadMovieList(List<MovieModel> movieList, boolean startOver) {
+    private void handleSuccessLoadMovieList(ArrayRequestAPI<MovieModel> response, boolean startOver) {
         if (mFilter == MovieListFilterDescriptor.FAVORITE) {
             mView.hideRequestStatus();
         } else {
@@ -90,11 +90,17 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         }
 
         mSubscription = null;
-        if (movieList.size() == 0) {
+        if (response.results.size() == 0) {
             mView.clearMovieList(); // Make sure that the list is empty.
             mView.showEmptyListMessage();
         } else {
-            mView.showMovieList(movieList, startOver);
+            mView.showMovieList(response.results, startOver);
+        }
+
+        if (response.hasMorePages()) {
+            mView.enableLoadMoreListener();
+        } else {
+            mView.disableLoadMoreListener();
         }
     }
 

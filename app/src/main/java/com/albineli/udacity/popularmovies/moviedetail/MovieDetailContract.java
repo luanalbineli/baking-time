@@ -32,6 +32,8 @@ public abstract class MovieDetailContract {
         void setShowAllReviewsButtonVisibility(boolean visible);
 
         void showLoadingReviewsIndicator();
+
+        void showAllReviews(List<MovieReviewModel> mMovieReviewList);
     }
 
     public interface Presenter extends BasePresenter<View> {
@@ -40,5 +42,7 @@ public abstract class MovieDetailContract {
         void removeFavoriteMovie(MovieModel movieModel);
 
         void saveFavoriteMovie(MovieModel movieModel);
+
+        void showAllReviews();
     }
 }

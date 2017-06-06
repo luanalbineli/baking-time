@@ -75,4 +75,9 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
                     mView.setFavoriteButtonState(false);
                 });
     }
+
+    @Override
+    public void showAllReviews() {
+        mView.showAllReviews(mMovieReviewList);
+    }
 }

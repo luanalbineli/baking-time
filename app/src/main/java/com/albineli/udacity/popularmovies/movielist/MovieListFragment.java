@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View {
@@ -58,6 +60,8 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
     RecyclerView mMovieListRecyclerView;
 
     MovieListAdapter mMovieListAdapter;
+
+    GridLayoutManager mGridLayoutManager;
 
     @MovieListFilterDescriptor.MovieListFilter
     private int mFilter;
@@ -91,48 +95,22 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         mMovieListAdapter = new MovieListAdapter();
         mMovieListAdapter.setOnItemClickListener((position, movieModel) -> mPresenter.openMovieDetail(movieModel));
 
-        final int itensPerRow = getItensPerRow();
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(mMovieListRecyclerView.getContext(), itensPerRow);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        mGridLayoutManager = new GridLayoutManager(mMovieListRecyclerView.getContext(), getItensPerRow(mMovieListRecyclerView.getContext()));
+        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 switch (mMovieListAdapter.getItemViewType(position)) {
                     case CustomRecyclerViewAdapter.ViewType.ITEM:
                         return 1;
                     default: // Grid status.
-                        return itensPerRow;
+                        return mGridLayoutManager.getSpanCount();
                 }
             }
         });
-        mMovieListRecyclerView.setLayoutManager(gridLayoutManager);
+        mMovieListRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieListRecyclerView.setAdapter(mMovieListAdapter);
 
-        // https://codentrick.com/load-more-recyclerview-bottom-progressbar
-        mMovieListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy == 0) { // Check if the user scrolled down.
-                    return;
-                }
-                int totalItemCount = gridLayoutManager.getItemCount();
-                int lastVisibleItem = gridLayoutManager.findLastVisibleItemPosition();
-                if (totalItemCount <= (lastVisibleItem + itensPerRow)) {
-                    mPresenter.onListEndReached();
-                }
-            }
-        });
-
         return rootView;
-    }
-
-    private int getItensPerRow() {
-        boolean isPortrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        if (isTablet) {
-            return isPortrait ? 5 : 6;
-        }
-        return isPortrait ? 3 : 4;
     }
 
     @Override
@@ -140,6 +118,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         super.onViewCreated(view, savedInstanceState);
         mPresenter.start(mFilter);
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -192,12 +171,50 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         mMovieListAdapter.showLoading();
     }
 
+    @Override
+    public void enableLoadMoreListener() {
+        // https://codentrick.com/load-more-recyclerview-bottom-progressbar
+        disableLoadMoreListener();
+        mMovieListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy == 0) { // Check if the user scrolled down.
+                    return;
+                }
+                int totalItemCount = mGridLayoutManager.getItemCount();
+                int lastVisibleItem = mGridLayoutManager.findLastVisibleItemPosition();
+                if (totalItemCount <= (lastVisibleItem + mGridLayoutManager.getSpanCount())) {
+                    /*java.lang.IllegalStateException: Cannot call this method in a scroll callback. Scroll callbacks mightbe run during a measure & layout pass where you cannot change theRecyclerView data.
+                    Any method call that might change the structureof the RecyclerView or the adapter contents should be postponed tothe next frame. */
+                    mMovieListRecyclerView.post(() -> mPresenter.onListEndReached());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void disableLoadMoreListener() {
+        mMovieListRecyclerView.clearOnScrollListeners();
+    }
+
     public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
+        mGridLayoutManager.scrollToPositionWithOffset(0, 0);
+
         mFilter = movieListFilter;
         mPresenter.setFilter(movieListFilter);
 
         if (getFragmentManager().getBackStackEntryCount() > 0) { // Are at detail screen
             getFragmentManager().popBackStack();
         }
+    }
+
+    public static int getItensPerRow(Context context) {
+        boolean isPortrait = context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        boolean isTablet = context.getResources().getBoolean(R.bool.isTablet);
+        if (isTablet) {
+            return isPortrait ? 5 : 6;
+        }
+        return isPortrait ? 3 : 4;
     }
 }

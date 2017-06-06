@@ -24,10 +24,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
@@ -63,20 +60,20 @@ public class MovieRepository extends RepositoryBase {
         return MovieListFilterDescriptor.parseFromInt(intSortList);
     }
 
-    public Observable<List<MovieModel>> getTopRatedList(final int pageIndex) {
-        return reduceMovieList(getMovieServiceInstance().getTopRatedList(pageIndex));
+    public Observable<ArrayRequestAPI<MovieModel>> getTopRatedList(final int pageIndex) {
+        return observeOnMainThread(getMovieServiceInstance().getTopRatedList(pageIndex));
     }
 
-    public Observable<List<MovieModel>> getPopularList(final int pageIndex) {
-        return reduceMovieList(getMovieServiceInstance().getPopularList(pageIndex));
+    public Observable<ArrayRequestAPI<MovieModel>> getPopularList(final int pageIndex) {
+        return observeOnMainThread(getMovieServiceInstance().getPopularList(pageIndex));
     }
 
     public Observable<List<MovieReviewModel>> getReviewsByMovieId(int pageIndex, int movieId) {
         return observeOnMainThread(getMovieServiceInstance().getReviewsByMovieId(movieId, pageIndex).map(listArrayRequestAPI -> listArrayRequestAPI.results));
     }
 
-    public Observable<List<TrailerModel>> getTrailersByMovieId(int pageIndex, int movieId) {
-        return observeOnMainThread(getMovieServiceInstance().getTrailersByMovieId(movieId, pageIndex).map(listArrayRequestAPI -> listArrayRequestAPI.results));
+    public Observable<List<TrailerModel>> getTrailersByMovieId(int movieId) {
+        return observeOnMainThread(getMovieServiceInstance().getTrailersByMovieId(movieId).map(listArrayRequestAPI -> listArrayRequestAPI.results));
     }
 
     public Observable<List<MovieModel>> getFavoriteList() {
@@ -106,12 +103,6 @@ public class MovieRepository extends RepositoryBase {
                 cursor.close();
             }
         }).subscribeOn(Schedulers.io()));
-    }
-
-    private Observable<List<MovieModel>> reduceMovieList(Observable<ArrayRequestAPI<List<MovieModel>>> observable) {
-        Observable<List<MovieModel>> reducedObservable = observable.map(listArrayRequestAPI -> listArrayRequestAPI.results);
-
-        return observeOnMainThread(reducedObservable);
     }
 
     public Observable<IWantToUseKotlinAndUnitINSTANCE> removeFavoriteMovie(final MovieModel movieModel) {

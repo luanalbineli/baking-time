@@ -49,16 +49,13 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         }
 
         mBottomBar.selectTabWithId(mSelectedTabId);
-        mBottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                if (mMovieListFragment == null) {
-                    return;
-                }
-                Timber.i("Selected item: " + tabId);
-                @MovieListFilterDescriptor.MovieListFilter int filter = getFilterBySelectedTab(tabId);
-                mMovieListFragment.reloadListWithNewSort(filter);
+        mBottomBar.setOnTabSelectListener(tabId -> {
+            if (mMovieListFragment == null) {
+                return;
             }
+            Timber.i("Selected item: " + tabId);
+            @MovieListFilterDescriptor.MovieListFilter int filter = getFilterBySelectedTab(tabId);
+            mMovieListFragment.reloadListWithNewSort(filter);
         });
 
         setupMovieListFragment();

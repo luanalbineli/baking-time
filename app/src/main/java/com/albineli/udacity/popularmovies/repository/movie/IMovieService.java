@@ -6,8 +6,6 @@ import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.model.TrailerModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 
-import java.util.List;
-
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -15,14 +13,14 @@ import retrofit2.http.Query;
 
 public interface IMovieService {
     @GET("movie/top_rated")
-    Observable<ArrayRequestAPI<List<MovieModel>>> getTopRatedList(@Query("page") Integer pageNumber);
+    Observable<ArrayRequestAPI<MovieModel>> getTopRatedList(@Query("page") Integer pageNumber);
 
     @GET("movie/popular")
-    Observable<ArrayRequestAPI<List<MovieModel>>> getPopularList(@Query("page") Integer pageNumber);
+    Observable<ArrayRequestAPI<MovieModel>> getPopularList(@Query("page") Integer pageNumber);
 
     @GET("movie/{movieId}/reviews")
-    Observable<ArrayRequestAPI<List<MovieReviewModel>>> getReviewsByMovieId(@Path("movieId") int movieId, @Query("page") Integer pageNumber);
+    Observable<ArrayRequestAPI<MovieReviewModel>> getReviewsByMovieId(@Path("movieId") int movieId, @Query("page") Integer pageNumber);
 
     @GET("movie/{movieId}/reviews")
-    Observable<ArrayRequestAPI<List<TrailerModel>>> getTrailersByMovieId(@Path("movieId") int movieId, @Query("page") Integer pageNumber);
+    Observable<ArrayRequestAPI<TrailerModel>> getTrailersByMovieId(@Path("movieId") int movieId);
 }

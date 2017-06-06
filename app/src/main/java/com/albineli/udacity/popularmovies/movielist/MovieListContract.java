@@ -18,6 +18,10 @@ public interface MovieListContract {
         void hideRequestStatus();
 
         void showLoadingIndicator();
+
+        void enableLoadMoreListener();
+
+        void disableLoadMoreListener();
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -1,6 +1,7 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -25,8 +26,10 @@ import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
 import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
+import com.albineli.udacity.popularmovies.util.UIUtil;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.security.InvalidParameterException;
@@ -167,8 +170,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @OnClick(R.id.btMovieDetailShowAllReviews)
     void onShowAllReviewsButtonClick() {
-        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance();
-        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
+        mPresenter.showAllReviews();
     }
 
     @Override
@@ -179,11 +181,12 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
                 .load(posterUrl)
                 .into(mPosterImageView);
 
-        String backdropWidth = ApiUtil.getDefaultPosterSize(mBackdropImageView.getWidth());
+        String backdropWidth = ApiUtil.getDefaultPosterSize(UIUtil.getDisplayMetrics(mPosterImageView.getContext()).widthPixels);
         String backdropUrl = ApiUtil.buildPosterImageUrl(movieModel.getBackdropPath(), backdropWidth);
         Picasso.with(getActivity())
                 .load(backdropUrl)
                 .into(mBackdropImageView);
+
 
         mTitleTextView.setText(movieModel.getTitle());
         mSynopsisTextView.setText(movieModel.getOverview());
@@ -251,6 +254,12 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @Override
     public void showLoadingReviewsIndicator() {
         mMovieReviewAdapter.showLoading();
+    }
+
+    @Override
+    public void showAllReviews(List<MovieReviewModel> movieReviewList) {
+        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList);
+        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
     }
 
     @SuppressLint("ShowToast")
