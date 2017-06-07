@@ -1,6 +1,7 @@
 package com.albineli.udacity.popularmovies.ui.recyclerview;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     private @RequestStatusDescriptor.RequestStatus int mRequestStatus = RequestStatusDescriptor.EMPTY;
 
     private GridStatusViewHolder.ITryAgainClick mTryAgainClickListener;
+    private int mEmptyMessageResId = R.string.the_list_is_empty;
 
     protected CustomRecyclerViewAdapter() {
         this(new ArrayList<>());
@@ -44,10 +46,12 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     @Override
     public final void onBindViewHolder(final CustomRecyclerViewHolder holder, int position) {
         if (holder.getItemViewType() == ViewType.GRID_STATUS) {
-            ((GridStatusViewHolder) holder).bind(mRequestStatus, mItems.size());
+            GridStatusViewHolder gridStatusViewHolder = (GridStatusViewHolder) holder;
+            gridStatusViewHolder.bind(mRequestStatus, mItems.size(), mEmptyMessageResId);
             return;
         }
 
+        //noinspection unchecked
         onBindItemViewHolder((THolder) holder, position);
         holder.itemView.setOnClickListener(v -> {
             if (mOnItemClickListener != null) {
@@ -103,7 +107,8 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
         redrawGridStatus(RequestStatusDescriptor.HIDDEN);
     }
 
-    public final void showEmptyMessage() {
+    public final void showEmptyMessage(@StringRes int emptyMessageResId) {
+        mEmptyMessageResId = emptyMessageResId;
         redrawGridStatus(RequestStatusDescriptor.EMPTY);
     }
 
@@ -112,9 +117,12 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     }
 
     private void redrawGridStatus(int gridStatus) {
+        int previousRequestStatus = mRequestStatus;
         mRequestStatus = gridStatus;
         if (mRequestStatus == RequestStatusDescriptor.HIDDEN) {
             notifyItemRemoved(mItems.size());
+        } else if (previousRequestStatus == RequestStatusDescriptor.HIDDEN) {
+            notifyItemInserted(mItems.size());
         } else {
             notifyItemChanged(mItems.size());
         }

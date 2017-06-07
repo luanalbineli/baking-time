@@ -33,7 +33,9 @@ public abstract class MovieDetailContract {
 
         void showLoadingReviewsIndicator();
 
-        void showAllReviews(List<MovieReviewModel> mMovieReviewList);
+        void showAllReviews(List<MovieReviewModel> movieReviewList, boolean hasMore);
+
+        void showEmptyReviewListMessage();
     }
 
     public interface Presenter extends BasePresenter<View> {

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 
 public class MovieListFragment extends BaseFragment<MovieListContract.View> implements MovieListContract.View {
@@ -145,7 +143,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         MovieDetailFragment movieDetailFragment = MovieDetailFragment.getInstance(movieModel);
         getFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .replace(R.id.fl_main_content, movieDetailFragment)
+                .add(R.id.fl_main_content, movieDetailFragment)
                 .addToBackStack(null)
                 .commit();
     }
@@ -157,8 +155,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
     @Override
     public void showEmptyListMessage() {
-        // TODO: SET EMPTY MESSAGE.
-        mMovieListAdapter.showEmptyMessage();
+        mMovieListAdapter.showEmptyMessage(R.string.the_list_is_empty);
     }
 
     @Override

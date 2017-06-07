@@ -2,6 +2,7 @@ package com.albineli.udacity.popularmovies.injector.components;
 
 import com.albineli.udacity.popularmovies.injector.PerFragment;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
+import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
 import com.albineli.udacity.popularmovies.movielist.MovieListFragment;
 
 import dagger.Component;
@@ -11,4 +12,6 @@ import dagger.Component;
 public interface FragmentComponent {
     void inject(MovieDetailFragment fragment);
     void inject(MovieListFragment fragment);
+
+    void inject(MovieReviewListDialog dialogFragment);
 }

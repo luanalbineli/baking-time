@@ -12,6 +12,9 @@ public class TrailerModel {
     @SerializedName("key")
     private String key;
 
+    @SerializedName("name")
+    private String name;
+
     public String getSite() {
         return site;
     }

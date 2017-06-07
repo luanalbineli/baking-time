@@ -19,6 +19,7 @@ import com.albineli.udacity.popularmovies.enums.RequestStatusDescriptor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -36,6 +37,7 @@ public class RequestStatusView extends FrameLayout {
 
     @BindView(R.id.tvRequestStatusEmptyMessage)
     TextView mEmptyMessageTextView;
+
     private @RequestStatusDescriptor.RequestStatus
     int mRequestStatus;
 

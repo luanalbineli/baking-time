@@ -1,7 +1,5 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
-import android.annotation.SuppressLint;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -29,7 +27,6 @@ import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.security.InvalidParameterException;
@@ -150,22 +147,6 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
         mReviewRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
-
-        // https://codentrick.com/load-more-recyclerview-bottom-progressbar
-        mReviewRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy == 0) { // Check if the user scrolled down.
-                    return;
-                }
-                int totalItemCount = linearLayoutManager.getItemCount();
-                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                if (totalItemCount <= (lastVisibleItem + 1)) {
-                    //mPresenter.onListEndReached();
-                }
-            }
-        });
     }
 
     @OnClick(R.id.btMovieDetailShowAllReviews)
@@ -257,12 +238,16 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     }
 
     @Override
-    public void showAllReviews(List<MovieReviewModel> movieReviewList) {
-        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList);
+    public void showAllReviews(List<MovieReviewModel> movieReviewList, boolean hasMore) {
+        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
         movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
     }
 
-    @SuppressLint("ShowToast")
+    @Override
+    public void showEmptyReviewListMessage() {
+        mMovieReviewAdapter.showEmptyMessage(R.string.there_is_no_reviews_to_show);
+    }
+
     private void showToastMessage(@StringRes int messageResId) {
         Snackbar.make(mContainer, messageResId, Snackbar.LENGTH_SHORT).show();
     }

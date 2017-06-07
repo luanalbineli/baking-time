@@ -68,8 +68,8 @@ public class MovieRepository extends RepositoryBase {
         return observeOnMainThread(getMovieServiceInstance().getPopularList(pageIndex));
     }
 
-    public Observable<List<MovieReviewModel>> getReviewsByMovieId(int pageIndex, int movieId) {
-        return observeOnMainThread(getMovieServiceInstance().getReviewsByMovieId(movieId, pageIndex).map(listArrayRequestAPI -> listArrayRequestAPI.results));
+    public Observable<ArrayRequestAPI<MovieReviewModel>> getReviewsByMovieId(int pageIndex, int movieId) {
+        return observeOnMainThread(getMovieServiceInstance().getReviewsByMovieId(movieId, pageIndex));
     }
 
     public Observable<List<TrailerModel>> getTrailersByMovieId(int movieId) {

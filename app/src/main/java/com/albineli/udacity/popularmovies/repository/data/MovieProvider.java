@@ -12,10 +12,6 @@ import android.support.annotation.Nullable;
 
 import com.albineli.udacity.popularmovies.model.MovieModel;
 
-import java.security.InvalidParameterException;
-
-import static com.albineli.udacity.popularmovies.repository.data.MovieContract.MovieEntry.CONTENT_URI;
-
 
 public class MovieProvider extends ContentProvider {
     private static final int CODE_MOVIES = 101;
@@ -36,7 +32,7 @@ public class MovieProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+    public Cursor query(@NonNull Uri uri, @Nullable String[] columns, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sort) {
         final int code = URI_MATCHER.match(uri);
         if (code == UriMatcher.NO_MATCH) {
             throw new IllegalArgumentException("Unknown URI: " + uri);

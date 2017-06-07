@@ -1,5 +1,6 @@
 package com.albineli.udacity.popularmovies.ui.recyclerview;
 
+import android.support.annotation.StringRes;
 import android.view.View;
 
 import com.albineli.udacity.popularmovies.R;
@@ -8,6 +9,7 @@ import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 public class GridStatusViewHolder extends CustomRecyclerViewHolder {
@@ -24,9 +26,10 @@ public class GridStatusViewHolder extends CustomRecyclerViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(@RequestStatusDescriptor.RequestStatus int requestStatus, int numberOfItems) {
+    public void bind(@RequestStatusDescriptor.RequestStatus int requestStatus, int numberOfItems, @StringRes int emptyMessageResId) {
+        mRequestStatusView.setEmptyMessage(emptyMessageResId);
         mRequestStatusView.setRequestStatus(requestStatus, numberOfItems == 0);
-        //mRequestStatusView.seton
+        Timber.i("REDRAWING GRID STATUS: " + requestStatus);
     }
 
     public interface ITryAgainClick {

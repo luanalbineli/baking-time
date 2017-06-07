@@ -55,6 +55,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     private void loadMovieList(final boolean startOver, @MovieListFilterDescriptor.MovieListFilter int filter) {
+        Timber.i("loadMovieList - Loading the movie list");
         if (mSubscription != null) {
             return;
         }

@@ -26,4 +26,6 @@
     <string name="success_add_favorite_movie">Added the movie to the favorite list</string>
     <string name="read_more">Read more</string>
     <string name="show_all_reviews">Show all reviews</string>
+    <string name="the_list_is_empty">The list is empty</string>
+    <string name="there_is_no_reviews_to_show">There is no reviews to show</string>
 </resources>

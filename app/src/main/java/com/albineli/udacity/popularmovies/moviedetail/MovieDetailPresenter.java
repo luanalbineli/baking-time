@@ -6,9 +6,8 @@ import android.support.annotation.NonNull;
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,7 +15,7 @@ import timber.log.Timber;
 
 public class MovieDetailPresenter extends BasePresenterImpl implements MovieDetailContract.Presenter {
     private MovieDetailContract.View mView;
-    private List<MovieReviewModel> mMovieReviewList;
+    private ArrayRequestAPI<MovieReviewModel> mMovieReviewRequest;
 
     @Inject
     MovieDetailPresenter(@NonNull MovieRepository movieRepository) {
@@ -38,13 +37,18 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
                 });
     }
 
-    private void handleMovieReviewRequestSuccess(List<MovieReviewModel> movieReviewList) {
-        mMovieReviewList = movieReviewList;
-        if (movieReviewList.size() > 2) {
-            mView.showMovieReview(mMovieReviewList.subList(0, 2));
+    private void handleMovieReviewRequestSuccess(ArrayRequestAPI<MovieReviewModel> movieReviewModelArrayRequestAPI) {
+        if (movieReviewModelArrayRequestAPI.results.size() == 0) {
+            mView.showEmptyReviewListMessage();
+            mView.setShowAllReviewsButtonVisibility(false);
+            return;
+        }
+        mMovieReviewRequest = movieReviewModelArrayRequestAPI;
+        if (movieReviewModelArrayRequestAPI.results.size() > 2) {
+            mView.showMovieReview(mMovieReviewRequest.results.subList(0, 2));
             mView.setShowAllReviewsButtonVisibility(true);
         } else {
-            mView.showMovieReview(mMovieReviewList);
+            mView.showMovieReview(mMovieReviewRequest.results);
             mView.setShowAllReviewsButtonVisibility(false);
         }
     }
@@ -78,6 +82,6 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
 
     @Override
     public void showAllReviews() {
-        mView.showAllReviews(mMovieReviewList);
+        mView.showAllReviews(mMovieReviewRequest.results, mMovieReviewRequest.hasMorePages());
     }
 }
