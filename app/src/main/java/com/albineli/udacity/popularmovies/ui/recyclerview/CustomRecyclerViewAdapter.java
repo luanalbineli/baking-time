@@ -16,7 +16,7 @@ import java.util.List;
 public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRecyclerViewHolder> extends RecyclerView.Adapter<CustomRecyclerViewHolder> {
     private final List<TItem> mItems;
     private IListRecyclerViewItemClick<TItem> mOnItemClickListener;
-    private @RequestStatusDescriptor.RequestStatus int mRequestStatus = RequestStatusDescriptor.EMPTY;
+    private @RequestStatusDescriptor.RequestStatus int mRequestStatus = RequestStatusDescriptor.HIDDEN;
 
     private GridStatusViewHolder.ITryAgainClick mTryAgainClickListener;
     private int mEmptyMessageResId = R.string.the_list_is_empty;

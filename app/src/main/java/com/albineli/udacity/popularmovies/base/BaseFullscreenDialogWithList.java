@@ -17,6 +17,7 @@ import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.util.UIUtil;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,14 +26,16 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
-public abstract class BaseFullscreenDialogWithList<TModel, TView> extends DialogFragment {
+public abstract class BaseFullscreenDialogWithList<TModel extends Parcelable, TView> extends DialogFragment {
     private static final String LIST_BUNDLE_KEY = "list";
 
     @BindView(R.id.rvFullscreenFragmentDialog)
-    protected RecyclerView mReviewRecyclerView;
+    protected RecyclerView mRecyclerView;
 
     @BindView(R.id.toolbarMovieReviewDialog)
     Toolbar mDialogToolbar;
+
+    protected ArrayList<TModel> mList;
 
     @Override
     public void onStart() {
@@ -46,6 +49,12 @@ public abstract class BaseFullscreenDialogWithList<TModel, TView> extends Dialog
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() == null || !getArguments().containsKey(LIST_BUNDLE_KEY)) {
+            throw new InvalidParameterException(LIST_BUNDLE_KEY);
+        }
+
+        mList = getArguments().getParcelableArrayList(LIST_BUNDLE_KEY);
 
         ApplicationComponent applicationComponent = PopularMovieApplication.getApplicationComponent(getActivity());
         onInjectDependencies(applicationComponent);

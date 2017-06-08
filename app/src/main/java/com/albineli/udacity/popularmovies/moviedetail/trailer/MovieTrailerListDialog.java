@@ -15,16 +15,11 @@ import com.albineli.udacity.popularmovies.injector.components.ApplicationCompone
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
 
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTrailerModel, MovieTrailerListDialogContract.View> implements MovieTrailerListDialogContract.View {
-    private static final String MOVIE_TRAILER_LIST_BUNDLE_KEY = "movie_trailer_list";
-    private ArrayList<MovieTrailerModel> mMovieTrailerList;
-
     MovieTrailerAdapter mMovieReviewAdapter;
 
     LinearLayoutManager mLinearLayoutManager;
@@ -33,27 +28,7 @@ public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTr
     MovieTrailerListDialogPresenter mPresenter;
 
     public static MovieTrailerListDialog getInstance(List<MovieTrailerModel> movieModelList) {
-        MovieTrailerListDialog instance = MovieTrailerListDialog.createNewInstance(MovieTrailerListDialog.class, movieModelList);
-
-        return instance;
-       /* Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(MOVIE_TRAILER_LIST_BUNDLE_KEY, new ArrayList<>(movieModelList));
-
-        MovieTrailerListDialog filterDialogFragment = new MovieTrailerListDialog();
-        filterDialogFragment.setArguments(bundle);
-        filterDialogFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme_DialogFullscreen);
-        return filterDialogFragment;*/
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() == null || !getArguments().containsKey(MOVIE_TRAILER_LIST_BUNDLE_KEY)) {
-            throw new InvalidParameterException("movie");
-        }
-
-        mMovieTrailerList = getArguments().getParcelableArrayList(MOVIE_TRAILER_LIST_BUNDLE_KEY);
+        return MovieTrailerListDialog.createNewInstance(MovieTrailerListDialog.class, movieModelList);
     }
 
     @Nullable
@@ -63,13 +38,13 @@ public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTr
 
         mMovieReviewAdapter = new MovieTrailerAdapter();
 
-        mLinearLayoutManager = new LinearLayoutManager(mReviewRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
+        mLinearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mReviewRecyclerView.getContext(), mLinearLayoutManager.getOrientation());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), mLinearLayoutManager.getOrientation());
 
-        mReviewRecyclerView.addItemDecoration(dividerItemDecoration);
-        mReviewRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mMovieReviewAdapter);
 
         return fullscreenDialogWithListView;
     }
@@ -78,7 +53,7 @@ public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTr
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPresenter.start(mMovieTrailerList);
+        mPresenter.start(mList);
     }
 
     @Override

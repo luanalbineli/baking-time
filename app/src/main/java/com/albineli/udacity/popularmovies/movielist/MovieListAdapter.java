@@ -1,18 +1,15 @@
 package com.albineli.udacity.popularmovies.movielist;
 
-import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
-import com.squareup.picasso.Picasso;
 
 class MovieListAdapter extends CustomRecyclerViewAdapter<MovieModel, MovieListViewHolder> {
     private String mPosterWidth;
@@ -35,8 +32,6 @@ class MovieListAdapter extends CustomRecyclerViewAdapter<MovieModel, MovieListVi
         final MovieModel movieModel = getItemByPosition(position);
 
         String posterUrl = ApiUtil.buildPosterImageUrl(movieModel.getPosterPath(), mPosterWidth);
-        Picasso.with(movieListViewHolder.getContext())
-                .load(posterUrl)
-                .into(movieListViewHolder.mMoviePosterImageView);
+        movieListViewHolder.mMoviePosterSimpleDraweeView.setImageURI(posterUrl);
     }
 }

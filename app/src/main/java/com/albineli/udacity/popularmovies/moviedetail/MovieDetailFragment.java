@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.albineli.udacity.popularmovies.R;
@@ -22,16 +21,14 @@ import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
-import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerListDialog;
 import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
-import com.squareup.picasso.Picasso;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -74,13 +71,13 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     View mContainer;
 
     @BindView(R.id.ivMovieDetailBackdrop)
-    ImageView mBackdropImageView;
+    SimpleDraweeView mBackdropSimpleDraweeView;
 
     @BindView(R.id.lbMovieDetailFavorite)
     LikeButton mFavoriteButton;
 
-    @BindView(R.id.ivMovieDetailPoster)
-    ImageView mPosterImageView;
+    @BindView(R.id.sdvMovieDetailPoster)
+    SimpleDraweeView mPosterSimpleDraweeView;
 
     @BindView(R.id.tvMovieDetailTitle)
     TextView mTitleTextView;
@@ -158,17 +155,13 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showMovieDetail(final MovieModel movieModel) {
-        String posterWidth = ApiUtil.getDefaultPosterSize(mPosterImageView.getWidth());
+        String posterWidth = ApiUtil.getDefaultPosterSize(mPosterSimpleDraweeView.getWidth());
         String posterUrl = ApiUtil.buildPosterImageUrl(movieModel.getPosterPath(), posterWidth);
-        Picasso.with(getActivity())
-                .load(posterUrl)
-                .into(mPosterImageView);
+        mPosterSimpleDraweeView.setImageURI(posterUrl);
 
-        String backdropWidth = ApiUtil.getDefaultPosterSize(UIUtil.getDisplayMetrics(mPosterImageView.getContext()).widthPixels);
+        String backdropWidth = ApiUtil.getDefaultPosterSize(UIUtil.getDisplayMetrics(mPosterSimpleDraweeView.getContext()).widthPixels);
         String backdropUrl = ApiUtil.buildPosterImageUrl(movieModel.getBackdropPath(), backdropWidth);
-        Picasso.with(getActivity())
-                .load(backdropUrl)
-                .into(mBackdropImageView);
+        mBackdropSimpleDraweeView.setImageURI(backdropUrl);
 
 
         mTitleTextView.setText(movieModel.getTitle());
@@ -241,11 +234,11 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showAllReviews(List<MovieReviewModel> movieReviewList, boolean hasMore) {
-        /*MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
-        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");*/
+        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
+        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
 
-        MovieTrailerListDialog movieTrailerListDialog = MovieTrailerListDialog.getInstance(new ArrayList<>());
-        movieTrailerListDialog.show(getChildFragmentManager(), "BLAH2");
+        /*MovieTrailerListDialog movieTrailerListDialog = MovieTrailerListDialog.getInstance(new ArrayList<>());
+        movieTrailerListDialog.show(getChildFragmentManager(), "BLAH2");*/
     }
 
     @Override

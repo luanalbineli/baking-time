@@ -20,6 +20,7 @@
     <TextView
         android:id="@+id/tvMovieReviewAuthor"
         android:layout_width="0dp"
+        android:textStyle="bold"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         app:layout_constraintBottom_toTopOf="@+id/imageButton"

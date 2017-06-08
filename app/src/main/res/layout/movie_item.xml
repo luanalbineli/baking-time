@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp">
 
-    <ImageView
-        android:id="@+id/iv_movie_item_poster"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdvMovieItemPoster"
+        fresco:actualImageScaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        fresco:viewAspectRatio="0.6666667"
+        android:scaleType="centerCrop" />
 </RelativeLayout>

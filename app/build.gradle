@@ -56,8 +56,8 @@ dependencies {
     // Material Dialogs
     compile 'com.afollestad.material-dialogs:core:0.9.4.1'
 
-    // Picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    // Fresco (power image viewer)
+    compile "com.facebook.fresco:fresco:$rootProject.fresco_version"
 
     // Dagger
     compile "com.google.dagger:dagger:$rootProject.dagger_version"
