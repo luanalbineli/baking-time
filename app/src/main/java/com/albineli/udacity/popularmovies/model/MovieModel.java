@@ -220,7 +220,7 @@ public class MovieModel implements Parcelable {
 
         contentValues.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, overview);
 
-        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, id);
+        contentValues.put(MovieContract.MovieEntry.COLUMN_TITLE, title);
 
         contentValues.put(MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
 

@@ -11,7 +11,7 @@ import com.albineli.udacity.popularmovies.PopularMovieApplication;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
-import com.albineli.udacity.popularmovies.model.TrailerModel;
+import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.RepositoryBase;
 import com.albineli.udacity.popularmovies.repository.data.MovieContract;
@@ -72,12 +72,12 @@ public class MovieRepository extends RepositoryBase {
         return observeOnMainThread(getMovieServiceInstance().getReviewsByMovieId(movieId, pageIndex));
     }
 
-    public Observable<List<TrailerModel>> getTrailersByMovieId(int movieId) {
+    public Observable<List<MovieTrailerModel>> getTrailersByMovieId(int movieId) {
         return observeOnMainThread(getMovieServiceInstance().getTrailersByMovieId(movieId).map(listArrayRequestAPI -> listArrayRequestAPI.results));
     }
 
-    public Observable<List<MovieModel>> getFavoriteList() {
-        return observeOnMainThread(Observable.create((ObservableOnSubscribe<List<MovieModel>>) emitter -> {
+    public Observable<ArrayRequestAPI<MovieModel>> getFavoriteList() {
+        return observeOnMainThread(Observable.create((ObservableOnSubscribe<ArrayRequestAPI<MovieModel>>) emitter -> {
             final ContentResolver contentResolver = mApplicationContext.getContentResolver();
             if (contentResolver == null) {
                 emitter.onError(new RuntimeException("Cannot get the ContentResolver"));
@@ -96,7 +96,13 @@ public class MovieRepository extends RepositoryBase {
                     favoriteMovieModelList.add(MovieModel.fromCursor(cursor));
                 }
 
-                emitter.onNext(favoriteMovieModelList);
+                ArrayRequestAPI<MovieModel> arrayRequestAPI = new ArrayRequestAPI<>();
+                arrayRequestAPI.results = favoriteMovieModelList;
+                arrayRequestAPI.totalPages = 1;
+                arrayRequestAPI.page = 1;
+
+
+                emitter.onNext(arrayRequestAPI);
             } catch (Exception ex) {
                 emitter.onError(ex);
             } finally {

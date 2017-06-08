@@ -3,7 +3,7 @@ package com.albineli.udacity.popularmovies.repository.movie;
 
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
-import com.albineli.udacity.popularmovies.model.TrailerModel;
+import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 
 import io.reactivex.Observable;
@@ -22,5 +22,5 @@ public interface IMovieService {
     Observable<ArrayRequestAPI<MovieReviewModel>> getReviewsByMovieId(@Path("movieId") int movieId, @Query("page") Integer pageNumber);
 
     @GET("movie/{movieId}/reviews")
-    Observable<ArrayRequestAPI<TrailerModel>> getTrailersByMovieId(@Path("movieId") int movieId);
+    Observable<ArrayRequestAPI<MovieTrailerModel>> getTrailersByMovieId(@Path("movieId") int movieId);
 }

@@ -33,8 +33,6 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     @Inject
     MovieListPresenter(@NonNull MovieRepository movieRepository) {
         super(movieRepository);
-
-        mFilter = movieRepository.getMovieListSort(MovieListFilterDescriptor.POPULAR);
     }
 
     @Override
@@ -74,8 +72,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         } else if (filter == MovieListFilterDescriptor.RATING) {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
         } else { // TODO: FIX
-            observable = mMovieRepository.getTopRatedList(mPageIndex);
-            //observable = mMovieRepository.getFavoriteList();
+            observable = mMovieRepository.getFavoriteList();
         }
 
         mSubscription = observable.subscribe(
@@ -132,9 +129,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             mSubscription.dispose();
         }
 
-        // Set the new order and save it.
         mFilter = movieListFilter;
-        mMovieRepository.saveMovieListSort(mFilter);
         // Reload the movie list.
         loadMovieList(true);
     }

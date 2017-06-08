@@ -2,6 +2,7 @@ package com.albineli.udacity.popularmovies.moviedetail.review;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,6 +17,7 @@ import com.albineli.udacity.popularmovies.PopularMovieApplication;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.util.UIUtil;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class MovieReviewListDialog extends DialogFragment implements MovieReview
     private static final String MOVIE_ID_BUNDLE_KEY = "movie_id";
     private ArrayList<MovieReviewModel> mReviewList;
 
-    @BindView(R.id.rvMovieReviewsDialog)
+    @BindView(R.id.rvFullscreenFragmentDialog)
     RecyclerView mReviewRecyclerView;
 
     @BindView(R.id.toolbarMovieReviewDialog)
@@ -95,7 +97,7 @@ public class MovieReviewListDialog extends DialogFragment implements MovieReview
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.movie_review_list_dialog, container);
+        View rootView = inflater.inflate(R.layout.fullscreen_fragment_dialog_with_list, container);
 
         ButterKnife.bind(this, rootView);
 
@@ -109,7 +111,9 @@ public class MovieReviewListDialog extends DialogFragment implements MovieReview
         mReviewRecyclerView.setLayoutManager(mLinearLayoutManager);
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
 
-        mDialogToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.arrow_left));
+        Drawable drawable = getResources().getDrawable(R.drawable.arrow_left);
+        UIUtil.paintDrawable(drawable, getResources().getColor(android.R.color.white));
+        mDialogToolbar.setNavigationIcon(drawable);
         mDialogToolbar.setNavigationOnClickListener(v -> dismiss());
 
         return rootView;

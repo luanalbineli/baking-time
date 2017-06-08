@@ -22,6 +22,7 @@ import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
+import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerListDialog;
 import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
@@ -30,6 +31,7 @@ import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -239,8 +241,11 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showAllReviews(List<MovieReviewModel> movieReviewList, boolean hasMore) {
-        MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
-        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
+        /*MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
+        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");*/
+
+        MovieTrailerListDialog movieTrailerListDialog = MovieTrailerListDialog.getInstance(new ArrayList<>());
+        movieTrailerListDialog.show(getChildFragmentManager(), "BLAH2");
     }
 
     @Override
