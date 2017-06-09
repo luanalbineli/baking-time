@@ -49,6 +49,10 @@ public class MovieTrailerModel implements Parcelable {
         return key;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -60,5 +64,10 @@ public class MovieTrailerModel implements Parcelable {
         dest.writeInt(size);
         dest.writeString(key);
         dest.writeString(name);
+    }
+
+    @Override
+    public String toString() {
+        return "(site = " + site + ", size = " + size + ", key = " + key + ", name = " + name + ")";
     }
 }

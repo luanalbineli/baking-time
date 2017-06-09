@@ -11,6 +11,5 @@
         fresco:actualImageScaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fresco:viewAspectRatio="0.6666667"
-        android:scaleType="centerCrop" />
+        fresco:viewAspectRatio="0.666666666666666666667" />
 </RelativeLayout>

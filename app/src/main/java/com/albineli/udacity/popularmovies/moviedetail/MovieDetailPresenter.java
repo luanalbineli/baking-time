@@ -6,8 +6,11 @@ import android.support.annotation.NonNull;
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
 import com.albineli.udacity.popularmovies.repository.ArrayRequestAPI;
 import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -16,6 +19,7 @@ import timber.log.Timber;
 public class MovieDetailPresenter extends BasePresenterImpl implements MovieDetailContract.Presenter {
     private MovieDetailContract.View mView;
     private ArrayRequestAPI<MovieReviewModel> mMovieReviewRequest;
+    private List<MovieTrailerModel> mMovieTrailerList;
 
     @Inject
     MovieDetailPresenter(@NonNull MovieRepository movieRepository) {
@@ -28,6 +32,7 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
 
         mMovieRepository.getMovieDetailById(movieModel.getId()).subscribe(movieModel1 -> mView.setFavoriteButtonState(true));
 
+        // Reviews.
         mView.showLoadingReviewsIndicator();
         mMovieRepository.getReviewsByMovieId(1, movieModel.getId()).subscribe(
                 this::handleMovieReviewRequestSuccess,
@@ -35,6 +40,32 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
                     Timber.e(throwable, "An error occurred while tried to get the movie reviews");
                     mView.showErrorMessageLoadReviews();
                 });
+
+        // Trailers
+        mView.showLoadingTrailersIndicator();
+        mMovieRepository.getTrailersByMovieId(movieModel.getId()).subscribe(
+                this::handleMovieTrailerRequestSuccess,
+                throwable -> {
+                    Timber.e(throwable, "An error occurred while tried to get the movie trailers");
+                    mView.showErrorMessageLoadTrailers();
+                });
+    }
+
+    private void handleMovieTrailerRequestSuccess(List<MovieTrailerModel> movieTrailerModels) {
+        if (movieTrailerModels.size() == 0) {
+            mView.showEmptyTrailerListMessage();
+            mView.setShowAllTrailersButtonVisibility(false);
+            return;
+        }
+
+        mMovieTrailerList = movieTrailerModels;
+        if (mMovieTrailerList.size() > 2) {
+            mView.showMovieTrailer(mMovieTrailerList.subList(0, 2));
+            mView.setShowAllTrailersButtonVisibility(true);
+        } else {
+            mView.showMovieTrailer(mMovieTrailerList);
+            mView.setShowAllTrailersButtonVisibility(false);
+        }
     }
 
     private void handleMovieReviewRequestSuccess(ArrayRequestAPI<MovieReviewModel> movieReviewModelArrayRequestAPI) {
@@ -83,5 +114,10 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
     @Override
     public void showAllReviews() {
         mView.showAllReviews(mMovieReviewRequest.results, mMovieReviewRequest.hasMorePages());
+    }
+
+    @Override
+    public void showAllTrailers() {
+        mView.showAllTrailers(mMovieTrailerList);
     }
 }

@@ -14,6 +14,7 @@ import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
+import com.albineli.udacity.popularmovies.util.YouTubeUtil;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTr
         View fullscreenDialogWithListView = super.onCreateView(inflater, container, savedInstanceState);
 
         mMovieReviewAdapter = new MovieTrailerAdapter();
+        mMovieReviewAdapter.setOnItemClickListener((position, item) -> YouTubeUtil.openYouTubeVideo(getActivity(), item.getKey()));
 
         mLinearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 

@@ -21,6 +21,6 @@ public interface IMovieService {
     @GET("movie/{movieId}/reviews")
     Observable<ArrayRequestAPI<MovieReviewModel>> getReviewsByMovieId(@Path("movieId") int movieId, @Query("page") Integer pageNumber);
 
-    @GET("movie/{movieId}/reviews")
+    @GET("movie/{movieId}/videos")
     Observable<ArrayRequestAPI<MovieTrailerModel>> getTrailersByMovieId(@Path("movieId") int movieId);
 }

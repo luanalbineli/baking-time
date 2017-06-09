@@ -1,5 +1,7 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -19,11 +21,16 @@ import com.albineli.udacity.popularmovies.injector.components.ApplicationCompone
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDialog;
+import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerAdapter;
+import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerListDialog;
 import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
+import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
+import com.albineli.udacity.popularmovies.util.YouTubeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
@@ -37,7 +44,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
-import timber.log.Timber;
 
 
 public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> implements MovieDetailContract.View {
@@ -94,10 +100,17 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     @BindView(R.id.rvMovieDetailReviews)
     RecyclerView mReviewRecyclerView;
 
-    @BindView(R.id.btMovieDetailShowAllReviews)
-    TextView mShowAllReviewsButton;
+    @BindView(R.id.tvMovieDetailShowAllReviews)
+    TextView mShowAllReviewsTextView;
+
+    @BindView(R.id.rvMovieDetailTrailers)
+    RecyclerView mTrailerRecyclerView;
+
+    @BindView(R.id.tvMovieDetailShowAllTrailers)
+    TextView mShowAllTrailersTextView;
 
     private MovieReviewAdapter mMovieReviewAdapter;
+    private MovieTrailerAdapter mMovieTrailerAdapter;
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
@@ -130,27 +143,38 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        configureReviewRecyclerView();
+        configureRecyclerViews();
 
         mPresenter.start(mMovieModel);
     }
 
-    private void configureReviewRecyclerView() {
+    private void configureRecyclerViews() {
+        setUpDefaultRecyclerViewConfiguration(mReviewRecyclerView);
         mMovieReviewAdapter = new MovieReviewAdapter();
-
-        // LayoutManager.
-        NonScrollableLLM linearLayoutManager = new NonScrollableLLM(mReviewRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
-        mReviewRecyclerView.setLayoutManager(linearLayoutManager);
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mReviewRecyclerView.getContext(), linearLayoutManager.getOrientation());
-        mReviewRecyclerView.addItemDecoration(dividerItemDecoration);
-
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
+
+        setUpDefaultRecyclerViewConfiguration(mTrailerRecyclerView);
+        mMovieTrailerAdapter = new MovieTrailerAdapter();
+        mTrailerRecyclerView.setAdapter(mMovieTrailerAdapter);
+        mMovieTrailerAdapter.setOnItemClickListener((position, item) -> YouTubeUtil.openYouTubeVideo(getActivity(), item.getKey()));
     }
 
-    @OnClick(R.id.btMovieDetailShowAllReviews)
+    private void setUpDefaultRecyclerViewConfiguration(RecyclerView recyclerView) {
+        NonScrollableLLM linearLayoutManager = new NonScrollableLLM(recyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    @OnClick(R.id.tvMovieDetailShowAllReviews)
     void onShowAllReviewsButtonClick() {
         mPresenter.showAllReviews();
+    }
+
+    @OnClick(R.id.tvMovieDetailShowAllTrailers)
+    void onShowAllTrailersButtonClick() {
+        mPresenter.showAllTrailers();
     }
 
     @Override
@@ -167,7 +191,7 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
         mTitleTextView.setText(movieModel.getTitle());
         mSynopsisTextView.setText(movieModel.getOverview());
 
-        float rating = (float) movieModel.getVoteAverage() / 2f;
+        float rating = (float) movieModel.getVoteAverage() / 2f; // The range of vote average is 0..10, and of the rating is 0..5
         mRatingBar.setRating(rating);
 
         mRatingTextView.setText(String.valueOf(movieModel.getVoteAverage()));
@@ -187,9 +211,14 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showMovieReview(List<MovieReviewModel> movieReviewModelList) {
-        Timber.i("Review list size: " + movieReviewModelList.size());
         mMovieReviewAdapter.addItems(movieReviewModelList);
         mMovieReviewAdapter.hideRequestStatus();
+    }
+
+    @Override
+    public void showMovieTrailer(List<MovieTrailerModel> movieTrailerList) {
+        mMovieTrailerAdapter.addItems(movieTrailerList);
+        mMovieTrailerAdapter.hideRequestStatus();
     }
 
     @Override
@@ -223,8 +252,18 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     }
 
     @Override
+    public void showErrorMessageLoadTrailers() {
+        mMovieTrailerAdapter.showErrorMessage();
+    }
+
+    @Override
     public void setShowAllReviewsButtonVisibility(boolean visible) {
-        //mShowAllReviewsButton.setVisibility(visible ? View.VISIBLE : View.GONE);
+        mShowAllReviewsTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setShowAllTrailersButtonVisibility(boolean visible) {
+        mShowAllTrailersTextView.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -233,17 +272,30 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
     }
 
     @Override
+    public void showLoadingTrailersIndicator() {
+        mMovieTrailerAdapter.showLoading();
+    }
+
+    @Override
     public void showAllReviews(List<MovieReviewModel> movieReviewList, boolean hasMore) {
         MovieReviewListDialog movieReviewListDialog = MovieReviewListDialog.getInstance(movieReviewList, mMovieModel.getId(), hasMore);
-        movieReviewListDialog.show(getChildFragmentManager(), "BLAH");
+        movieReviewListDialog.show(getChildFragmentManager(), "movie_review_dialog");
+    }
 
-        /*MovieTrailerListDialog movieTrailerListDialog = MovieTrailerListDialog.getInstance(new ArrayList<>());
-        movieTrailerListDialog.show(getChildFragmentManager(), "BLAH2");*/
+    @Override
+    public void showAllTrailers(List<MovieTrailerModel> movieTrailerList) {
+        MovieTrailerListDialog movieTrailerListDialog = MovieTrailerListDialog.getInstance(movieTrailerList);
+        movieTrailerListDialog.show(getChildFragmentManager(), "movie_trailer_dialog");
     }
 
     @Override
     public void showEmptyReviewListMessage() {
         mMovieReviewAdapter.showEmptyMessage(R.string.there_is_no_reviews_to_show);
+    }
+
+    @Override
+    public void showEmptyTrailerListMessage() {
+        mMovieTrailerAdapter.showEmptyMessage(R.string.there_is_no_trailers_to_show);
     }
 
     private void showToastMessage(@StringRes int messageResId) {

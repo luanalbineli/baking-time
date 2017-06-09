@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,23 +12,24 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/clMovieDetailContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/ivMovieDetailBackdrop"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="24dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/movie_detail_backdrop_content_description"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/lbMovieDetailFavorite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/backdrop_default" />
+            app:srcCompat="@drawable/backdrop_default"
+            fresco:actualImageScaleType="centerCrop" />
 
         <include
             android:id="@+id/lbMovieDetailFavorite"
@@ -38,26 +40,12 @@
             app:layout_constraintRight_toLeftOf="@+id/guidelineMovieDetailRight"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <com.like.LikeButton
-                    android:elevation="8dp"
-                    android:id="@+id/lbMovieDetailFavorite"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="140dp"
-                    android:background="@drawable/background_favorite"
-                    app:icon_size="25dp"
-                    app:icon_type="heart"
-                    app:layout_constraintRight_toLeftOf="@+id/guidelineMovieDetailRight"
-                    app:layout_constraintTop_toTopOf="parent" />-->
-
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/sdvMovieDetailPoster"
             android:layout_width="96dp"
-            android:layout_height="wrap_content"
+            android:layout_height="144dp"
             android:layout_marginTop="130dp"
-            android:adjustViewBounds="true"
             android:contentDescription="@string/movie_detail_poster_content_description"
-            android:minHeight="120dp"
             app:layout_constraintLeft_toLeftOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/poster" />
@@ -131,9 +119,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textStyle="bold"
             android:text="@string/reviews"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toBottomOf="@+id/tvMovieDetailSynopsis" />
 
@@ -147,7 +135,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
-            android:id="@+id/btMovieDetailShowAllReviews"
+            android:id="@+id/tvMovieDetailShowAllReviews"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -155,9 +143,38 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="@+id/rvMovieDetailReviews"
-            app:layout_constraintTop_toBottomOf="@+id/rvMovieDetailReviews"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp" />
+            app:layout_constraintTop_toBottomOf="@+id/rvMovieDetailReviews" />
+
+        <TextView
+            android:id="@+id/textView_trailers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/trailers"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/guidelineMovieDetailLeft"
+            app:layout_constraintTop_toBottomOf="@+id/tvMovieDetailShowAllReviews" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvMovieDetailTrailers"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineMovieDetailRight"
+            app:layout_constraintStart_toStartOf="@+id/textView_trailers"
+            app:layout_constraintTop_toBottomOf="@+id/textView_trailers" />
+
+        <TextView
+            android:id="@+id/tvMovieDetailShowAllTrailers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/show_all_trailers"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintStart_toStartOf="@+id/rvMovieDetailTrailers"
+            app:layout_constraintTop_toBottomOf="@+id/rvMovieDetailTrailers" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
