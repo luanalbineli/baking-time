@@ -37,6 +37,7 @@ public class MovieTrailerListDialog extends BaseFullscreenDialogWithList<MovieTr
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View fullscreenDialogWithListView = super.onCreateView(inflater, container, savedInstanceState);
 
+        // The trailers endpoint is not paginated, so I don't need to implement the "Try again" constructor.
         mMovieReviewAdapter = new MovieTrailerAdapter();
         mMovieReviewAdapter.setOnItemClickListener((position, item) -> YouTubeUtil.openYouTubeVideo(getActivity(), item.getKey()));
 

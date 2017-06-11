@@ -1,7 +1,5 @@
 package com.albineli.udacity.popularmovies.moviedetail;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
 import com.albineli.udacity.popularmovies.base.BasePresenter;
+import com.albineli.udacity.popularmovies.event.FavoriteMovieEvent;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
@@ -27,13 +26,14 @@ import com.albineli.udacity.popularmovies.moviedetail.review.MovieReviewListDial
 import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerAdapter;
 import com.albineli.udacity.popularmovies.moviedetail.trailer.MovieTrailerListDialog;
 import com.albineli.udacity.popularmovies.ui.NonScrollableLLM;
-import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
 import com.albineli.udacity.popularmovies.util.YouTubeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -150,11 +150,11 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     private void configureRecyclerViews() {
         setUpDefaultRecyclerViewConfiguration(mReviewRecyclerView);
-        mMovieReviewAdapter = new MovieReviewAdapter();
+        mMovieReviewAdapter = new MovieReviewAdapter(R.string.there_is_no_reviews_to_show, mPresenter::tryToLoadReviewAgain);
         mReviewRecyclerView.setAdapter(mMovieReviewAdapter);
 
         setUpDefaultRecyclerViewConfiguration(mTrailerRecyclerView);
-        mMovieTrailerAdapter = new MovieTrailerAdapter();
+        mMovieTrailerAdapter = new MovieTrailerAdapter(R.string.there_is_no_trailers_to_show, mPresenter::tryToLoadTrailersAgain);
         mTrailerRecyclerView.setAdapter(mMovieTrailerAdapter);
         mMovieTrailerAdapter.setOnItemClickListener((position, item) -> YouTubeUtil.openYouTubeVideo(getActivity(), item.getKey()));
     }
@@ -200,12 +200,16 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
             @Override
             public void liked(LikeButton likeButton) {
                 mPresenter.saveFavoriteMovie(movieModel);
+                EventBus.getDefault().post(new FavoriteMovieEvent(movieModel, true));
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
                 mPresenter.removeFavoriteMovie(movieModel);
+                EventBus.getDefault().post(new FavoriteMovieEvent(movieModel, false));
             }
+
+
         });
     }
 
@@ -290,12 +294,12 @@ public class MovieDetailFragment extends BaseFragment<MovieDetailContract.View> 
 
     @Override
     public void showEmptyReviewListMessage() {
-        mMovieReviewAdapter.showEmptyMessage(R.string.there_is_no_reviews_to_show);
+        mMovieReviewAdapter.showEmptyMessage();
     }
 
     @Override
     public void showEmptyTrailerListMessage() {
-        mMovieTrailerAdapter.showEmptyMessage(R.string.there_is_no_trailers_to_show);
+        mMovieTrailerAdapter.showEmptyMessage();
     }
 
     private void showToastMessage(@StringRes int messageResId) {

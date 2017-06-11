@@ -20,6 +20,7 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
     private MovieDetailContract.View mView;
     private ArrayRequestAPI<MovieReviewModel> mMovieReviewRequest;
     private List<MovieTrailerModel> mMovieTrailerList;
+    private int mMovieId;
 
     @Inject
     MovieDetailPresenter(@NonNull MovieRepository movieRepository) {
@@ -30,24 +31,33 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
     public void start(MovieModel movieModel) {
         mView.showMovieDetail(movieModel);
 
+        // If it is in the database, means that is favorite.
         mMovieRepository.getMovieDetailById(movieModel.getId()).subscribe(movieModel1 -> mView.setFavoriteButtonState(true));
 
-        // Reviews.
-        mView.showLoadingReviewsIndicator();
-        mMovieRepository.getReviewsByMovieId(1, movieModel.getId()).subscribe(
-                this::handleMovieReviewRequestSuccess,
-                throwable -> {
-                    Timber.e(throwable, "An error occurred while tried to get the movie reviews");
-                    mView.showErrorMessageLoadReviews();
-                });
+        loadMovieReviews(movieModel.getId());
 
-        // Trailers
+        loadMovieTrailers(movieModel.getId());
+
+        mMovieId = movieModel.getId();
+    }
+
+    private void loadMovieTrailers(int movieId) {
         mView.showLoadingTrailersIndicator();
-        mMovieRepository.getTrailersByMovieId(movieModel.getId()).subscribe(
+        mMovieRepository.getTrailersByMovieId(movieId).subscribe(
                 this::handleMovieTrailerRequestSuccess,
                 throwable -> {
                     Timber.e(throwable, "An error occurred while tried to get the movie trailers");
                     mView.showErrorMessageLoadTrailers();
+                });
+    }
+
+    private void loadMovieReviews(int movieId) {
+        mView.showLoadingReviewsIndicator();
+        mMovieRepository.getReviewsByMovieId(1, movieId).subscribe(
+                this::handleMovieReviewRequestSuccess,
+                throwable -> {
+                    Timber.e(throwable, "An error occurred while tried to get the movie reviews");
+                    mView.showErrorMessageLoadReviews();
                 });
     }
 
@@ -119,5 +129,15 @@ public class MovieDetailPresenter extends BasePresenterImpl implements MovieDeta
     @Override
     public void showAllTrailers() {
         mView.showAllTrailers(mMovieTrailerList);
+    }
+
+    @Override
+    public void tryToLoadTrailersAgain() {
+        loadMovieTrailers(mMovieId);
+    }
+
+    @Override
+    public void tryToLoadReviewAgain() {
+        loadMovieReviews(mMovieId);
     }
 }

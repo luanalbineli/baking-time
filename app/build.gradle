@@ -79,7 +79,11 @@ dependencies {
     compile "android.arch.persistence.room:runtime:$rootProject.room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$rootProject.room_version"
 
-    compile 'com.borjabravo:readmoretextview:2.0.1'
+    // ReadMore TextView
+    compile "com.borjabravo:readmoretextview:$rootProject.readmoreTextview_version"
+
+    // EventBus
+    compile "org.greenrobot:eventbus:$rootProject.eventBus_version"
 
     // LeakCanary
     debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"

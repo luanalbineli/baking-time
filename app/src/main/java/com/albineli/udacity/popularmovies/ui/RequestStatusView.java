@@ -19,7 +19,6 @@ import com.albineli.udacity.popularmovies.enums.RequestStatusDescriptor;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -40,6 +39,8 @@ public class RequestStatusView extends FrameLayout {
 
     private @RequestStatusDescriptor.RequestStatus
     int mRequestStatus;
+
+    private ITryAgainClickListener mTryAgainClickListener;
 
     public RequestStatusView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -80,12 +81,22 @@ public class RequestStatusView extends FrameLayout {
         mErrorContainerView.setVisibility(errorVisible ? View.VISIBLE : View.INVISIBLE);
         mEmptyMessageTextView.setVisibility(emptyMessageVisible ? View.VISIBLE : View.INVISIBLE);
 
+        mTryAgainButton.setOnClickListener(view -> {
+            if (mTryAgainClickListener != null) {
+                mTryAgainClickListener.tryAgain();
+            }
+        });
+
         ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
         layoutParams.height = viewHeight;
         this.setLayoutParams(layoutParams);
     }
 
-    interface onTryAgainListener {
+    public void setTryAgainClickListener(ITryAgainClickListener tryAgainClickListener) {
+        mTryAgainClickListener = tryAgainClickListener;
+    }
+
+    public interface ITryAgainClickListener {
         void tryAgain();
     }
 }

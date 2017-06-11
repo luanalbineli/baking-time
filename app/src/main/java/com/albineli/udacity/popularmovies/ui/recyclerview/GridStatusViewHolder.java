@@ -13,26 +13,21 @@ import timber.log.Timber;
 
 
 public class GridStatusViewHolder extends CustomRecyclerViewHolder {
-    private ITryAgainClick mTryAgainClick;
 
     @BindView(R.id.rsvRequestStatus)
     RequestStatusView mRequestStatusView;
 
-    public GridStatusViewHolder(View itemView, ITryAgainClick tryAgainClick) {
+    GridStatusViewHolder(View itemView, RequestStatusView.ITryAgainClickListener tryAgainClick, @StringRes int emptyMessageResId) {
         super(itemView);
 
-        mTryAgainClick = tryAgainClick;
-
         ButterKnife.bind(this, itemView);
+
+        mRequestStatusView.setEmptyMessage(emptyMessageResId);
+        mRequestStatusView.setTryAgainClickListener(tryAgainClick);
     }
 
-    public void bind(@RequestStatusDescriptor.RequestStatus int requestStatus, int numberOfItems, @StringRes int emptyMessageResId) {
-        mRequestStatusView.setEmptyMessage(emptyMessageResId);
+    public void bind(@RequestStatusDescriptor.RequestStatus int requestStatus, int numberOfItems) {
         mRequestStatusView.setRequestStatus(requestStatus, numberOfItems == 0);
         Timber.i("REDRAWING GRID STATUS: " + requestStatus);
-    }
-
-    public interface ITryAgainClick {
-        void tryAgain();
     }
 }

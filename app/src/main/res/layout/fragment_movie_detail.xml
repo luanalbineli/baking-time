@@ -29,7 +29,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/backdrop_default"
-            fresco:actualImageScaleType="centerCrop" />
+            fresco:actualImageScaleType="centerCrop"
+            fresco:placeholderImage="@android:color/darker_gray" />
 
         <include
             android:id="@+id/lbMovieDetailFavorite"
@@ -48,7 +49,8 @@
             android:contentDescription="@string/movie_detail_poster_content_description"
             app:layout_constraintLeft_toLeftOf="@+id/guidelineMovieDetailLeft"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/poster" />
+            app:srcCompat="@drawable/poster"
+            fresco:placeholderImage="@android:color/darker_gray" />
 
         <TextView
             android:id="@+id/tvMovieDetailTitle"

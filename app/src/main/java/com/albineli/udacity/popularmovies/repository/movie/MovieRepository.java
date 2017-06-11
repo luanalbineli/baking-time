@@ -2,13 +2,10 @@ package com.albineli.udacity.popularmovies.repository.movie;
 
 
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 
 import com.albineli.udacity.popularmovies.PopularMovieApplication;
-import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
 import com.albineli.udacity.popularmovies.model.MovieTrailerModel;
@@ -30,18 +27,18 @@ import retrofit2.Retrofit;
 
 public class MovieRepository extends RepositoryBase {
     private static IMovieService mMovieService;
-    private static String MOVIE_LIST_FILTER_KEY = "movie_list_filter";
-    private static final String SP_KEY = "sp_popular_movies";
+    /*private static String MOVIE_LIST_FILTER_KEY = "movie_list_filter";
+    private static final String SP_KEY = "sp_popular_movies";*/
 
     private final Retrofit mRetrofit;
-    private final SharedPreferences mSharedPreferences;
+    //private final SharedPreferences mSharedPreferences;
     private final PopularMovieApplication mApplicationContext;
 
     @Inject
     MovieRepository(Retrofit retrofit, PopularMovieApplication applicationContext) {
         mRetrofit = retrofit;
         mApplicationContext = applicationContext;
-        mSharedPreferences = applicationContext.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
+        //mSharedPreferences = applicationContext.getSharedPreferences(SP_KEY, Context.MODE_PRIVATE);
     }
 
     private IMovieService getMovieServiceInstance() {
@@ -50,7 +47,7 @@ public class MovieRepository extends RepositoryBase {
         }
         return mMovieService;
     }
-
+/*
     public void saveMovieListSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         mSharedPreferences.edit().putInt(MOVIE_LIST_FILTER_KEY, movieListFilter).apply();
     }
@@ -58,7 +55,7 @@ public class MovieRepository extends RepositoryBase {
     public @MovieListFilterDescriptor.MovieListFilter int getMovieListSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         int intSortList = mSharedPreferences.getInt(MOVIE_LIST_FILTER_KEY, movieListFilter);
         return MovieListFilterDescriptor.parseFromInt(intSortList);
-    }
+    }*/
 
     public Observable<ArrayRequestAPI<MovieModel>> getTopRatedList(final int pageIndex) {
         return observeOnMainThread(getMovieServiceInstance().getTopRatedList(pageIndex));

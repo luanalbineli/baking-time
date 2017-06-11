@@ -22,7 +22,7 @@ public class MovieReviewListDialogPresenter implements MovieReviewListDialogCont
     private int mMovieId;
 
     @Inject
-    public MovieReviewListDialogPresenter(MovieRepository movieRepository) {
+    MovieReviewListDialogPresenter(MovieRepository movieRepository) {
         mMovieRepository = movieRepository;
     }
 
@@ -64,11 +64,18 @@ public class MovieReviewListDialogPresenter implements MovieReviewListDialogCont
         if (!response.hasMorePages()) {
             mView.disableLoadMoreListener();
         }
+        mSubscription = null;
     }
 
     private void handleErrorLoadMovieReview(Throwable throwable) {
         Timber.e(throwable, "An error occurred while tried to get the movie reviews for page: " + mPageIndex);
         mPageIndex--;
         mView.showErrorLoadingReviews();
+        mSubscription = null;
+    }
+
+    @Override
+    public void tryLoadReviewsAgain() {
+        onListEndReached();
     }
 }

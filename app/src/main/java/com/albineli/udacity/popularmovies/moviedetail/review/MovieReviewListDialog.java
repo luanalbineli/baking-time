@@ -65,7 +65,9 @@ public class MovieReviewListDialog extends BaseFullscreenDialogWithList<MovieRev
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View fullScrennDialogView = super.onCreateView(inflater, container, savedInstanceState);
 
-        mMovieReviewAdapter = new MovieReviewAdapter();
+        mMovieReviewAdapter = new MovieReviewAdapter(() -> {
+            mPresenter.tryLoadReviewsAgain();
+        });
 
         mLinearLayoutManager = new LinearLayoutManager(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
 

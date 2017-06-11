@@ -6,9 +6,18 @@ import android.view.ViewGroup;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.model.MovieReviewModel;
+import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 
 public class MovieReviewAdapter extends CustomRecyclerViewAdapter<MovieReviewModel, MovieDetailReviewViewHolder> {
+    public MovieReviewAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+        super(emptyMessageResId, tryAgainClickListener);
+    }
+
+    public MovieReviewAdapter(RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+        super(tryAgainClickListener);
+    }
+
     @Override
     protected MovieDetailReviewViewHolder onCreateItemViewHolder(ViewGroup parent) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_review_item, parent, false);

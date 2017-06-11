@@ -61,5 +61,9 @@ public abstract class MovieDetailContract {
         void showAllReviews();
 
         void showAllTrailers();
+
+        void tryToLoadTrailersAgain();
+
+        void tryToLoadReviewAgain();
     }
 }

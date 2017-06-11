@@ -13,7 +13,6 @@ import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
 import com.albineli.udacity.popularmovies.movielist.MovieListFragment;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

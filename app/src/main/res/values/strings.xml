@@ -33,4 +33,5 @@
     <string name="there_is_no_trailers_to_show">There is no trailers to show</string>
     <string name="press_the_button_to_watch_the_trailer">Press the button to watch the trailer</string>
     <string name="youtube">YouTube</string>
+    <string name="screen_size_trailer">%1$dp</string>
 </resources>

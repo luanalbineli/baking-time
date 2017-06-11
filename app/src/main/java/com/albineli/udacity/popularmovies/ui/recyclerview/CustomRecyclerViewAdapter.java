@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.enums.RequestStatusDescriptor;
+import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,24 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     private IListRecyclerViewItemClick<TItem> mOnItemClickListener;
     private @RequestStatusDescriptor.RequestStatus int mRequestStatus = RequestStatusDescriptor.HIDDEN;
 
-    private GridStatusViewHolder.ITryAgainClick mTryAgainClickListener;
+    private RequestStatusView.ITryAgainClickListener mTryAgainClickListener;
     private int mEmptyMessageResId = R.string.the_list_is_empty;
 
     protected CustomRecyclerViewAdapter() {
         this(new ArrayList<>());
+    }
+
+    protected CustomRecyclerViewAdapter(RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+        this();
+
+        mTryAgainClickListener = tryAgainClickListener;
+    }
+
+    protected CustomRecyclerViewAdapter(@StringRes int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+        this();
+
+        mEmptyMessageResId = emptyMessageResId;
+        mTryAgainClickListener = tryAgainClickListener;
     }
 
     private CustomRecyclerViewAdapter(@NonNull List<TItem> items) {
@@ -38,7 +52,7 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     public final CustomRecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ViewType.GRID_STATUS) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.grid_status, parent, false);
-            return new GridStatusViewHolder(itemView, mTryAgainClickListener);
+            return new GridStatusViewHolder(itemView, mTryAgainClickListener, mEmptyMessageResId);
         }
         return onCreateItemViewHolder(parent);
     }
@@ -47,7 +61,7 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
     public final void onBindViewHolder(final CustomRecyclerViewHolder holder, int position) {
         if (holder.getItemViewType() == ViewType.GRID_STATUS) {
             GridStatusViewHolder gridStatusViewHolder = (GridStatusViewHolder) holder;
-            gridStatusViewHolder.bind(mRequestStatus, mItems.size(), mEmptyMessageResId);
+            gridStatusViewHolder.bind(mRequestStatus, mItems.size());
             return;
         }
 
@@ -99,6 +113,16 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
         }
     }
 
+    public final void removeItemByIndex(int index) {
+        mItems.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    public final void insertItemByIndex(TItem item, int index) {
+        mItems.add(index, item);
+        notifyItemInserted(index);
+    }
+
     public final void showLoading() {
         redrawGridStatus(RequestStatusDescriptor.LOADING);
     }
@@ -107,8 +131,7 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
         redrawGridStatus(RequestStatusDescriptor.HIDDEN);
     }
 
-    public final void showEmptyMessage(@StringRes int emptyMessageResId) {
-        mEmptyMessageResId = emptyMessageResId;
+    public final void showEmptyMessage() {
         redrawGridStatus(RequestStatusDescriptor.EMPTY);
     }
 
@@ -130,10 +153,6 @@ public abstract class CustomRecyclerViewAdapter<TItem, THolder extends CustomRec
 
     public final void setOnItemClickListener(IListRecyclerViewItemClick<TItem> onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
-    }
-
-    public final void setOnTryAgainClickListener(GridStatusViewHolder.ITryAgainClick onTryAgainClickListener) {
-        this.mTryAgainClickListener = onTryAgainClickListener;
     }
 
     public interface IListRecyclerViewItemClick<TItemInternal> {

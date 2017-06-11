@@ -24,5 +24,7 @@ class MovieReviewListDialogContract {
         void start(List<MovieReviewModel> movieReviewList, int movieId, boolean hasMore);
 
         void onListEndReached();
+
+        void tryLoadReviewsAgain();
     }
 }

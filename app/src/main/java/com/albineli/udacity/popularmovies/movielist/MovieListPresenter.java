@@ -29,6 +29,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         The unitial page must be 1 (API implementation).
      */
     private int mPageIndex = 1;
+    private int mSelectedMovieIndex;
 
     @Inject
     MovieListPresenter(@NonNull MovieRepository movieRepository) {
@@ -71,7 +72,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             observable = mMovieRepository.getPopularList(mPageIndex);
         } else if (filter == MovieListFilterDescriptor.RATING) {
             observable = mMovieRepository.getTopRatedList(mPageIndex);
-        } else { // TODO: FIX
+        } else {
             observable = mMovieRepository.getFavoriteList();
         }
 
@@ -81,6 +82,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     private void handleSuccessLoadMovieList(ArrayRequestAPI<MovieModel> response, boolean startOver) {
+        Timber.i("handleSuccessLoadMovieList - CHANGED");
         if (mFilter == MovieListFilterDescriptor.FAVORITE) {
             mView.hideRequestStatus();
         } else {
@@ -111,6 +113,10 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
             mPageIndex--;
         }
 
+        if (mFilter == MovieListFilterDescriptor.FAVORITE) {
+            mView.clearMovieList();
+        }
+
         mView.showLoadingMovieListError();
     }
 
@@ -127,6 +133,7 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
 
         if (mSubscription != null && !mSubscription.isDisposed()) {
             mSubscription.dispose();
+            mSubscription = null;
         }
 
         mFilter = movieListFilter;
@@ -135,7 +142,8 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
     }
 
     @Override
-    public void openMovieDetail(MovieModel movieModel) {
+    public void openMovieDetail(int selectedMovieIndex, MovieModel movieModel) {
+        mSelectedMovieIndex = selectedMovieIndex;
         mView.showMovieDetail(movieModel);
     }
 
@@ -153,5 +161,22 @@ public class MovieListPresenter extends BasePresenterImpl implements MovieListCo
         mView.hideRequestStatus();
 
         loadMovieList(false);
+    }
+
+    @Override
+    public void favoriteMovie(MovieModel movie, boolean favorite) {
+        if (mFilter != MovieListFilterDescriptor.FAVORITE) { // Only if the user is at favorite list it needs an update.
+            return;
+        }
+
+        if (favorite) {
+            mView.addMovieToListByIndex(mSelectedMovieIndex, movie);
+        } else {
+            mView.removeMovieFromListByIndex(mSelectedMovieIndex);
+        }
+
+        if (mView.getMovieListCount() == 0) {
+            mView.showEmptyListMessage();
+        }
     }
 }

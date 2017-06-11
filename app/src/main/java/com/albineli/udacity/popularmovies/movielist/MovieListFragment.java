@@ -14,11 +14,16 @@ import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
 import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
+import com.albineli.udacity.popularmovies.event.FavoriteMovieEvent;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.MovieModel;
 import com.albineli.udacity.popularmovies.moviedetail.MovieDetailFragment;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -90,8 +95,8 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         ButterKnife.bind(this, rootView);
 
         // List.
-        mMovieListAdapter = new MovieListAdapter();
-        mMovieListAdapter.setOnItemClickListener((position, movieModel) -> mPresenter.openMovieDetail(movieModel));
+        mMovieListAdapter = new MovieListAdapter(R.string.the_list_is_empty, () -> mPresenter.tryAgain());
+        mMovieListAdapter.setOnItemClickListener((position, movieModel) -> mPresenter.openMovieDetail(position, movieModel));
 
         mGridLayoutManager = new GridLayoutManager(mMovieListRecyclerView.getContext(), getItensPerRow(mMovieListRecyclerView.getContext()));
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -118,10 +123,22 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
+        EventBus.getDefault().unregister(this);
         mPresenter.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    void onFavoriteMovieEvent(FavoriteMovieEvent favoriteMovieEvent) {
+        mPresenter.favoriteMovie(favoriteMovieEvent.movie, favoriteMovieEvent.favorite);
     }
 
     @Override
@@ -155,7 +172,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
 
     @Override
     public void showEmptyListMessage() {
-        mMovieListAdapter.showEmptyMessage(R.string.the_list_is_empty);
+        mMovieListAdapter.showEmptyMessage();
     }
 
     @Override
@@ -195,9 +212,22 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
         mMovieListRecyclerView.clearOnScrollListeners();
     }
 
-    public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
-        mGridLayoutManager.scrollToPositionWithOffset(0, 0);
+    @Override
+    public void removeMovieFromListByIndex(int index) {
+        mMovieListAdapter.removeItemByIndex(index);
+    }
 
+    @Override
+    public void addMovieToListByIndex(int index, MovieModel movieModel) {
+        mMovieListAdapter.insertItemByIndex(movieModel, index);
+    }
+
+    @Override
+    public int getMovieListCount() {
+        return mMovieListAdapter.getItemCount();
+    }
+
+    public void reloadListWithNewSort(@MovieListFilterDescriptor.MovieListFilter int movieListFilter) {
         mFilter = movieListFilter;
         mPresenter.setFilter(movieListFilter);
 

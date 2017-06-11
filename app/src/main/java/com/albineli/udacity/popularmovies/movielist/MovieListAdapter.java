@@ -7,12 +7,17 @@ import android.view.ViewGroup;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.model.MovieModel;
+import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 import com.albineli.udacity.popularmovies.util.ApiUtil;
 import com.albineli.udacity.popularmovies.util.UIUtil;
 
 class MovieListAdapter extends CustomRecyclerViewAdapter<MovieModel, MovieListViewHolder> {
     private String mPosterWidth;
+
+    protected MovieListAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+        super(emptyMessageResId, tryAgainClickListener);
+    }
 
     @Override
     protected MovieListViewHolder onCreateItemViewHolder(ViewGroup parent) {

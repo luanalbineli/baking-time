@@ -22,6 +22,12 @@ public interface MovieListContract {
         void enableLoadMoreListener();
 
         void disableLoadMoreListener();
+
+        void removeMovieFromListByIndex(int index);
+
+        void addMovieToListByIndex(int index, MovieModel movieModel);
+
+        int getMovieListCount();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -29,9 +35,13 @@ public interface MovieListContract {
         void onStop();
         void loadMovieList(boolean startOver);
         void setFilter(@MovieListFilterDescriptor.MovieListFilter int filter);
-        void openMovieDetail(MovieModel movieModel);
+
+        void openMovieDetail(int selectedMovieIndex, MovieModel movieModel);
+
         void onListEndReached();
 
         void tryAgain();
+
+        void favoriteMovie(MovieModel movie, boolean favorite);
     }
 }

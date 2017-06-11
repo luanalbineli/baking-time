@@ -43,10 +43,6 @@ public class MovieProvider extends ContentProvider {
             return null;
         }
 
-      /*  if (columns != null) {
-            return buildCustomQuery(columns)
-        }*/
-
         MovieDAO movieDAO = MovieDatabase.getInstance(context).movieDAO();
         final Cursor cursor;
         if (code == CODE_MOVIES) {
