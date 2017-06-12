@@ -137,7 +137,7 @@ public class MovieListFragment extends BaseFragment<MovieListContract.View> impl
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    void onFavoriteMovieEvent(FavoriteMovieEvent favoriteMovieEvent) {
+    public void onFavoriteMovieEvent(FavoriteMovieEvent favoriteMovieEvent) {
         mPresenter.favoriteMovie(favoriteMovieEvent.movie, favoriteMovieEvent.favorite);
     }
 
