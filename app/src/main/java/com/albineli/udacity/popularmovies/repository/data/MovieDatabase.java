@@ -1,27 +1,35 @@
 package com.albineli.udacity.popularmovies.repository.data;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
-import com.albineli.udacity.popularmovies.model.MovieModel;
 
-@Database(entities = {MovieModel.class}, version = 1)
-@TypeConverters({RoomConverters.class})
-public abstract class MovieDatabase extends RoomDatabase {
+public class MovieDatabase extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "movies";
-    private static MovieDatabase mInstance;
+    private static final int DATABASE_VERSION = 1;
 
-    @SuppressWarnings("WeakerAccess")
-    public abstract MovieDAO movieDAO();
+    MovieDatabase(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
 
-    public static synchronized  MovieDatabase getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = Room.databaseBuilder(context.getApplicationContext(), MovieDatabase.class, DATABASE_NAME).build();
-        }
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        final String CREATE_TABLE = "CREATE TABLE " + MovieContract.MovieEntry.TABLE_NAME + " (" +
+                MovieContract.MovieEntry._ID + " INTEGER PRIMARY KEY, " +
+                MovieContract.MovieEntry.COLUMN_VOTE_COUNT + " INTEGER NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_BACKDROP_PATH + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_RELEASE_DATE + " INTEGER NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_VOTE_AVERAGE + " REAL NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
+                MovieContract.MovieEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL);";
 
-        return mInstance;
+        db.execSQL(CREATE_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
     }
 }
