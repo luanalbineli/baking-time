@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ApplicationModule {
-    private static final String BASE_URL = "https://api.themoviedb.org/3/";
+    private static final String BASE_URL = "http://go.udacity.com/";
     private final PopularMovieApplication mPopularMovieApplication;
 
     public ApplicationModule(PopularMovieApplication popularMovieApplication) {

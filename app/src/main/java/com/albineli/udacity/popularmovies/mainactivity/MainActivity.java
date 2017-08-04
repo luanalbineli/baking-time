@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.enums.MovieListFilterDescriptor;
-import com.albineli.udacity.popularmovies.movielist.MovieListFragment;
+import com.albineli.udacity.popularmovies.recipelist.RecipeListFragment;
 import com.roughike.bottombar.BottomBar;
 
 import butterknife.BindView;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @IdRes
     int mSelectedTabId = R.id.tab_popular;
 
-    private MovieListFragment mMovieListFragment;
+    private RecipeListFragment mRecipeListFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
         mBottomBar.selectTabWithId(mSelectedTabId);
         mBottomBar.setOnTabSelectListener(tabId -> {
-            if (mMovieListFragment == null) {
+            if (mRecipeListFragment == null) {
                 return;
             }
             Timber.i("Selected item: " + tabId);
             @MovieListFilterDescriptor.MovieListFilter int filter = getFilterBySelectedTab(tabId);
-            mMovieListFragment.reloadListWithNewSort(filter);
+            mRecipeListFragment.reloadListWithNewSort(filter);
         });
 
         setupMovieListFragment();
@@ -67,14 +67,14 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     private void setupMovieListFragment() {
         final String movieListFragmentTag = "movie_list";
         FragmentManager fragmentManager = getFragmentManager();
-        mMovieListFragment = (MovieListFragment) fragmentManager.findFragmentByTag(movieListFragmentTag);
-        if (mMovieListFragment == null) {
+        mRecipeListFragment = (RecipeListFragment) fragmentManager.findFragmentByTag(movieListFragmentTag);
+        if (mRecipeListFragment == null) {
             @MovieListFilterDescriptor.MovieListFilter int filter = getFilterBySelectedTab(mSelectedTabId);
 
-            mMovieListFragment = MovieListFragment.getInstance(filter);
+            mRecipeListFragment = RecipeListFragment.getInstance(filter);
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.fl_main_content, mMovieListFragment, movieListFragmentTag)
+                    .add(R.id.fl_main_content, mRecipeListFragment, movieListFragmentTag)
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .commit();
         }

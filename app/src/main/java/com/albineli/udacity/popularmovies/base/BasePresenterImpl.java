@@ -1,12 +1,12 @@
 package com.albineli.udacity.popularmovies.base;
 
-import com.albineli.udacity.popularmovies.repository.movie.MovieRepository;
+import com.albineli.udacity.popularmovies.repository.RecipeRepository;
 
 
 public abstract class BasePresenterImpl {
-    protected final MovieRepository mMovieRepository;
+    protected final RecipeRepository mMovieRepository;
 
-    public BasePresenterImpl(MovieRepository movieRepository) {
+    public BasePresenterImpl(RecipeRepository movieRepository) {
         this.mMovieRepository = movieRepository;
     }
 }
