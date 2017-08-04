@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp">
+
+    <!--<com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/sdvMovieItemPoster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        fresco:actualImageScaleType="centerCrop"
+        fresco:placeholderImage="@android:color/darker_gray"
+        fresco:viewAspectRatio="0.666666666666666666667" />-->
+    <TextView
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        fresco:layout_constraintEnd_toEndOf="parent"
+        fresco:layout_constraintStart_toStartOf="parent"
+        fresco:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/tvRecipeItemName"
+        tools:text="Brownie" />
+
+</android.support.constraint.ConstraintLayout>
