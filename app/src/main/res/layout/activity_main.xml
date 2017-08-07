@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/tab_popular"
+                android:text="@string/recipe_list"
                 android:textAlignment="center"
                 android:textStyle="bold" />
         </android.support.v7.widget.Toolbar>

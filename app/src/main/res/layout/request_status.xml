@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="@string/error_get_movie_list"/>
+            android:text="@string/an_error_occurred"/>
 
         <Button
             android:id="@+id/btRequestStatusRetry"

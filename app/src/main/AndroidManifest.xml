@@ -20,10 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <provider
-            android:authorities="com.albineli.udacity.popuparmovies.provider"
-            android:name=".repository.data.MovieProvider"
-            android:exported="false" />
     </application>
 
 </manifest>

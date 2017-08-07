@@ -21,8 +21,10 @@ class MovieListAdapter extends CustomRecyclerViewAdapter<RecipeModel, RecipeItem
     }
 
     @Override
-    protected void onBindItemViewHolder(RecipeItemViewHolder movieListViewHolder, int position) {
+    protected void onBindItemViewHolder(RecipeItemViewHolder recipeItemViewHolder, int position) {
         RecipeModel recipeModel = getItemByPosition(position);
-        movieListViewHolder.mRecipeNameTextView.setText(recipeModel.getName());
+        recipeItemViewHolder.mRecipeNameTextView.setText(recipeModel.getName());
+        recipeItemViewHolder.mRecipeServingTextView.setText(recipeModel.getServings() + "servings");
+
     }
 }
