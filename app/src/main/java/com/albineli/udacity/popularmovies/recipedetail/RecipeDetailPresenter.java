@@ -7,29 +7,23 @@ import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
 import com.albineli.udacity.popularmovies.repository.RecipeRepository;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
-public class MovieDetailPresenter extends BasePresenterImpl implements MovieDetailContract.Presenter {
-    private MovieDetailContract.View mView;
-    private int mMovieId;
+public class RecipeDetailPresenter extends BasePresenterImpl implements RecipeDetailContract.Presenter {
+    private RecipeDetailContract.View mView;
 
     @Inject
-    MovieDetailPresenter(@NonNull RecipeRepository movieRepository) {
+    RecipeDetailPresenter(@NonNull RecipeRepository movieRepository) {
         super(movieRepository);
     }
 
     @Override
-    public void openRecipeDetail(int position, RecipeModel recipeModel) {
-
+    public void setView(RecipeDetailContract.View view) {
+        mView = view;
     }
 
-
     @Override
-    public void setView(MovieDetailContract.View view) {
+    public void start(RecipeModel recipeModel) {
 
     }
 }

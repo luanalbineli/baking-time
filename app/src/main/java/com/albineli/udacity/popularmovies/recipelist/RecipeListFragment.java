@@ -14,8 +14,7 @@ import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
-
-import org.greenrobot.eventbus.EventBus;
+import com.albineli.udacity.popularmovies.recipedetail.RecipeDetailFragment;
 
 import java.util.List;
 
@@ -44,7 +43,7 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
     @Inject
     RecipeListPresenter mPresenter;
 
-    @BindView(R.id.rv_recipe_list)
+    @BindView(R.id.rvFragment)
     RecyclerView mRecipeRecyclerView;
 
     MovieListAdapter mRecipeListAdapter;
@@ -62,7 +61,7 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
         ButterKnife.bind(this, rootView);
 
         // List.
@@ -79,20 +78,20 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        getActivity().setTitle(R.string.recipe_list);
+
         mPresenter.start();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        // EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        EventBus.getDefault().unregister(this);
+    public void goToRecipeDetail(RecipeModel recipeModel) {
+        RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.getInstance(recipeModel);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.fl_main_content, recipeDetailFragment)
+                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

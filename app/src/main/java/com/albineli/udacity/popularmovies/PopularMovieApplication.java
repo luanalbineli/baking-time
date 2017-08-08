@@ -7,7 +7,6 @@ import android.content.Context;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.modules.ApplicationModule;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.leakcanary.LeakCanary;
 
 import timber.log.Timber;
@@ -25,8 +24,6 @@ public class PopularMovieApplication extends Application {
         }
         // Timber
         Timber.plant(new Timber.DebugTree());
-        // Fresco
-        Fresco.initialize(this);
         // LeakCanary
         LeakCanary.install(this);
         // Dagger2

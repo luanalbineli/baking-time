@@ -11,7 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 class RecipeItemViewHolder extends CustomRecyclerViewHolder {
-    @BindView(R.id.sdvRecipeItemPicture)
+    @BindView(R.id.ivRecipeItemPicture)
     ImageView mRecipeImageDraweeView;
 
     @BindView(R.id.tvRecipeItemName)

@@ -5,4 +5,7 @@
     <string name="recipe_list">Recipe list</string>
     <string name="the_list_is_empty">The list is empty</string>
     <string name="an_error_occurred">An error occurred</string>
+    <string name="content_description_recipe_item">The image of the recipe</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="steps">Steps</string>
 </resources>

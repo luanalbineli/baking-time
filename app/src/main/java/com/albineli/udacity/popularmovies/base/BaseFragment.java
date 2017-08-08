@@ -1,8 +1,8 @@
 package com.albineli.udacity.popularmovies.base;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.albineli.udacity.popularmovies.PopularMovieApplication;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;

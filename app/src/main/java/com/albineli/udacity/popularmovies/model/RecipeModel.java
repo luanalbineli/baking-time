@@ -15,7 +15,7 @@ public class RecipeModel implements Parcelable {
     private String name;
 
     @SerializedName("ingredients")
-    private List<IngredientModel> ingredientList;
+    private List<RecipeIngredientModel> ingredientList;
 
     @SerializedName("steps")
     private List<RecipeStepModel> recipeStepList;
@@ -29,7 +29,7 @@ public class RecipeModel implements Parcelable {
     protected RecipeModel(Parcel in) {
         id = in.readInt();
         name = in.readString();
-        ingredientList = in.createTypedArrayList(IngredientModel.CREATOR);
+        ingredientList = in.createTypedArrayList(RecipeIngredientModel.CREATOR);
         recipeStepList = in.createTypedArrayList(RecipeStepModel.CREATOR);
         servings = in.readInt();
         image = in.readString();
@@ -63,11 +63,11 @@ public class RecipeModel implements Parcelable {
         this.name = name;
     }
 
-    public List<IngredientModel> getIngredientList() {
+    public List<RecipeIngredientModel> getIngredientList() {
         return ingredientList;
     }
 
-    public void setIngredientList(List<IngredientModel> ingredientList) {
+    public void setIngredientList(List<RecipeIngredientModel> ingredientList) {
         this.ingredientList = ingredientList;
     }
 

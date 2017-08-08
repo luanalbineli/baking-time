@@ -9,12 +9,13 @@ import java.util.List;
  * Presenter of the Movie Detail Fragment.
  */
 
-public abstract class MovieDetailContract {
+public abstract class RecipeDetailContract {
     public interface View {
 
     }
 
     public interface Presenter extends BasePresenter<View> {
 
+        void start(RecipeModel mRecipeModel);
     }
 }

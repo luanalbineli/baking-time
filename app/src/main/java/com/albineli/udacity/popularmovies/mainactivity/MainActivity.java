@@ -1,8 +1,8 @@
 package com.albineli.udacity.popularmovies.mainactivity;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @BindView(R.id.toolbar_title)
     TextView mToobarTitle;
 
-    private RecipeListFragment mRecipeListFragment;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,20 +29,20 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
         setupMovieListFragment();
 
-        getFragmentManager().addOnBackStackChangedListener(this);
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         checkShouldDisplayBackButton();
     }
 
     private void setupMovieListFragment() {
         final String fragmentTag = "recipe_list";
-        FragmentManager fragmentManager = getFragmentManager();
-        mRecipeListFragment = (RecipeListFragment) fragmentManager.findFragmentByTag(fragmentTag);
-        if (mRecipeListFragment == null) {
-            mRecipeListFragment = RecipeListFragment.getInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        RecipeListFragment recipeListFragment = (RecipeListFragment) fragmentManager.findFragmentByTag(fragmentTag);
+        if (recipeListFragment == null) {
+            recipeListFragment = RecipeListFragment.getInstance();
             fragmentManager
                     .beginTransaction()
-                    .add(R.id.fl_main_content, mRecipeListFragment, fragmentTag)
+                    .add(R.id.fl_main_content, recipeListFragment, fragmentTag)
                     .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                     .commit();
         }
@@ -66,5 +64,10 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @Override
     public void onBackStackChanged() {
         checkShouldDisplayBackButton();
+    }
+
+    @Override
+    public void setTitle(int titleResId) {
+        mToobarTitle.setText(getString(titleResId));
     }
 }
