@@ -9,6 +9,7 @@ import java.util.List;
 public abstract class RecipeIngredientListContract {
     public interface View {
 
+        void showIngredientList(List<RecipeIngredientModel> recipeIngredientList);
     }
 
     public interface Presenter extends BasePresenter<View> {

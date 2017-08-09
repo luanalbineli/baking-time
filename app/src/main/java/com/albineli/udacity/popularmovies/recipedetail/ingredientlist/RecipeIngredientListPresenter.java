@@ -26,6 +26,6 @@ public class RecipeIngredientListPresenter extends BasePresenterImpl implements 
 
     @Override
     public void start(List<RecipeIngredientModel> recipeIngredientList) {
-
+        mView.showIngredientList(recipeIngredientList);
     }
 }

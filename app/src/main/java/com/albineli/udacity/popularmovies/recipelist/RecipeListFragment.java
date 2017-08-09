@@ -2,30 +2,28 @@ package com.albineli.udacity.popularmovies.recipelist;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.albineli.udacity.popularmovies.R;
-import com.albineli.udacity.popularmovies.base.BaseFragment;
 import com.albineli.udacity.popularmovies.base.BasePresenter;
+import com.albineli.udacity.popularmovies.base.BaseRecyclerViewFragment;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
 import com.albineli.udacity.popularmovies.recipedetail.RecipeDetailFragment;
+import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
-public class RecipeListFragment extends BaseFragment<RecipeListContract.View> implements RecipeListContract.View {
+public class RecipeListFragment extends BaseRecyclerViewFragment<RecipeListContract.View> implements RecipeListContract.View {
     public static RecipeListFragment getInstance() {
         return new RecipeListFragment();
     }
@@ -46,9 +44,7 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
     @BindView(R.id.rvFragment)
     RecyclerView mRecipeRecyclerView;
 
-    MovieListAdapter mRecipeListAdapter;
-
-    LinearLayoutManager mLinearLayoutManager;
+    RecipeListAdapter mRecipeListAdapter;
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
@@ -58,23 +54,6 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
                 .inject(this);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler_view, container, false);
-        ButterKnife.bind(this, rootView);
-
-        // List.
-        mRecipeListAdapter = new MovieListAdapter(R.string.the_list_is_empty, () -> mPresenter.start());
-        mRecipeListAdapter.setOnItemClickListener((position, recipeModel) -> mPresenter.openRecipeDetail(position, recipeModel));
-
-        mLinearLayoutManager = new LinearLayoutManager(mRecipeRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false);
-        mRecipeRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecipeRecyclerView.setAdapter(mRecipeListAdapter);
-
-        return rootView;
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,6 +61,37 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
         getActivity().setTitle(R.string.recipe_list);
 
         mPresenter.start();
+    }
+
+    @Override
+    protected void configureRecyclerView(RecyclerView recyclerView) {
+        mRecipeListAdapter = new RecipeListAdapter(R.string.the_list_is_empty, () -> mPresenter.start());
+        mRecipeListAdapter.setOnItemClickListener((position, recipeModel) -> mPresenter.openRecipeDetail(position, recipeModel));
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(mRecipeListAdapter);
+
+        if (getActivity().getResources().getBoolean(R.bool.isTablet)) {
+            configureTabletLayout();
+        } else {
+            useLinearLayoutManager();
+        }
+    }
+
+    private void configureTabletLayout() {
+        GridLayoutManager gridLayoutManager = useGridLayoutManager(getActivity().getResources().getInteger(R.integer.recipe_list_columns));
+
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (mRecipeListAdapter.getItemViewType(position)) {
+                    case CustomRecyclerViewAdapter.ViewType.ITEM:
+                        return 1;
+                    default: // Grid status.
+                        return gridLayoutManager.getSpanCount();
+                }
+            }
+        });
     }
 
     @Override

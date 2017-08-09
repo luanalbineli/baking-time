@@ -8,4 +8,9 @@
     <string name="content_description_recipe_item">The image of the recipe</string>
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
+    <string name="empty_ingredient_list">There is no ingredients on this recipe. (?)</string>
+    <plurals name="number_of_serving">
+        <item quantity="one">%1$d serving</item>
+        <item quantity="other">%1$d servings</item>
+    </plurals>
 </resources>

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     private void checkShouldDisplayBackButton() {
-        boolean shouldDisplayBackButton = getFragmentManager().getBackStackEntryCount() > 0;
+        boolean shouldDisplayBackButton = getSupportFragmentManager().getBackStackEntryCount() > 0;
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(shouldDisplayBackButton);
         }
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @Override
     public boolean onSupportNavigateUp() {
-        getFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStack();
         return true;
     }
 

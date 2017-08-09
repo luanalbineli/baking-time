@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.base.BaseRecyclerViewFragment;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
@@ -45,6 +46,8 @@ public class RecipeIngredientListFragment extends BaseRecyclerViewFragment<Recip
 
     private List<RecipeIngredientModel> mRecipeIngredientList;
 
+    private IngredientListAdapter mAdapter;
+
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
         DaggerFragmentComponent.builder()
@@ -71,6 +74,17 @@ public class RecipeIngredientListFragment extends BaseRecyclerViewFragment<Recip
 
     @Override
     protected void configureRecyclerView(RecyclerView recyclerView) {
+        mAdapter = new IngredientListAdapter(R.string.empty_ingredient_list, () -> mPresenter.start(mRecipeIngredientList));
 
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.setHasFixedSize(true);
+
+        useLinearLayoutManager();
+        useDividerItemDecoration();
+    }
+
+    @Override
+    public void showIngredientList(List<RecipeIngredientModel> recipeIngredientList) {
+        mAdapter.addItems(recipeIngredientList);
     }
 }
