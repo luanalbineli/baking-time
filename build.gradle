@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha9'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta2'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,7 +20,7 @@ allprojects {
 }
 
 ext {
-    support_version = '26.0.0'
+    support_version = '26.0.1'
     constraint_layout_version = '1.0.2'
     retrofit_version = '2.2.0'
     gson_version = '2.8.0'

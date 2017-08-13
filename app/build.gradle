@@ -32,7 +32,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.android.support:appcompat-v7:$rootProject.support_version"
+    implementation "com.android.support:support-v13:$rootProject.support_version"
     implementation "com.android.support:design:$rootProject.support_version"
     implementation "com.android.support.constraint:constraint-layout:$rootProject.constraint_layout_version"
     implementation "com.android.support:cardview-v7:$rootProject.support_version"
@@ -70,6 +70,9 @@ dependencies {
 
     // EventBus
     implementation "org.greenrobot:eventbus:$rootProject.eventBus_version"
+
+    // View Pager Indicator
+    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
 
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"
