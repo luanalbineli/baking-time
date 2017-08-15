@@ -36,7 +36,7 @@ ext {
     fresco_version = '1.4.0'
     readmoreTextview_version = '2.0.1'
     eventBus_version = '3.0.0'
-
+    exoPlayer_version = 'r2.5.1'
 }
 
 task clean(type: Delete) {

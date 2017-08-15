@@ -86,6 +86,8 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getActivity().setTitle(mRecipeModel.getName());
+
         setupViewPager(view);
 
         mPresenter.start(mRecipeModel);

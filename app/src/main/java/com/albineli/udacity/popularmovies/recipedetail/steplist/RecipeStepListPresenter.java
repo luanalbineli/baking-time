@@ -4,7 +4,6 @@ package com.albineli.udacity.popularmovies.recipedetail.steplist;
 import android.support.annotation.NonNull;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
-import com.albineli.udacity.popularmovies.model.RecipeModel;
 import com.albineli.udacity.popularmovies.model.RecipeStepModel;
 import com.albineli.udacity.popularmovies.repository.RecipeRepository;
 
@@ -28,6 +27,11 @@ public class RecipeStepListPresenter extends BasePresenterImpl implements Recipe
 
     @Override
     public void start(List<RecipeStepModel> recipeStepList) {
+        mView.showStepList(recipeStepList);
+    }
 
+    @Override
+    public void handleStepVideoClick(RecipeStepModel recipeStepModel) {
+        mView.openStepVideo(recipeStepModel.getRealVideoUrl());
     }
 }

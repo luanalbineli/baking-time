@@ -12,10 +12,15 @@ import java.util.List;
 public abstract class RecipeStepListContract {
     public interface View {
 
+        void showStepList(List<RecipeStepModel> recipeStepList);
+
+        void openStepVideo(String videoUrl);
     }
 
     public interface Presenter extends BasePresenter<View> {
 
         void start(List<RecipeStepModel> recipeStepList);
+
+        void handleStepVideoClick(RecipeStepModel recipeStepModel);
     }
 }
