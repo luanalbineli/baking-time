@@ -21,11 +21,10 @@ import com.albineli.udacity.popularmovies.model.RecipeModel;
 import com.albineli.udacity.popularmovies.recipedetail.ingredientlist.RecipeIngredientListFragment;
 import com.albineli.udacity.popularmovies.recipedetail.steplist.RecipeStepListFragment;
 
-import java.security.InvalidParameterException;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View> implements RecipeDetailContract.View {
@@ -66,10 +65,9 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null || !getArguments().containsKey(RECIPE_MODEL_BUNDLE_KEY)) {
-            throw new InvalidParameterException("movie");
+        if (getArguments() != null && getArguments().containsKey(RECIPE_MODEL_BUNDLE_KEY)) {
+            mRecipeModel = getArguments().getParcelable(RECIPE_MODEL_BUNDLE_KEY);
         }
-        mRecipeModel = getArguments().getParcelable(RECIPE_MODEL_BUNDLE_KEY);
     }
 
     @Nullable
@@ -88,16 +86,24 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
 
         getActivity().setTitle(mRecipeModel.getName());
 
-        setupViewPager(view);
-
         mPresenter.start(mRecipeModel);
     }
 
-    private void setupViewPager(View view) {
-        ViewPager viewPager = ButterKnife.findById(view, R.id.vpRecipeDetail);
-        viewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), mRecipeModel, getActivity()));
+    @Override
+    public void showRecipeDetailContent(RecipeModel recipeModel) {
+        setupViewPager(recipeModel);
+    }
 
-        TabLayout tabLayout = ButterKnife.findById(view, R.id.tlRecipeDetail);
+    private void setupViewPager(RecipeModel recipeModel) {
+        if (getView() == null) {
+            Timber.wtf("Why is the view null?");
+            return;
+        }
+
+        ViewPager viewPager = ButterKnife.findById(getView(), R.id.vpRecipeDetail);
+        viewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), recipeModel, getActivity()));
+
+        TabLayout tabLayout = ButterKnife.findById(getView(), R.id.tlRecipeDetail);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -107,7 +113,6 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
 
         ViewPagerAdapter(FragmentManager fm, RecipeModel recipeModel, Context context) {
             super(fm);
-
 
             mTitles = new String[]{context.getString(R.string.ingredients), context.getString(R.string.steps)};
             mRecipeModel = recipeModel;

@@ -2,6 +2,7 @@ package com.albineli.udacity.popularmovies.recipedetail;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
@@ -23,7 +24,9 @@ public class RecipeDetailPresenter extends BasePresenterImpl implements RecipeDe
     }
 
     @Override
-    public void start(RecipeModel recipeModel) {
-
+    public void start(@Nullable RecipeModel recipeModel) {
+        if (recipeModel != null) {
+            mView.showRecipeDetailContent(recipeModel);
+        }
     }
 }
