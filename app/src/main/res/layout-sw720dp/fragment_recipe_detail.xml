@@ -5,12 +5,12 @@
     android:layout_height="match_parent">
 
     <fragment
-        android:id="@+id/fragmentIngredientList"
-        android:name="com.albineli.udacity.popularmovies.recipedetail.ingredientlist.RecipeIngredientListFragment"
+        android:id="@+id/fragmentRecipeDetailStepList"
+        android:name="com.albineli.udacity.popularmovies.recipedetail.steplist.RecipeStepListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,14 +19,16 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.33" />
+        app:layout_constraintGuide_percent="0.3" />
 
     <fragment
-        android:id="@+id/fragmentIngredientDetail"
+        android:id="@+id/fragmentRecipeDetailStepDetail"
+        android:name="com.albineli.udacity.popularmovies.recipedetail.stepdetail.RecipeStepDetailFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

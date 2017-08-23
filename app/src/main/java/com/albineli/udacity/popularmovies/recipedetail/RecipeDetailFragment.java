@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BaseFragment;
@@ -19,6 +21,7 @@ import com.albineli.udacity.popularmovies.injector.components.ApplicationCompone
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
 import com.albineli.udacity.popularmovies.recipedetail.ingredientlist.RecipeIngredientListFragment;
+import com.albineli.udacity.popularmovies.recipedetail.stepdetail.RecipeStepDetailFragment;
 import com.albineli.udacity.popularmovies.recipedetail.steplist.RecipeStepListFragment;
 
 import javax.inject.Inject;
@@ -91,7 +94,33 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
 
     @Override
     public void showRecipeDetailContent(RecipeModel recipeModel) {
+        boolean useMasterDetail = getActivity().getResources().getBoolean(R.bool.useMasterDetail);
+        if (useMasterDetail) {
+            configureMasterDetailLayout(recipeModel);
+        } else {
+            configureDefaultLayout(recipeModel);
+        }
+    }
+
+    private void configureDefaultLayout(RecipeModel recipeModel) {
+        if (!TextUtils.isEmpty(recipeModel.getImage()) && getView() != null) {
+            // TODO: implementation to fetch the image.
+            ImageView ingredientImage = ButterKnife.findById(getView(), R.id.ivRecipeItemPicture);
+        }
         setupViewPager(recipeModel);
+    }
+
+    private void configureMasterDetailLayout(RecipeModel recipeModel) {
+        if (getView() == null) {
+            Timber.wtf("Null view?");
+            return;
+        }
+
+        RecipeStepListFragment recipeStepListFragment = (RecipeStepListFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepList);
+        recipeStepListFragment.showStepList(recipeModel.getRecipeStepList());
+
+        RecipeStepDetailFragment recipeStepDetailFragment = (RecipeStepDetailFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepDetail);
+        recipeStepDetailFragment.showStepDetail(recipeModel.getRecipeStepList().get(0));
     }
 
     private void setupViewPager(RecipeModel recipeModel) {

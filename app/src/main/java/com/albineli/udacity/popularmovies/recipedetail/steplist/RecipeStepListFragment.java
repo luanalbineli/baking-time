@@ -13,7 +13,6 @@ import com.albineli.udacity.popularmovies.injector.components.ApplicationCompone
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.RecipeStepModel;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,10 +59,9 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null || !getArguments().containsKey(RECIPE_STEP_LIST_BUNDLE_KEY)) {
-            throw new InvalidParameterException("step_list");
+        if (getArguments() != null && getArguments().containsKey(RECIPE_STEP_LIST_BUNDLE_KEY)) {
+            mRecipeStepList = getArguments().getParcelableArrayList(RECIPE_STEP_LIST_BUNDLE_KEY);
         }
-        mRecipeStepList = getArguments().getParcelableArrayList(RECIPE_STEP_LIST_BUNDLE_KEY);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.albineli.udacity.popularmovies.recipedetail.steplist;
 
+import android.support.annotation.Nullable;
+
 import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.model.RecipeStepModel;
 
@@ -19,7 +21,7 @@ public abstract class RecipeStepListContract {
 
     public interface Presenter extends BasePresenter<View> {
 
-        void start(List<RecipeStepModel> recipeStepList);
+        void start(@Nullable List<RecipeStepModel> recipeStepList);
 
         void handleStepVideoClick(RecipeStepModel recipeStepModel);
     }

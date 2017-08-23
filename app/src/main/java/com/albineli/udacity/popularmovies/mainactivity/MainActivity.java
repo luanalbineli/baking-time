@@ -12,7 +12,6 @@ import com.albineli.udacity.popularmovies.recipelist.RecipeListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
     @BindView(R.id.toolbar_title)
@@ -28,20 +27,11 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
         ButterKnife.bind(this);
 
-        setupContent();
+        setupMovieListFragment();
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);
 
         checkShouldDisplayBackButton();
-    }
-
-    private void setupContent() {
-        boolean useMasterDetail = getResources().getBoolean(R.bool.useMasterDetail);
-        Timber.i("Is master detail? " + useMasterDetail);
-        if (!useMasterDetail) {
-            setupMovieListFragment();
-            return;
-        }
     }
 
     private void setupMovieListFragment() {
