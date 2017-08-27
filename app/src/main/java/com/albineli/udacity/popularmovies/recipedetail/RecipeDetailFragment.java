@@ -117,7 +117,7 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
         }
 
         RecipeStepListFragment recipeStepListFragment = (RecipeStepListFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepList);
-        recipeStepListFragment.showStepList(recipeModel.getRecipeStepList());
+        recipeStepListFragment.setStepList(recipeModel.getRecipeStepList());
 
         RecipeStepDetailFragment recipeStepDetailFragment = (RecipeStepDetailFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepDetail);
         recipeStepDetailFragment.showStepDetail(recipeModel.getRecipeStepList().get(0));

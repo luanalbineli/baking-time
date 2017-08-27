@@ -17,12 +17,20 @@ public abstract class RecipeStepListContract {
         void showStepList(List<RecipeStepModel> recipeStepList);
 
         void openStepVideo(String videoUrl);
+
+        void viewStepDetail(RecipeStepModel recipeStepModel);
+
+        void setSelectedRecipeStep(int selectedRecipeStepIndex);
+
+        void clearSelectedStep();
     }
 
     public interface Presenter extends BasePresenter<View> {
 
         void start(@Nullable List<RecipeStepModel> recipeStepList);
 
-        void handleStepVideoClick(RecipeStepModel recipeStepModel);
+        void handleStepVideoClick(int selectedRecipeStepIndex, RecipeStepModel recipeStepModel, boolean viewStepDetail);
+
+        void handleRecipeStepList(List<RecipeStepModel> recipeStepList);
     }
 }

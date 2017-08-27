@@ -23,7 +23,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.io.IOException;
-import java.security.InvalidParameterException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,11 +51,10 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null || !getArguments().containsKey(VIDEO_URL_BUNDLE_KEY)) {
-            throw new InvalidParameterException(VIDEO_URL_BUNDLE_KEY);
+        if (getArguments() != null && getArguments().containsKey(VIDEO_URL_BUNDLE_KEY)) {
+            mVideoUrl = getArguments().getString(VIDEO_URL_BUNDLE_KEY);
         }
 
-        mVideoUrl = getArguments().getString(VIDEO_URL_BUNDLE_KEY);
         Timber.i("Video URL: " + mVideoUrl);
     }
 
@@ -87,6 +85,12 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
 
         mPlayerView.setPlayer(mPlayer);
 
+        if (mVideoUrl != null) {
+            playVideo();
+        }
+    }
+
+    private void playVideo() {
         Uri mp4VideoUri = Uri.parse(mVideoUrl);
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), "exoPlayerFragment"));
@@ -105,5 +109,18 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
     @Override
     public void onLoadError(IOException error) {
         Timber.e(error, "An error occurred while tried to load the video");
+    }
+
+    public void setVisibility(int visible) {
+        if (getView() != null) {
+            getView().setVisibility(visible);
+        }
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.mVideoUrl = videoUrl;
+        if (mVideoUrl != null) {
+            playVideo();
+        }
     }
 }

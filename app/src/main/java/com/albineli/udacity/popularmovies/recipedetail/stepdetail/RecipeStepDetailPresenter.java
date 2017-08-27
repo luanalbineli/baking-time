@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.albineli.udacity.popularmovies.base.BasePresenterImpl;
 import com.albineli.udacity.popularmovies.model.RecipeModel;
+import com.albineli.udacity.popularmovies.model.RecipeStepModel;
 import com.albineli.udacity.popularmovies.repository.RecipeRepository;
 
 import javax.inject.Inject;
@@ -25,5 +26,10 @@ public class RecipeStepDetailPresenter extends BasePresenterImpl implements Reci
 
     @Override
     public void start(@Nullable RecipeModel recipeModel) {
+    }
+
+    @Override
+    public void onSelectStep(RecipeStepModel recipeStepModel) {
+        mView.showStepDetail(recipeStepModel);
     }
 }

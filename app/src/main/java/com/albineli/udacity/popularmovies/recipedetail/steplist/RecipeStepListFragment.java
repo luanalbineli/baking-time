@@ -8,10 +8,13 @@ import android.view.View;
 import com.albineli.udacity.popularmovies.R;
 import com.albineli.udacity.popularmovies.base.BasePresenter;
 import com.albineli.udacity.popularmovies.base.BaseRecyclerViewFragment;
+import com.albineli.udacity.popularmovies.event.SelectStepEvent;
 import com.albineli.udacity.popularmovies.exoplayer.ExoPlayerFragment;
 import com.albineli.udacity.popularmovies.injector.components.ApplicationComponent;
 import com.albineli.udacity.popularmovies.injector.components.DaggerFragmentComponent;
 import com.albineli.udacity.popularmovies.model.RecipeStepModel;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,8 @@ import javax.inject.Inject;
 
 
 public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepListContract.View> implements RecipeStepListContract.View {
+    private boolean mUseMasterDetail;
+
     public static RecipeStepListFragment getInstance(List<RecipeStepModel> recipeStepList) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(RECIPE_STEP_LIST_BUNDLE_KEY, new ArrayList<>(recipeStepList));
@@ -68,14 +73,17 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mUseMasterDetail = getActivity().getResources().getBoolean(R.bool.useMasterDetail);
+
         mPresenter.start(mRecipeStepList);
     }
 
     @Override
     protected void configureRecyclerView(RecyclerView recyclerView) {
         mAdapter = new StepListAdapter(R.string.empty_step_list,
-                () -> mPresenter.start(mRecipeStepList),
-                (recipeStepModel) -> mPresenter.handleStepVideoClick(recipeStepModel));
+                () -> mPresenter.start(mRecipeStepList));
+
+        mAdapter.setOnItemClickListener((index, recipeStepModel) -> mPresenter.handleStepVideoClick(index, recipeStepModel, mUseMasterDetail));
 
         recyclerView.setAdapter(mAdapter);
         useLinearLayoutManager();
@@ -95,5 +103,24 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void viewStepDetail(RecipeStepModel recipeStepModel) {
+        EventBus.getDefault().post(new SelectStepEvent(recipeStepModel));
+    }
+
+    @Override
+    public void setSelectedRecipeStep(int selectedRecipeStepIndex) {
+        mAdapter.setSelectedStep(selectedRecipeStepIndex);
+    }
+
+    @Override
+    public void clearSelectedStep() {
+        mAdapter.clearSelectedStep();
+    }
+
+    public void setStepList(List<RecipeStepModel> recipeStepList) {
+        mPresenter.handleRecipeStepList(recipeStepList);
     }
 }
