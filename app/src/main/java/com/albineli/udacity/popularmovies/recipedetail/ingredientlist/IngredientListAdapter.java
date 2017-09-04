@@ -9,8 +9,13 @@ import com.albineli.udacity.popularmovies.model.RecipeIngredientModel;
 import com.albineli.udacity.popularmovies.ui.RequestStatusView;
 import com.albineli.udacity.popularmovies.ui.recyclerview.CustomRecyclerViewAdapter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 class IngredientListAdapter extends CustomRecyclerViewAdapter<RecipeIngredientModel, IngredientListViewHolder> {
-    protected IngredientListAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+    private static final NumberFormat QUANTITY_FORMAT = new DecimalFormat("##.###");
+
+    IngredientListAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
         super(emptyMessageResId, tryAgainClickListener);
     }
 
@@ -24,8 +29,11 @@ class IngredientListAdapter extends CustomRecyclerViewAdapter<RecipeIngredientMo
     protected void onBindItemViewHolder(IngredientListViewHolder recipeItemViewHolder, int position) {
         RecipeIngredientModel recipeIngredientModel = getItemByPosition(position);
 
-        recipeItemViewHolder.mRecipeIngredientQuantityTextView.setText(String.valueOf(recipeIngredientModel.getQuantity()));
+        String formattedQuantity = QUANTITY_FORMAT.format(recipeIngredientModel.getQuantity());
+        recipeItemViewHolder.mRecipeIngredientQuantityTextView.setText(formattedQuantity);
+
         recipeItemViewHolder.mRecipeIngredientMeasurementUnitTextView.setText(recipeIngredientModel.getMeasure());
+
         recipeItemViewHolder.mRecipeIngredientNameTextView.setText(recipeIngredientModel.getIngredient());
     }
 }

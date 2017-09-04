@@ -1,53 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
     android:layout_marginStart="16dp"
-    android:layout_marginTop="16dp">
+    android:layout_marginTop="16dp"
+    android:animateLayoutChanges="true">
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/tvRecipeStepShortDescription"
+        style="@style/Base.TextAppearance.AppCompat.Medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/ibRecipeStepVideo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Prep the cookie crust" />
 
-        <ImageView
-            android:id="@+id/ivRecipeItemPicture"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:contentDescription="@string/content_description_recipe_item"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/default_image" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/ibRecipeStepVideo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="4dp"
+        app:backgroundTint="#d9d6d6"
+        app:elevation="0dp"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/video" />
 
-        <TextView
-            android:id="@+id/tvRecipeItemName"
-            style="@style/Base.TextAppearance.AppCompat.Medium"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivRecipeItemPicture"
-            tools:text="Cookie" />
-
-        <TextView
-            android:id="@+id/tvRecipeItemServing"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvRecipeItemName"
-            app:layout_constraintTop_toBottomOf="@+id/tvRecipeItemName"
-            tools:text="8 servings" />
-
-    </android.support.constraint.ConstraintLayout>
-
-</android.support.v7.widget.CardView>
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/tvRecipeStepLongDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        app:colorClickableText="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ibRecipeStepVideo"
+        app:layout_constraintStart_toStartOf="@+id/tvRecipeStepShortDescription"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeStepShortDescription"
+        app:trimCollapsedText="@string/read_more"
+        app:trimExpandedText="@string/read_less"
+        app:trimLength="120"
+        app:trimMode="trimModeLength" />
+</android.support.constraint.ConstraintLayout>

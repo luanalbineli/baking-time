@@ -9,6 +9,9 @@
     <string name="ingredients">Ingredients</string>
     <string name="steps">Steps</string>
     <string name="empty_ingredient_list">There is no ingredients on this recipe. (?)</string>
+    <string name="empty_step_list">There is no steps on this recipe. (?)</string>
+    <string name="read_more">Read more</string>
+    <string name="read_less">Read less</string>
     <plurals name="number_of_serving">
         <item quantity="one">%1$d serving</item>
         <item quantity="other">%1$d servings</item>

@@ -5,11 +5,12 @@ android {
     buildToolsVersion "26.0.0"
     defaultConfig {
         applicationId "com.albineli.udacity.popularmovies"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -71,8 +72,9 @@ dependencies {
     // EventBus
     implementation "org.greenrobot:eventbus:$rootProject.eventBus_version"
 
-    // View Pager Indicator
-    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
+    // ExoPlayer
+    implementation "com.google.android.exoplayer:exoplayer-core:$rootProject.exoPlayer_version"
+    implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoPlayer_version"
 
     // LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"

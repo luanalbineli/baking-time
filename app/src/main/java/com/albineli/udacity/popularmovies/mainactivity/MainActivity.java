@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         setContentView(R.layout.activity_main);
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle(null);
+        super.setTitle(null);
 
         ButterKnife.bind(this);
 
@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
 
     @Override
     public void setTitle(int titleResId) {
-        mToobarTitle.setText(getString(titleResId));
+        setTitle(getString(titleResId));
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mToobarTitle.setText(title);
     }
 }
