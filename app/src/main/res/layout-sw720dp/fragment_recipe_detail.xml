@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/fragmentRecipeDetailStepList"
-        android:name="com.albineli.udacity.popularmovies.recipedetail.steplist.RecipeStepListFragment"
+        android:name="com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/fragmentRecipeDetailStepDetail"
-        android:name="com.albineli.udacity.popularmovies.recipedetail.stepdetail.RecipeStepDetailFragment"
+        android:name="com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

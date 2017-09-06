@@ -42,7 +42,7 @@
 
         <fragment
             android:id="@+id/fragmentExoPlayer"
-            android:name="com.albineli.udacity.popularmovies.exoplayer.ExoPlayerFragment"
+            android:name="com.udacity.bakingtime.exoplayer.ExoPlayerFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </FrameLayout>

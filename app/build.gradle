@@ -81,4 +81,5 @@ dependencies {
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanary_version"
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanary_version"
 
+    compile 'org.jetbrains:annotations:15.0'
 }

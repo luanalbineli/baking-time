@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.albineli.udacity.popularmovies">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    package="com.udacity.bakingtime">
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:name=".PopularMovieApplication"
+        android:name=".BakingTimeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,6 +21,25 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".widget.RecipeSelectActivity"
+            android:label="@string/recipe_select">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver android:name=".widget.RecipeShortcutWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_shortcut_widget" />
+        </receiver>
+
+
     </application>
 
 </manifest>
