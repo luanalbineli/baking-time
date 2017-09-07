@@ -23,6 +23,6 @@ public interface RecipeListContract {
     interface Presenter extends BasePresenter<View> {
         void start();
 
-        void openRecipeDetail(int position, RecipeModel recipeModel);
+        void handleSelectRecipeEvent(RecipeModel recipeModel);
     }
 }

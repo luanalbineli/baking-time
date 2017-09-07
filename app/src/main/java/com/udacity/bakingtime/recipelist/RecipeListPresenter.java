@@ -41,7 +41,7 @@ public class RecipeListPresenter extends BasePresenterImpl implements RecipeList
     }
 
     @Override
-    public void openRecipeDetail(int position, RecipeModel recipeModel) {
+    public void handleSelectRecipeEvent(RecipeModel recipeModel) {
         mView.goToRecipeDetail(recipeModel);
     }
 }

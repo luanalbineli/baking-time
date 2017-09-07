@@ -15,8 +15,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/fragmentRecipeList"
-        android:name="com.udacity.bakingtime.recipelist.RecipeListFragment"
+        android:id="@+id/fragmentRecipeListinator"
+        android:name="com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

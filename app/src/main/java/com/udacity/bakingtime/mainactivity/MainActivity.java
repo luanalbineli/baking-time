@@ -69,23 +69,6 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSelectRecipeEvent(SelectRecipeEvent selectRecipeEvent) {
-        Timber.i("MAIN_ACTIVITY - Selected a recipe: " + selectRecipeEvent);
-    }
-
-    @Override
     public void onBackStackChanged() {
         checkShouldDisplayBackButton();
     }

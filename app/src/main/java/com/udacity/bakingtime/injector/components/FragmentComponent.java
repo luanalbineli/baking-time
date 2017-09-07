@@ -7,6 +7,7 @@ import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFr
 import com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment;
 import com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment;
 import com.udacity.bakingtime.recipelist.RecipeListFragment;
+import com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment;
 
 import dagger.Component;
 
@@ -18,4 +19,5 @@ public interface FragmentComponent {
     void inject(RecipeStepListFragment fragment);
     void inject(RecipeIngredientListFragment fragment);
     void inject(RecipeStepDetailFragment fragment);
+    void inject(RecipeListinatorFragment fragment);
 }
