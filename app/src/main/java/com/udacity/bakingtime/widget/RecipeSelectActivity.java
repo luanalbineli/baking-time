@@ -1,10 +1,15 @@
 package com.udacity.bakingtime.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.RemoteViews;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.base.BaseActivity;
@@ -12,6 +17,7 @@ import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.event.SelectRecipeEvent;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerActivityComponent;
+import com.udacity.bakingtime.mainactivity.MainActivity;
 import com.udacity.bakingtime.model.RecipeModel;
 import com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment;
 
@@ -120,5 +126,32 @@ public class RecipeSelectActivity extends BaseActivity<RecipeSelectContract.View
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSelectRecipeEvent(SelectRecipeEvent selectRecipeEvent) {
         Timber.i("RECIPE_SELECT_ACTIVITY - Selected a recipe: " + selectRecipeEvent);
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+
+        RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_final_layout);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setAction(MainActivity.VIEW_RECIPE_DETAIL_ACTION);
+        intent.putExtra(MainActivity.RECIPE_BUNDLE_KEY, selectRecipeEvent.recipeModel);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, MainActivity.VIEW_RECIPE_DETAIL_REQUEST_CODE, intent, 0);
+
+        views.setTextViewText(R.id.tvWidgetRecipeDescription, selectRecipeEvent.recipeModel.getName());
+        views.setOnClickPendingIntent(R.id.tvWidgetRecipeDescription, pendingIntent);
+
+        views.setOnClickPendingIntent(R.id.ivWidgetRecipeImage, pendingIntent);
+        if (selectRecipeEvent.recipeModel.getImage() != null) {
+            views.setImageViewUri(R.id.ivWidgetRecipeImage, Uri.parse(selectRecipeEvent.recipeModel.getImage()));
+        } else {
+            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
+            views.setImageViewBitmap(R.id.ivWidgetRecipeImage, defaultImage);
+        }
+
+        appWidgetManager.updateAppWidget(mShortcutWidgetId, views);
+
+        Intent resultValue = new Intent();
+        resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mShortcutWidgetId);
+        setResult(RESULT_OK, resultValue);
+        finish();
     }
 }

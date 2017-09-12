@@ -13,7 +13,7 @@
     <string name="read_more">Read more</string>
     <string name="read_less">Read less</string>
     <string name="recipe_select">Select the recipe</string>
-    <string name="select_the_recipe_to_create_shortcut">Select the recipe to create a shortcut for it</string>
+    <string name="select_the_recipe_to_create_shortcut">Select the recipe to create a shortcut for it:</string>
     <plurals name="number_of_serving">
         <item quantity="one">%1$d serving</item>
         <item quantity="other">%1$d servings</item>

@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @BindView(R.id.toolbar_title)
     TextView mToobarTitle;
 
+    public static int VIEW_RECIPE_DETAIL_REQUEST_CODE = 1001;
+    public static String VIEW_RECIPE_DETAIL_ACTION = "view_recipe_detail";
+    public static String RECIPE_BUNDLE_KEY = "recipe_model";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,9 +35,8 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         super.setTitle(null);
-
+        Timber.i("ACTION: " + getIntent().getAction());
         ButterKnife.bind(this);
-
         setupMovieListFragment();
 
         getSupportFragmentManager().addOnBackStackChangedListener(this);

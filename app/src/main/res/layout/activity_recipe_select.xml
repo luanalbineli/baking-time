@@ -6,9 +6,11 @@
 
     <TextView
         android:id="@+id/tvRecipeSelectTitle"
-        style="@style/TextAppearance.AppCompat.Medium"
+        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/select_the_recipe_to_create_shortcut"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
