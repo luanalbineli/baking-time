@@ -15,6 +15,10 @@ public interface RecipeSelectContract {
         void hideLoadingIndicator();
 
         void showErrorLoadingRecipeList();
+
+        void bindWidgetView(RecipeModel recipeModel);
+
+        void endProcess();
     }
 
     interface Presenter extends BasePresenter<View> {
@@ -22,5 +26,7 @@ public interface RecipeSelectContract {
         void start();
 
         void tryAgain();
+
+        void handleRecipeSelection(int widgetId, RecipeModel recipeModel);
     }
 }

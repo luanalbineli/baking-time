@@ -46,4 +46,11 @@ public class RecipeSelectPresenter extends BasePresenterImpl implements RecipeSe
                     mView.showRecipeList(recipeList);
                 }, error -> mView.showErrorLoadingRecipeList());
     }
+
+    @Override
+    public void handleRecipeSelection(int widgetId, RecipeModel recipeModel) {
+        mRecipeRepository.saveRecipeIdToWidgedId(widgetId, recipeModel.getId());
+        mView.bindWidgetView(recipeModel);
+        mView.endProcess();
+    }
 }

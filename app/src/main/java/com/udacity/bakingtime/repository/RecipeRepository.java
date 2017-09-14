@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.SparseIntArray;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +14,7 @@ import com.udacity.bakingtime.model.RecipeModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,7 +24,9 @@ import retrofit2.Retrofit;
 
 public class RecipeRepository extends RepositoryBase {
     private static final String INTERNAL_SP = "internal_shared_preferences";
-    private static final String RECIPE_LIST_SP_KEY = "internal_shared_preferences";
+    private static final String RECIPE_LIST_SP_KEY = "internal_cached_recipe_list";
+    private static final String RECIPE_ID_TO_WIDGET_ID_MAP_SP_KEY = "internal_recipe_id_to_widget_id_map";
+
     private static IRecipeService mRecipeService;
     private final Retrofit mRetrofit;
     private final SharedPreferences mInternalSP;
@@ -52,7 +56,8 @@ public class RecipeRepository extends RepositoryBase {
                 .apply();
     }
 
-    public @Nullable List<RecipeModel> getCachedRecipeList() {
+    public @Nullable
+    List<RecipeModel> getCachedRecipeList() {
         if (!mInternalSP.contains(RECIPE_LIST_SP_KEY)) {
             return null;
         }
@@ -61,6 +66,61 @@ public class RecipeRepository extends RepositoryBase {
         if (TextUtils.isEmpty(rawRecipeList)) {
             return null;
         }
-        return mGson.fromJson(rawRecipeList, new TypeToken<List<RecipeModel>>(){}.getType());
+        return mGson.fromJson(rawRecipeList, new TypeToken<List<RecipeModel>>() {
+        }.getType());
+    }
+
+    public @Nullable
+    RecipeModel getCachedRecipeByWidgetId(int widgetId) {
+        List<RecipeModel> recipeList = getCachedRecipeList();
+        if (recipeList == null) {
+            return null;
+        }
+
+        SparseIntArray sparseIntArray = getRecipeIdToWidgetIdMap();
+        int recipeId = sparseIntArray.get(widgetId);
+        if (recipeId == 0) {
+            return null;
+        }
+        RecipeModel result = null;
+        for (RecipeModel recipeModel : recipeList) {
+            if (recipeModel.getId() == recipeId) {
+                result = recipeModel;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void saveRecipeIdToWidgedId(int widgetId, int recipeId) {
+        SparseIntArray sparseIntArray = getRecipeIdToWidgetIdMap();
+        sparseIntArray.put(widgetId, recipeId);
+        saveRecipeIdToWidgedIdSparseArray(sparseIntArray);
+    }
+
+    private SparseIntArray mRecipeIdToWidgetIdSparseArray;
+
+    private SparseIntArray getRecipeIdToWidgetIdMap() {
+        if (mRecipeIdToWidgetIdSparseArray != null) {
+            return mRecipeIdToWidgetIdSparseArray;
+        }
+
+        if (mInternalSP.contains(RECIPE_ID_TO_WIDGET_ID_MAP_SP_KEY)) {
+            String rawSparseIntArray = mInternalSP.getString(RECIPE_ID_TO_WIDGET_ID_MAP_SP_KEY, "");
+            if (!TextUtils.isEmpty(rawSparseIntArray)) {
+                mRecipeIdToWidgetIdSparseArray = mGson.fromJson(rawSparseIntArray, SparseIntArray.class);
+
+                return mRecipeIdToWidgetIdSparseArray;
+            }
+        }
+
+        return mRecipeIdToWidgetIdSparseArray = new SparseIntArray();
+    }
+
+    private void saveRecipeIdToWidgedIdSparseArray(SparseIntArray sparseIntArray) {
+        String jsonedSparseArray = mGson.toJson(sparseIntArray);
+        mInternalSP.edit()
+                .putString(RECIPE_ID_TO_WIDGET_ID_MAP_SP_KEY, jsonedSparseArray)
+                .apply();
     }
 }

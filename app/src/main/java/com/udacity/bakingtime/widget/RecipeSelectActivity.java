@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.widget.RemoteViews;
 
 import com.udacity.bakingtime.R;
@@ -126,29 +127,18 @@ public class RecipeSelectActivity extends BaseActivity<RecipeSelectContract.View
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSelectRecipeEvent(SelectRecipeEvent selectRecipeEvent) {
         Timber.i("RECIPE_SELECT_ACTIVITY - Selected a recipe: " + selectRecipeEvent);
+        mPresenter.handleRecipeSelection(mShortcutWidgetId, selectRecipeEvent.recipeModel);
+    }
+
+    @Override
+    public void bindWidgetView(RecipeModel recipeModel) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-        RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_final_layout);
+        RecipeWidgetManager.bindLayout(appWidgetManager, this, mShortcutWidgetId, recipeModel);
+    }
 
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setAction(MainActivity.VIEW_RECIPE_DETAIL_ACTION);
-        intent.putExtra(MainActivity.RECIPE_BUNDLE_KEY, selectRecipeEvent.recipeModel);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, MainActivity.VIEW_RECIPE_DETAIL_REQUEST_CODE, intent, 0);
-
-        views.setTextViewText(R.id.tvWidgetRecipeDescription, selectRecipeEvent.recipeModel.getName());
-        views.setOnClickPendingIntent(R.id.tvWidgetRecipeDescription, pendingIntent);
-
-        views.setOnClickPendingIntent(R.id.ivWidgetRecipeImage, pendingIntent);
-        if (selectRecipeEvent.recipeModel.getImage() != null) {
-            views.setImageViewUri(R.id.ivWidgetRecipeImage, Uri.parse(selectRecipeEvent.recipeModel.getImage()));
-        } else {
-            Bitmap defaultImage = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
-            views.setImageViewBitmap(R.id.ivWidgetRecipeImage, defaultImage);
-        }
-
-        appWidgetManager.updateAppWidget(mShortcutWidgetId, views);
-
+    @Override
+    public void endProcess() {
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mShortcutWidgetId);
         setResult(RESULT_OK, resultValue);
