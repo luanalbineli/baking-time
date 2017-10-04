@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".mainactivity.RecipeListActivity"
+            android:name=".recipelist.RecipeListActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,11 +23,11 @@
         </activity>
 
         <activity android:name=".recipedetail.RecipeDetailActivity"
-            android:parentActivityName=".mainactivity.RecipeListActivity">
+            android:parentActivityName=".recipelist.RecipeListActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".mainactivity.RecipeListActivity" />
+                android:value=".recipelist.RecipeListActivity" />
         </activity>
 
         <activity android:name=".widget.RecipeSelectActivity"

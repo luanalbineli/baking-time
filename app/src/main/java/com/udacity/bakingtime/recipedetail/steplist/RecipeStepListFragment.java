@@ -5,15 +5,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.base.BaseRecyclerViewFragment;
 import com.udacity.bakingtime.event.SelectStepEvent;
-import com.udacity.bakingtime.exoplayer.ExoPlayerFragment;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
 import com.udacity.bakingtime.model.RecipeStepModel;
+import com.udacity.bakingtime.recipedetail.stepvideo.StepVideoDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -97,13 +96,15 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     }
 
     @Override
-    public void openStepVideo(String videoUrl) {
-        ExoPlayerFragment exoPlayerFragment = ExoPlayerFragment.getInstance(videoUrl);
+    public void openStepVideo(String title, String videoUrl) {
+        StepVideoDialog stepVideoDialog = StepVideoDialog.getInstance(title, videoUrl);
+        stepVideoDialog.show(getChildFragmentManager(), "video_dialog");
+        /*ExoPlayerFragment exoPlayerFragment = ExoPlayerFragment.getInstance(videoUrl);
         getActivity().getFragmentManager().beginTransaction()
                 .replace(R.id.fl_main_content, exoPlayerFragment)
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .addToBackStack(null)
-                .commit();
+                .commit();*/
     }
 
     @Override

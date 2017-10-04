@@ -71,13 +71,6 @@ public class RecipeStepDetailFragment extends BaseFragment<RecipeStepDetailContr
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //mPresenter.start(mRecipeModel);
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);

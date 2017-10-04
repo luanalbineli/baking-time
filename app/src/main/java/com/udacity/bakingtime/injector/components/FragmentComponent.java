@@ -2,7 +2,7 @@ package com.udacity.bakingtime.injector.components;
 
 
 import com.udacity.bakingtime.injector.PerFragment;
-import com.udacity.bakingtime.mainactivity.RecipeListActivity;
+import com.udacity.bakingtime.recipelist.RecipeListActivity;
 import com.udacity.bakingtime.recipedetail.RecipeDetailActivity;
 import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFragment;
 import com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment;

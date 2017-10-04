@@ -1,4 +1,4 @@
-package com.udacity.bakingtime.mainactivity;
+package com.udacity.bakingtime.recipelist;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;

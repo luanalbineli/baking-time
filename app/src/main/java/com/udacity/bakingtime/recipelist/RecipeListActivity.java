@@ -1,4 +1,4 @@
-package com.udacity.bakingtime.mainactivity;
+package com.udacity.bakingtime.recipelist;
 
 import android.content.Intent;
 import android.os.Bundle;

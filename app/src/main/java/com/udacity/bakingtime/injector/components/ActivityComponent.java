@@ -2,7 +2,7 @@ package com.udacity.bakingtime.injector.components;
 
 
 import com.udacity.bakingtime.injector.PerActivity;
-import com.udacity.bakingtime.mainactivity.RecipeListActivity;
+import com.udacity.bakingtime.recipelist.RecipeListActivity;
 import com.udacity.bakingtime.widget.RecipeSelectActivity;
 
 import dagger.Component;

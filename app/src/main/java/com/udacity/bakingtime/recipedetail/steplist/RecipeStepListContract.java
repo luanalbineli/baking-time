@@ -17,7 +17,7 @@ public abstract class RecipeStepListContract {
 
         void showStepList(List<RecipeStepModel> recipeStepList);
 
-        void openStepVideo(String videoUrl);
+        void openStepVideo(String title, String videoUrl);
 
         void viewStepDetail(RecipeStepModel recipeStepModel);
 

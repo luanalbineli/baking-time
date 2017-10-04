@@ -26,10 +26,6 @@ public class RecipeStepDetailPresenter extends BasePresenterImpl implements Reci
     }
 
     @Override
-    public void start(@Nullable RecipeModel recipeModel) {
-    }
-
-    @Override
     public void onSelectStep(RecipeStepModel recipeStepModel) {
         mView.showStepDetail(recipeStepModel);
     }

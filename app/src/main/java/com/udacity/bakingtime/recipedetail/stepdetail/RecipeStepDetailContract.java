@@ -15,8 +15,6 @@ public abstract class RecipeStepDetailContract {
 
     public interface Presenter extends BasePresenter<View> {
 
-        void start(RecipeModel mRecipeModel);
-
         void onSelectStep(RecipeStepModel recipeStepModel);
     }
 }

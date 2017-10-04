@@ -43,7 +43,7 @@ public class RecipeStepListPresenter extends BasePresenterImpl implements Recipe
             }
             return;
         }
-        mView.openStepVideo(recipeStepModel.getRealVideoUrl());
+        mView.openStepVideo(recipeStepModel.getShortDescription(), recipeStepModel.getRealVideoUrl());
 
     }
 
