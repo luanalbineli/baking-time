@@ -2,11 +2,11 @@ package com.udacity.bakingtime.injector.components;
 
 
 import com.udacity.bakingtime.injector.PerFragment;
-import com.udacity.bakingtime.recipedetail.RecipeDetailFragment;
+import com.udacity.bakingtime.mainactivity.RecipeListActivity;
+import com.udacity.bakingtime.recipedetail.RecipeDetailActivity;
 import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFragment;
 import com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment;
 import com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment;
-import com.udacity.bakingtime.recipelist.RecipeListFragment;
 import com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment;
 import com.udacity.bakingtime.widget.RecipeShortcutWidgetProvider;
 
@@ -15,8 +15,8 @@ import dagger.Component;
 @PerFragment
 @Component(dependencies = ApplicationComponent.class)
 public interface FragmentComponent {
-    void inject(RecipeDetailFragment fragment);
-    void inject(RecipeListFragment fragment);
+    void inject(RecipeDetailActivity fragment);
+    void inject(RecipeListActivity fragment);
     void inject(RecipeStepListFragment fragment);
     void inject(RecipeIngredientListFragment fragment);
     void inject(RecipeStepDetailFragment fragment);

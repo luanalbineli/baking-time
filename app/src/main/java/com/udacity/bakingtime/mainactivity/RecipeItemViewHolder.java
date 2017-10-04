@@ -1,4 +1,4 @@
-package com.udacity.bakingtime.recipelist;
+package com.udacity.bakingtime.mainactivity;
 
 import android.view.View;
 import android.widget.ImageView;

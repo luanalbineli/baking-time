@@ -1,16 +1,9 @@
 package com.udacity.bakingtime.widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
-import android.widget.RemoteViews;
 
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.base.BaseActivity;
@@ -18,7 +11,6 @@ import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.event.SelectRecipeEvent;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerActivityComponent;
-import com.udacity.bakingtime.mainactivity.MainActivity;
 import com.udacity.bakingtime.model.RecipeModel;
 import com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment;
 
@@ -86,7 +78,7 @@ public class RecipeSelectActivity extends BaseActivity<RecipeSelectContract.View
     }
 
     private void configureLayout() {
-        mRecipeListinatorFragment = (RecipeListinatorFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentRecipeListinator);
+        mRecipeListinatorFragment = (RecipeListinatorFragment) getFragmentManager().findFragmentById(R.id.fragmentRecipeListinator);
         Timber.i("mRecipeListinatorFragment - " + mRecipeListinatorFragment);
         mRecipeListinatorFragment.setTryAgainClickListener(mPresenter::tryAgain);
     }

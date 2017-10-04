@@ -1,19 +1,18 @@
-package com.udacity.bakingtime.recipelist;
+package com.udacity.bakingtime.mainactivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.widget.Toolbar;
 
 import com.udacity.bakingtime.R;
-import com.udacity.bakingtime.base.BaseFragment;
+import com.udacity.bakingtime.base.BaseActivity;
 import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.event.SelectRecipeEvent;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
 import com.udacity.bakingtime.model.RecipeModel;
-import com.udacity.bakingtime.recipedetail.RecipeDetailFragment;
+import com.udacity.bakingtime.recipedetail.RecipeDetailActivity;
 import com.udacity.bakingtime.recipelistinator.RecipeListinatorFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,11 +27,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 
-public class RecipeListFragment extends BaseFragment<RecipeListContract.View> implements RecipeListContract.View {
-    public static RecipeListFragment getInstance() {
-        return new RecipeListFragment();
-    }
-
+public class RecipeListActivity extends BaseActivity<RecipeListContract.View> implements RecipeListContract.View {
     private RecipeListinatorFragment mRecipeListinatorFragment;
 
     @Override
@@ -56,35 +51,27 @@ public class RecipeListFragment extends BaseFragment<RecipeListContract.View> im
                 .inject(this);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recipe_list, container, false);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recipe_list);
 
-        ButterKnife.bind(this, rootView);
+        Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        return rootView;
-    }
+        mRecipeListinatorFragment = (RecipeListinatorFragment) getFragmentManager().findFragmentById(R.id.fragmentRecipeListinator);
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        getActivity().setTitle(R.string.recipe_list);
-
-        mRecipeListinatorFragment = (RecipeListinatorFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeListinator);
+        setTitle(R.string.recipe_list);
 
         mPresenter.start();
     }
 
     @Override
     public void goToRecipeDetail(RecipeModel recipeModel) {
-        RecipeDetailFragment recipeDetailFragment = RecipeDetailFragment.getInstance(recipeModel);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.fl_main_content, recipeDetailFragment)
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .addToBackStack(null)
-                .commit();
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.RECIPE_MODEL_BUNDLE_KEY, recipeModel);
+
+        startActivity(intent);
     }
 
     @Override

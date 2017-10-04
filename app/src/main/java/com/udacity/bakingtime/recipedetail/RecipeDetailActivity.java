@@ -1,21 +1,24 @@
 package com.udacity.bakingtime.recipedetail;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.udacity.bakingtime.R;
-import com.udacity.bakingtime.base.BaseFragment;
+import com.udacity.bakingtime.base.BaseActivity;
 import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
@@ -24,22 +27,14 @@ import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFr
 import com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment;
 import com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment;
 
+import java.security.InvalidParameterException;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import timber.log.Timber;
 
 
-public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View> implements RecipeDetailContract.View {
-    public static RecipeDetailFragment getInstance(RecipeModel recipeModel) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(RECIPE_MODEL_BUNDLE_KEY, recipeModel);
-
-        RecipeDetailFragment movieDetailFragment = new RecipeDetailFragment();
-        movieDetailFragment.setArguments(bundle);
-        return movieDetailFragment;
-    }
-
+public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View> implements RecipeDetailContract.View {
     @Override
     protected BasePresenter<RecipeDetailContract.View> getPresenterImplementation() {
         return mPresenter;
@@ -50,12 +45,8 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
         return this;
     }
 
-    private static String RECIPE_MODEL_BUNDLE_KEY = "recipe_model";
-
     @Inject
     RecipeDetailPresenter mPresenter;
-
-    private RecipeModel mRecipeModel;
 
     @Override
     protected void onInjectDependencies(ApplicationComponent applicationComponent) {
@@ -68,33 +59,37 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey(RECIPE_MODEL_BUNDLE_KEY)) {
-            mRecipeModel = getArguments().getParcelable(RECIPE_MODEL_BUNDLE_KEY);
+        if (getIntent() == null || !getIntent().hasExtra(RECIPE_MODEL_BUNDLE_KEY)) {
+            throw new InvalidParameterException("We need the recipe detail to open pal :(");
+        }
+
+        setContentView(R.layout.fragment_recipe_detail);
+
+        RecipeModel recipeModel = getIntent().getParcelableExtra(RECIPE_MODEL_BUNDLE_KEY);
+
+        setTitle(recipeModel.getName());
+
+        mPresenter.start(recipeModel);
+
+        if (getActionBar() != null) {
+            getActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-
-        ButterKnife.bind(this, rootView);
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        getActivity().setTitle(mRecipeModel.getName());
-
-        mPresenter.start(mRecipeModel);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void showRecipeDetailContent(RecipeModel recipeModel) {
-        boolean useMasterDetail = getActivity().getResources().getBoolean(R.bool.useMasterDetail);
+        boolean useMasterDetail = getResources().getBoolean(R.bool.useMasterDetail);
         if (useMasterDetail) {
             configureMasterDetailLayout(recipeModel);
         } else {
@@ -103,38 +98,32 @@ public class RecipeDetailFragment extends BaseFragment<RecipeDetailContract.View
     }
 
     private void configureDefaultLayout(RecipeModel recipeModel) {
-        if (!TextUtils.isEmpty(recipeModel.getImage()) && getView() != null) {
+        if (!TextUtils.isEmpty(recipeModel.getImage())) {
             // TODO: implementation to fetch the image.
-            ImageView ingredientImage = ButterKnife.findById(getView(), R.id.ivRecipeItemPicture);
+            ImageView ingredientImage = ButterKnife.findById(this, R.id.ivRecipeItemPicture);
         }
         setupViewPager(recipeModel);
     }
 
     private void configureMasterDetailLayout(RecipeModel recipeModel) {
-        if (getView() == null) {
-            Timber.wtf("Null view?");
-            return;
-        }
-
-        RecipeStepListFragment recipeStepListFragment = (RecipeStepListFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepList);
+        RecipeStepListFragment recipeStepListFragment = (RecipeStepListFragment) getFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepList);
         recipeStepListFragment.setStepList(recipeModel.getRecipeStepList());
 
-        RecipeStepDetailFragment recipeStepDetailFragment = (RecipeStepDetailFragment) getChildFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepDetail);
+        RecipeStepDetailFragment recipeStepDetailFragment = (RecipeStepDetailFragment) getFragmentManager().findFragmentById(R.id.fragmentRecipeDetailStepDetail);
         recipeStepDetailFragment.showStepDetail(recipeModel.getRecipeStepList().get(0));
     }
 
     private void setupViewPager(RecipeModel recipeModel) {
-        if (getView() == null) {
-            Timber.wtf("Why is the view null?");
-            return;
-        }
+        ViewPager viewPager = ButterKnife.findById(this, R.id.vpRecipeDetail);
+        viewPager.setAdapter(new ViewPagerAdapter(getFragmentManager(), recipeModel, this));
 
-        ViewPager viewPager = ButterKnife.findById(getView(), R.id.vpRecipeDetail);
-        viewPager.setAdapter(new ViewPagerAdapter(getChildFragmentManager(), recipeModel, getActivity()));
-
-        TabLayout tabLayout = ButterKnife.findById(getView(), R.id.tlRecipeDetail);
+        TabLayout tabLayout = ButterKnife.findById(this, R.id.tlRecipeDetail);
         tabLayout.setupWithViewPager(viewPager);
     }
+
+    public static String RECIPE_MODEL_BUNDLE_KEY = "recipe_model";
+    public static int VIEW_RECIPE_DETAIL_REQUEST_CODE = 1001;
+    public static String VIEW_RECIPE_DETAIL_ACTION = "view_recipe_detail";
 
     private static class ViewPagerAdapter extends FragmentPagerAdapter {
         private final RecipeModel mRecipeModel;

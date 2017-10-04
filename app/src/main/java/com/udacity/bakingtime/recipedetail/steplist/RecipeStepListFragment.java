@@ -99,7 +99,7 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     @Override
     public void openStepVideo(String videoUrl) {
         ExoPlayerFragment exoPlayerFragment = ExoPlayerFragment.getInstance(videoUrl);
-        getActivity().getSupportFragmentManager().beginTransaction()
+        getActivity().getFragmentManager().beginTransaction()
                 .replace(R.id.fl_main_content, exoPlayerFragment)
                 .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
                 .addToBackStack(null)

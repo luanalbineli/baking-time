@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".mainactivity.MainActivity"
+            android:name=".mainactivity.RecipeListActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -20,6 +20,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".recipedetail.RecipeDetailActivity"
+            android:parentActivityName=".mainactivity.RecipeListActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".mainactivity.RecipeListActivity" />
         </activity>
 
         <activity android:name=".widget.RecipeSelectActivity"
