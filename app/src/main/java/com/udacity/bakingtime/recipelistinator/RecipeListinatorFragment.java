@@ -19,8 +19,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 
 public class RecipeListinatorFragment extends BaseRecyclerViewFragment<RecipeListinatorContract.View> implements RecipeListinatorContract.View {
     private RequestStatusView.ITryAgainClickListener mTryAgainListener;

@@ -10,6 +10,7 @@ import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
@@ -18,12 +19,15 @@ import com.udacity.bakingtime.base.BaseActivity;
 import com.udacity.bakingtime.base.BasePresenter;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
+import com.udacity.bakingtime.model.RecipeIngredientModel;
 import com.udacity.bakingtime.model.RecipeModel;
 import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFragment;
+import com.udacity.bakingtime.recipedetail.ingredientlistdialog.IngredientListDialog;
 import com.udacity.bakingtime.recipedetail.stepdetail.RecipeStepDetailFragment;
 import com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -73,12 +77,24 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        boolean useMasterDetail = getResources().getBoolean(R.bool.useMasterDetail);
+        if (useMasterDetail) {
+            getMenuInflater().inflate(R.menu.recipe_detail_tablet_menu, menu);
+        }
+
+        return useMasterDetail;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+            case R.id.action_show_ingredient_list:
+                mPresenter.showIngredientList();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -91,6 +107,12 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
         } else {
             configureDefaultLayout(recipeModel);
         }
+    }
+
+    @Override
+    public void showIngredientList(List<RecipeIngredientModel> ingredientList) {
+        IngredientListDialog ingredientListDialog = IngredientListDialog.getInstance(ingredientList);
+        ingredientListDialog.show(getFragmentManager(), "ingredient_list_dialog");
     }
 
     private void configureDefaultLayout(RecipeModel recipeModel) {

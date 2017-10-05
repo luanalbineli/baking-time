@@ -59,10 +59,9 @@ public class RecipeIngredientListFragment extends BaseRecyclerViewFragment<Recip
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null || !getArguments().containsKey(RECIPE_INGREDIENT_LIST_BUNDLE_KEY)) {
-            throw new InvalidParameterException("recipe_ingredient_list");
+        if (getArguments() != null && getArguments().containsKey(RECIPE_INGREDIENT_LIST_BUNDLE_KEY)) {
+            mRecipeIngredientList = getArguments().getParcelableArrayList(RECIPE_INGREDIENT_LIST_BUNDLE_KEY);
         }
-        mRecipeIngredientList = getArguments().getParcelableArrayList(RECIPE_INGREDIENT_LIST_BUNDLE_KEY);
     }
 
     @Override
@@ -70,6 +69,10 @@ public class RecipeIngredientListFragment extends BaseRecyclerViewFragment<Recip
         super.onViewCreated(view, savedInstanceState);
 
         mPresenter.start(mRecipeIngredientList);
+    }
+
+    public void addIngredientList(List<RecipeIngredientModel> ingredientListModel) {
+        mPresenter.start(ingredientListModel);
     }
 
     @Override

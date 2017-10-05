@@ -99,12 +99,6 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     public void openStepVideo(String title, String videoUrl) {
         StepVideoDialog stepVideoDialog = StepVideoDialog.getInstance(title, videoUrl);
         stepVideoDialog.show(getChildFragmentManager(), "video_dialog");
-        /*ExoPlayerFragment exoPlayerFragment = ExoPlayerFragment.getInstance(videoUrl);
-        getActivity().getFragmentManager().beginTransaction()
-                .replace(R.id.fl_main_content, exoPlayerFragment)
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .addToBackStack(null)
-                .commit();*/
     }
 
     @Override

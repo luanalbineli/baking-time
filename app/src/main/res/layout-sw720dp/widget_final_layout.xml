@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/accent"
     android:orientation="vertical">
 
     <ImageView
@@ -14,7 +13,8 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/content_description_recipe_image" />
 
     <TextView
         android:id="@+id/tvWidgetRecipeDescription"

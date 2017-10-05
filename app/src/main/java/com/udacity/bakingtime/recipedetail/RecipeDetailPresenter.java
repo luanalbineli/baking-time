@@ -14,6 +14,8 @@ import javax.inject.Inject;
 public class RecipeDetailPresenter extends BasePresenterImpl implements RecipeDetailContract.Presenter {
     private RecipeDetailContract.View mView;
 
+    private RecipeModel mRecipeModel;
+
     @Inject
     RecipeDetailPresenter(@NonNull RecipeRepository movieRepository) {
         super(movieRepository);
@@ -26,8 +28,14 @@ public class RecipeDetailPresenter extends BasePresenterImpl implements RecipeDe
 
     @Override
     public void start(@Nullable RecipeModel recipeModel) {
+        mRecipeModel = recipeModel;
         if (recipeModel != null) {
             mView.showRecipeDetailContent(recipeModel);
         }
+    }
+
+    @Override
+    public void showIngredientList() {
+        mView.showIngredientList(mRecipeModel.getIngredientList());
     }
 }

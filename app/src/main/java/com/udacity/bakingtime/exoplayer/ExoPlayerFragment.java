@@ -54,8 +54,6 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         if (getArguments() != null && getArguments().containsKey(VIDEO_URL_BUNDLE_KEY)) {
             mVideoUrl = getArguments().getString(VIDEO_URL_BUNDLE_KEY);
         }
-
-        Timber.i("Video URL: " + mVideoUrl);
     }
 
     @Nullable
@@ -77,7 +75,6 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
 
     private void configurePlayer() {
         BandwidthMeter bandwidthMeter = null;
-        //TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector = new DefaultTrackSelector(bandwidthMeter);
 
         mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);

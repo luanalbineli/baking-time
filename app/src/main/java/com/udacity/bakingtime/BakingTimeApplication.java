@@ -3,6 +3,7 @@ package com.udacity.bakingtime;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
@@ -33,6 +34,8 @@ public class BakingTimeApplication extends Application {
         mApplicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     public ApplicationComponent getApplicationComponent() {
