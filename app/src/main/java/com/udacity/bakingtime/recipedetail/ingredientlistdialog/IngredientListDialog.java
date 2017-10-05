@@ -51,7 +51,7 @@ public class IngredientListDialog extends DialogFragment {
         Fragment fragment = getChildFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
         if (fragment != null) {
             recipeIngredientListFragment = (RecipeIngredientListFragment) fragment;
-            recipeIngredientListFragment.addIngredientList(mRecipeIngredientList);
+//            recipeIngredientListFragment.addIngredientList(mRecipeIngredientList);
         } else {
             recipeIngredientListFragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
             getChildFragmentManager().beginTransaction()
