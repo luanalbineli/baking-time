@@ -2,6 +2,7 @@ package com.udacity.bakingtime.recipedetail.ingredientlistdialog;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -26,6 +27,12 @@ import javax.inject.Inject;
 
 public class IngredientListDialog extends DialogFragment {
     private List<RecipeIngredientModel> mRecipeIngredientList;
+    private DialogInterface.OnDismissListener onDismissListener;
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,16 +54,21 @@ public class IngredientListDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecipeIngredientListFragment recipeIngredientListFragment;
         Fragment fragment = getChildFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
-        if (fragment != null) {
-            recipeIngredientListFragment = (RecipeIngredientListFragment) fragment;
-//            recipeIngredientListFragment.addIngredientList(mRecipeIngredientList);
-        } else {
-            recipeIngredientListFragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
+        if (fragment == null) {
+            fragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.flIngredientListDialogContainer, recipeIngredientListFragment, INGREDIENT_LIST_FRAGMENT_TAG)
+                    .add(R.id.flIngredientListDialogContainer, fragment, INGREDIENT_LIST_FRAGMENT_TAG)
                     .commit();
+        }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (onDismissListener != null) {
+            onDismissListener.onDismiss(dialog);
         }
     }
 

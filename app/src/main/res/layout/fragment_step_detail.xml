@@ -6,46 +6,24 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvStepDetailShortDescription"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="0dp"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Graham Cracker crumbs asd as das das da sda sd asd as da android:string/defaultMsisdnAlphaTag" />
-
-    <TextView
         android:id="@+id/tvStepDetailDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_margin="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStepDetailShortDescription"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentExoPlayer"
         tools:text="Graham Cracker crumbs asd as das das da sda sd asd as da android:string/defaultMsisdnAlphaTag" />
 
-    <FrameLayout
+    <fragment
+        android:id="@+id/fragmentExoPlayer"
+        android:name="com.udacity.bakingtime.exoplayer.ExoPlayerFragment"
         android:layout_width="0dp"
         android:layout_height="340dp"
         android:layout_margin="32dp"
-        android:maxHeight="340dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStepDetailDescription">
-
-        <fragment
-            android:id="@+id/fragmentExoPlayer"
-            android:name="com.udacity.bakingtime.exoplayer.ExoPlayerFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

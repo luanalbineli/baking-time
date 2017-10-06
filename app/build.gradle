@@ -56,9 +56,6 @@ dependencies {
     // Material Dialogs
     implementation 'com.afollestad.material-dialogs:core:0.9.4.1'
 
-    // Fresco (power image viewer)
-    implementation "com.facebook.fresco:fresco:$rootProject.fresco_version"
-
     // Dagger
     implementation "com.google.dagger:dagger:$rootProject.dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger_version"

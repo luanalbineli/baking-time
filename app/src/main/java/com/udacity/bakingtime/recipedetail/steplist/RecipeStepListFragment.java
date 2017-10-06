@@ -102,8 +102,8 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
     }
 
     @Override
-    public void viewStepDetail(RecipeStepModel recipeStepModel) {
-        EventBus.getDefault().post(new SelectStepEvent(recipeStepModel));
+    public void viewStepDetail(int selectedStepIndex, RecipeStepModel recipeStepModel) {
+        EventBus.getDefault().post(new SelectStepEvent(selectedStepIndex, recipeStepModel));
     }
 
     @Override

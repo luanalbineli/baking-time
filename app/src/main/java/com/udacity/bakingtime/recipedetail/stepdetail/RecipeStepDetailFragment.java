@@ -10,15 +10,10 @@ import android.widget.TextView;
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.base.BaseFragment;
 import com.udacity.bakingtime.base.BasePresenter;
-import com.udacity.bakingtime.event.SelectStepEvent;
 import com.udacity.bakingtime.exoplayer.ExoPlayerFragment;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
 import com.udacity.bakingtime.model.RecipeStepModel;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import javax.inject.Inject;
 
@@ -30,12 +25,8 @@ public class RecipeStepDetailFragment extends BaseFragment<RecipeStepDetailContr
 
     @BindView(R.id.tvStepDetailDescription)
     TextView mDescriptionTextView;
+
     private ExoPlayerFragment mExoPlayerFragment;
-
-
-    @BindView(R.id.tvStepDetailShortDescription)
-    TextView mShortDescriptionTextView;
-
 
     @Override
     protected BasePresenter<RecipeStepDetailContract.View> getPresenterImplementation() {
@@ -71,25 +62,7 @@ public class RecipeStepDetailFragment extends BaseFragment<RecipeStepDetailContr
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSelectStepEvent(SelectStepEvent selectStepEvent) {
-        mPresenter.onSelectStep(selectStepEvent.recipeStepModel);
-    }
-
-    @Override
     public void showStepDetail(RecipeStepModel recipeStepModel) {
-        mShortDescriptionTextView.setText(recipeStepModel.getShortDescription());
         if (recipeStepModel.getDescripton() == null || recipeStepModel.getDescripton().equals(recipeStepModel.getShortDescription())) {
             mDescriptionTextView.setVisibility(View.GONE);
         } else {

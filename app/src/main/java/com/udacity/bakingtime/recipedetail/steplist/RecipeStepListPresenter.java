@@ -58,7 +58,7 @@ public class RecipeStepListPresenter extends BasePresenterImpl implements Recipe
     }
 
     private void selectAndShowRecipeStep(int selectedRecipeStepIndex, RecipeStepModel recipeStepModel) {
-        mView.viewStepDetail(recipeStepModel);
+        mView.viewStepDetail(selectedRecipeStepIndex, recipeStepModel);
         if (mSelectedStepIndex != -1) {
             mView.clearSelectedStep();
         }

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ivRecipeItemPicture"
+        android:id="@+id/ivRecipeDetailImage"
         android:layout_width="0dp"
         android:layout_height="140dp"
         android:adjustViewBounds="true"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivRecipeItemPicture" />
+        app:layout_constraintTop_toBottomOf="@+id/ivRecipeDetailImage" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vpRecipeDetail"

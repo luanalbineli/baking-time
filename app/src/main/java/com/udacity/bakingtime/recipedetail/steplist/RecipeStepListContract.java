@@ -19,7 +19,7 @@ public abstract class RecipeStepListContract {
 
         void openStepVideo(String title, String videoUrl);
 
-        void viewStepDetail(RecipeStepModel recipeStepModel);
+        void viewStepDetail(int selectedStepIndex, RecipeStepModel recipeStepModel);
 
         void setSelectedRecipeStep(int selectedRecipeStepIndex);
 

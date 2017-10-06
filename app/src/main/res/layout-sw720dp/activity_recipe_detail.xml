@@ -4,6 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/ivRecipeDetailImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_recipe_item"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/glide_logo" />
+
     <fragment
         android:id="@+id/fragmentRecipeDetailStepList"
         android:name="com.udacity.bakingtime.recipedetail.steplist.RecipeStepListFragment"
@@ -12,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/ivRecipeDetailImage" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -28,7 +39,7 @@
         android:background="#1f000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <fragment
         android:id="@+id/fragmentRecipeDetailStepDetail"

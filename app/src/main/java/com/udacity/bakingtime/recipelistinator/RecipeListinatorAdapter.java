@@ -1,6 +1,5 @@
 package com.udacity.bakingtime.recipelistinator;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import com.udacity.bakingtime.ui.RequestStatusView;
 import com.udacity.bakingtime.ui.recyclerview.CustomRecyclerViewAdapter;
 
 class RecipeListinatorAdapter extends CustomRecyclerViewAdapter<RecipeModel, RecipeItemViewHolder> {
-    protected RecipeListinatorAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
+    RecipeListinatorAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
         super(emptyMessageResId, tryAgainClickListener);
     }
 
@@ -24,14 +23,6 @@ class RecipeListinatorAdapter extends CustomRecyclerViewAdapter<RecipeModel, Rec
     @Override
     protected void onBindItemViewHolder(RecipeItemViewHolder recipeItemViewHolder, int position) {
         RecipeModel recipeModel = getItemByPosition(position);
-        recipeItemViewHolder.mRecipeNameTextView.setText(recipeModel.getName());
-
-        Resources resources = recipeItemViewHolder.getContext().getResources();
-        String servingText = resources.getQuantityString(R.plurals.number_of_serving,
-                recipeModel.getServings(), // Determine if is plural by the quantity.
-                recipeModel.getServings()); // Format.
-
-        recipeItemViewHolder.mRecipeServingTextView.setText(servingText);
-
+        recipeItemViewHolder.bind(recipeModel);
     }
 }

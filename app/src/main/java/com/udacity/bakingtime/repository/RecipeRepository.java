@@ -20,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
+import io.reactivex.functions.Function;
 import retrofit2.Retrofit;
 
 public class RecipeRepository extends RepositoryBase {
@@ -47,7 +48,11 @@ public class RecipeRepository extends RepositoryBase {
     }
 
     public Observable<List<RecipeModel>> getRecipeList() {
-        return observeOnMainThread(getRecipeServiceInstance().getRecipeList());
+        return observeOnMainThread(getRecipeServiceInstance().getRecipeList()).map(recipeModels -> {
+            // TODO: JUST FOR TESTS.
+            recipeModels.get(0).setImage("https://github.com/bumptech/glide/blob/master/static/glide_logo.png?raw=true");
+            return recipeModels;
+        });
     }
 
     public void cacheRecipeList(@NotNull List<RecipeModel> recipeList) {

@@ -39,9 +39,5 @@ ext {
     readmoreTextview_version = '2.0.1'
     eventBus_version = '3.0.0'
     exoPlayer_version = 'r2.5.1'
-    glide_version = '4.1.1'
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    glide_version = '4.2.0'
 }
