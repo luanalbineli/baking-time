@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="recipeItemBackground">#9c050505</color>
+
+    <color name="colorButtonSecondary">#c5c5c5</color>
 </resources>

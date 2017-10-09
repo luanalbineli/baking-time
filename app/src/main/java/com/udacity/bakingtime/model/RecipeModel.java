@@ -109,4 +109,12 @@ public class RecipeModel implements Parcelable {
         dest.writeInt(servings);
         dest.writeString(image);
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id
+                + "\nname: " + name
+                + "\nservings: " + servings
+                + "\nimage: " + image;
+    }
 }

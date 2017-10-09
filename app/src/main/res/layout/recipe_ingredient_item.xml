@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp">
+    android:layout_margin="16dp"
+    android:minWidth="240dp">
 
     <TextView
         android:id="@+id/tvRecipeIngredientQuantity"
@@ -12,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="2" />
 
@@ -23,30 +24,31 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/tvRecipeIngredientQuantity"
-        app:layout_constraintStart_toStartOf="@+id/tvRecipeIngredientQuantity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRecipeIngredientQuantity"
-        tools:text="CUP"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="CUP" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintGuide_end="64dp" />
+        app:layout_constraintGuide_begin="64dp" />
 
     <TextView
         android:id="@+id/tvRecipeIngredientName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Graham Cracker crumbs asd as das das da sda sd asd as da android:string/defaultMsisdnAlphaTag"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp" />
+        app:layout_constraintStart_toEndOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Graham Cracker crumbs asd as das das da sda sd asd as da android:string/defaultMsisdnAlphaTag asd asd as dalsk dçalks dçaksç dkaçs dkaçsdk çaskd çakdç aksçd " />
 
 </android.support.constraint.ConstraintLayout>

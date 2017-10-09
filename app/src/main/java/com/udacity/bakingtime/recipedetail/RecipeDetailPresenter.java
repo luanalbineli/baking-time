@@ -31,6 +31,7 @@ public class RecipeDetailPresenter extends BasePresenterImpl implements RecipeDe
         this.recipeDetailViewModel = recipeDetailViewModel;
         if (!recipeDetailViewModel.useMasterDetail) {
             mView.configureNormalLayout(recipeDetailViewModel.recipeModel);
+            return;
         }
 
         if (recipeDetailViewModel.selectedStepIndex == null) {

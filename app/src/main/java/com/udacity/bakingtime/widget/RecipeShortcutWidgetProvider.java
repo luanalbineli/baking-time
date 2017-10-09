@@ -23,6 +23,7 @@ public class RecipeShortcutWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+        Timber.d("Updating the widgets. Count: " + appWidgetIds.length);
         DaggerFragmentComponent.builder()
                 .applicationComponent(((BakingTimeApplication) context.getApplicationContext()).getApplicationComponent())
                 .build()
@@ -30,6 +31,7 @@ public class RecipeShortcutWidgetProvider extends AppWidgetProvider {
 
         for (int widgetId : appWidgetIds) {
             RecipeModel recipeModel = mRecipeRepository.getCachedRecipeByWidgetId(widgetId);
+            Timber.d("Checking if there is a recipe model for it: " + recipeModel);
             if (recipeModel != null) { // TODO: Handle if the recipe was not found.
                 RecipeWidgetManager.bindLayout(appWidgetManager, context, widgetId, recipeModel);
             }
@@ -42,6 +44,13 @@ public class RecipeShortcutWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDisabled(Context context) {
+
+    }
+
+    @Override
+    public void onDeleted(Context context, int[] appWidgetIds) {
+        super.onDeleted(context, appWidgetIds);
+
 
     }
 }

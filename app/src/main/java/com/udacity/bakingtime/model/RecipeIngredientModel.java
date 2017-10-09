@@ -56,4 +56,11 @@ public class RecipeIngredientModel implements Parcelable {
         dest.writeString(measure);
         dest.writeString(ingredient);
     }
+
+    @Override
+    public String toString() {
+        return "quantity: " + quantity
+                + "\nmeasure: " + measure
+                + "\ningredient: " + ingredient;
+    }
 }

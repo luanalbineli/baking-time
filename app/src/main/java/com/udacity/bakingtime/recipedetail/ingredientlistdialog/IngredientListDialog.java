@@ -5,16 +5,13 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
 
 import com.udacity.bakingtime.R;
-import com.udacity.bakingtime.injector.components.ApplicationComponent;
-import com.udacity.bakingtime.injector.components.DaggerFragmentComponent;
 import com.udacity.bakingtime.model.RecipeIngredientModel;
 import com.udacity.bakingtime.recipedetail.ingredientlist.RecipeIngredientListFragment;
 
@@ -22,7 +19,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import butterknife.ButterKnife;
 
 
 public class IngredientListDialog extends DialogFragment {
@@ -47,6 +44,9 @@ public class IngredientListDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        if (getDialog() != null) {
+            getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
         return inflater.inflate(R.layout.ingredient_list_dialog, container, false);
     }
 
@@ -54,13 +54,16 @@ public class IngredientListDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Fragment fragment = getChildFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
+        Fragment fragment = getFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
         if (fragment == null) {
-            fragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
+            RecipeIngredientListFragment recipeIngredientListFragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
             getChildFragmentManager().beginTransaction()
-                    .add(R.id.flIngredientListDialogContainer, fragment, INGREDIENT_LIST_FRAGMENT_TAG)
+                    .add(R.id.flIngredientListDialogContainer, recipeIngredientListFragment, INGREDIENT_LIST_FRAGMENT_TAG)
                     .commit();
         }
+
+        TextView closeButton = ButterKnife.findById(view, R.id.btQuantityPickerDialogConfirm);
+        closeButton.setOnClickListener(v -> dismiss());
     }
 
     @Override

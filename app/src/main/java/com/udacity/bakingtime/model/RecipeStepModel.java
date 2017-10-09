@@ -72,6 +72,15 @@ public class RecipeStepModel implements Parcelable {
         dest.writeString(thumbnailUrl);
     }
 
+    @Override
+    public String toString() {
+        return "quantity: " + id
+                + "\nshortDescription: " + shortDescription
+                + "\ndescription: " + descripton
+                + "\nvideoURL: " + videoURL
+                + "\nthumbnailUrl: " + thumbnailUrl;
+    }
+
     @Nullable
     public String getRealVideoUrl() {
         if (videoURL == null) {

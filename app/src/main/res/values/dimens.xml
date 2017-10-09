@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="default_ingredient_dialog_width">420dp</dimen>
+    <dimen name="default_ingredient_dialog_height">540dp</dimen>
 </resources>

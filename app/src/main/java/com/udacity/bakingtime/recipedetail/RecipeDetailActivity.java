@@ -3,7 +3,6 @@ package com.udacity.bakingtime.recipedetail;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -150,9 +149,8 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
             ingredientListDialog = (IngredientListDialog) getFragmentManager().findFragmentByTag(ingredientListDialogTag);
         } else {
             ingredientListDialog = IngredientListDialog.getInstance(ingredientList);
-            ingredientListDialog.setOnDismissListener(dialogInterface -> mPresenter.onDismissIngredientList());
 
-            ingredientListDialog.show(getFragmentManager(), "ingredient_list_dialog");
+            ingredientListDialog.show(getFragmentManager(), ingredientListDialogTag);
         }
 
         ingredientListDialog.setOnDismissListener(dialogInterface -> mPresenter.onDismissIngredientList());

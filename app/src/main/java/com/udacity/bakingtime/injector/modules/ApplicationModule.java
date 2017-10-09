@@ -17,7 +17,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ApplicationModule {
-    private static final String BASE_URL = "http://go.udacity.com/";
+    //private static final String BASE_URL = "http://go.udacity.com/";
+    private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
     private final BakingTimeApplication mPopularMovieApplication;
 
     public ApplicationModule(BakingTimeApplication popularMovieApplication) {
