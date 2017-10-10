@@ -4,7 +4,9 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
 
@@ -12,8 +14,12 @@ import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.model.RecipeModel;
 import com.udacity.bakingtime.recipedetail.RecipeDetailActivity;
 
-public abstract class RecipeWidgetManager {
-    public static void bindLayout(AppWidgetManager appWidgetManager, Context context, int widgetId, RecipeModel recipeModel) {
+import java.net.URL;
+
+import timber.log.Timber;
+
+abstract class RecipeWidgetManager {
+    static void bindLayout(AppWidgetManager appWidgetManager, Context context, int widgetId, RecipeModel recipeModel) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_final_layout);
 
         Intent intent = new Intent(context, RecipeDetailActivity.class);
@@ -28,10 +34,50 @@ public abstract class RecipeWidgetManager {
         views.setOnClickPendingIntent(R.id.ivWidgetRecipeImage, pendingIntent);
         if (TextUtils.isEmpty(recipeModel.getImage())) {
             views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
+            appWidgetManager.updateAppWidget(widgetId, views);
         } else {
-            views.setImageViewUri(R.id.ivWidgetRecipeImage, Uri.parse(recipeModel.getImage()));
+            new FetchWidgetImageAsyncTask(appWidgetManager, widgetId, views).execute(recipeModel.getImage());
+        }
+    }
+
+    static class FetchWidgetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
+        private final AppWidgetManager appWidgetManager;
+        private final int widgetId;
+        private final RemoteViews views;
+
+        FetchWidgetImageAsyncTask(AppWidgetManager appWidgetManager, int widgetId, RemoteViews views) {
+            this.appWidgetManager = appWidgetManager;
+            this.widgetId = widgetId;
+            this.views = views;
         }
 
-        appWidgetManager.updateAppWidget(widgetId, views);
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Timber.i("RecipeWidgetManager - 1 - Init the download");
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Timber.i("RecipeWidgetManager - Started the download");
+            try {
+                URL url = new URL(strings[0]);
+                return BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (Exception e) {
+                Timber.e("RecipeWidgetManager - An error occurred while tried to load the image");
+                return null;
+            }
+        }
+
+        protected void onPostExecute(Bitmap bitmap) {
+            Timber.e("RecipeWidgetManager - Finished the download: " + bitmap);
+            if (bitmap == null) {
+                views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
+            } else {
+                views.setImageViewBitmap(R.id.ivWidgetRecipeImage, bitmap);
+            }
+            appWidgetManager.updateAppWidget(widgetId, views);
+
+        }
     }
 }

@@ -92,7 +92,7 @@ public class RecipeRepository extends RepositoryBase {
         SparseIntArray sparseIntArray = getRecipeIdToWidgetIdMap();
         Timber.i("Map with widgetId/recipe values: " + sparseIntArray);
         int recipeId = sparseIntArray.get(widgetId);
-        if (recipeId == 0) {
+        if (recipeId < 0) {
             return null;
         }
         RecipeModel result = null;
@@ -110,8 +110,6 @@ public class RecipeRepository extends RepositoryBase {
         SparseIntArray sparseIntArray = getRecipeIdToWidgetIdMap();
         sparseIntArray.put(widgetId, recipeId);
         saveRecipeIdToWidgedIdSparseArray(sparseIntArray);
-
-        mRecipeIdToWidgetIdSparseArray.put(widgetId, recipeId);
     }
 
     private SparseIntArray mRecipeIdToWidgetIdSparseArray;
@@ -139,5 +137,11 @@ public class RecipeRepository extends RepositoryBase {
         mInternalSP.edit()
                 .putString(RECIPE_ID_TO_WIDGET_ID_MAP_SP_KEY, jsonedSparseArray)
                 .apply();
+    }
+
+    public void removeRecipeIdByWidgetId(int widgetId) {
+        SparseIntArray sparseIntArray = getRecipeIdToWidgetIdMap();
+        sparseIntArray.delete(widgetId);
+        saveRecipeIdToWidgedIdSparseArray(sparseIntArray);
     }
 }

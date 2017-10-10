@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.model.RecipeModel;
 import com.udacity.bakingtime.ui.recyclerview.CustomRecyclerViewHolder;
@@ -41,7 +41,7 @@ class RecipeItemViewHolder extends CustomRecyclerViewHolder {
         mRecipeServingTextView.setText(servingText);
 
         if (!TextUtils.isEmpty(recipeModel.getImage())) {
-            Glide.with(getContext()).load(recipeModel.getImage()).into(mRecipeImageView);
+            Picasso.with(getContext()).load(recipeModel.getImage()).into(mRecipeImageView);
         }
     }
 }

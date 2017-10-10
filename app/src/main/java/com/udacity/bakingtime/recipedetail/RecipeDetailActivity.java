@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 import com.udacity.bakingtime.R;
 import com.udacity.bakingtime.base.BaseActivity;
 import com.udacity.bakingtime.base.BasePresenter;
@@ -42,6 +42,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 
 public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View> implements RecipeDetailContract.View {
@@ -87,6 +88,7 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
         }
 
         RecipeDetailViewModel recipeDetailViewModel = buildRecipeDetailViewModel(getIntent(), savedInstanceState);
+        Timber.d("recipeDetailViewModel: " + recipeDetailViewModel);
         mPresenter.start(recipeDetailViewModel);
     }
 
@@ -175,7 +177,7 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
             return;
         }
 
-        Glide.with(this)
+        Picasso.with(this)
                 .load(recipeModel.getImage())
                 .into(mRecipeImageView);
     }

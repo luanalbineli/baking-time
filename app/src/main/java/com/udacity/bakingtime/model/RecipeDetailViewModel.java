@@ -13,4 +13,12 @@ public class RecipeDetailViewModel {
         this.ingredientListDialogDismissed = ingredientListDialogDismissed;
         this.useMasterDetail = useMasterDetail;
     }
+
+    @Override
+    public String toString() {
+        return "recipeModel: " + recipeModel
+                + "\nselectedStepIndex: " + selectedStepIndex
+                + "\ningredientListDialogDismissed: " + ingredientListDialogDismissed
+                + "\nuseMasterDetail: " + useMasterDetail;
+    }
 }

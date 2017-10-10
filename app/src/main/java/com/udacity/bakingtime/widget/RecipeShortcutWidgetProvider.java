@@ -50,7 +50,13 @@ public class RecipeShortcutWidgetProvider extends AppWidgetProvider {
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
         super.onDeleted(context, appWidgetIds);
+        DaggerFragmentComponent.builder()
+                .applicationComponent(((BakingTimeApplication) context.getApplicationContext()).getApplicationComponent())
+                .build()
+                .inject(this);
 
-
+        for (int widgetId : appWidgetIds) {
+            mRecipeRepository.removeRecipeIdByWidgetId(widgetId);
+        }
     }
 }
