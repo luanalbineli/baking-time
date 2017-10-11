@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/glide_logo" />
+        app:srcCompat="@drawable/default_image" />
 
     <fragment
         android:id="@+id/fragmentRecipeDetailStepList"

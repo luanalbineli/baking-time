@@ -54,7 +54,7 @@ public class IngredientListDialog extends DialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Fragment fragment = getFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
+        Fragment fragment = getChildFragmentManager().findFragmentByTag(INGREDIENT_LIST_FRAGMENT_TAG);
         if (fragment == null) {
             RecipeIngredientListFragment recipeIngredientListFragment = RecipeIngredientListFragment.getInstance(mRecipeIngredientList);
             getChildFragmentManager().beginTransaction()

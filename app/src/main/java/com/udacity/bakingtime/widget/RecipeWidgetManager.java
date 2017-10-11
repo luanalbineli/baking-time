@@ -20,18 +20,20 @@ import timber.log.Timber;
 
 abstract class RecipeWidgetManager {
     static void bindLayout(AppWidgetManager appWidgetManager, Context context, int widgetId, RecipeModel recipeModel) {
+        Timber.d("bindLayout - Binding the layout for the widget: " + widgetId);
+        Timber.d("bindLayout - recipeModel: " + recipeModel);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_final_layout);
 
         Intent intent = new Intent(context, RecipeDetailActivity.class);
-        intent.setAction(RecipeDetailActivity.VIEW_RECIPE_DETAIL_ACTION);
+        intent.setAction(String.valueOf(widgetId)); // For some reason, if we put the same action for the widgets, the first one overrides (recipeModel) the  the others' values.
         intent.putExtra(RecipeDetailActivity.RECIPE_MODEL_BUNDLE_KEY, recipeModel);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, RecipeDetailActivity.VIEW_RECIPE_DETAIL_REQUEST_CODE, intent, 0);
 
         views.setTextViewText(R.id.tvWidgetRecipeDescription, recipeModel.getName());
-        views.setOnClickPendingIntent(R.id.tvWidgetRecipeDescription, pendingIntent);
 
-        views.setOnClickPendingIntent(R.id.ivWidgetRecipeImage, pendingIntent);
+        views.setOnClickPendingIntent(R.id.llWidgetRecipeContainer, pendingIntent);
+
         if (TextUtils.isEmpty(recipeModel.getImage())) {
             views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
             appWidgetManager.updateAppWidget(widgetId, views);
@@ -70,7 +72,7 @@ abstract class RecipeWidgetManager {
         }
 
         protected void onPostExecute(Bitmap bitmap) {
-            Timber.e("RecipeWidgetManager - Finished the download: " + bitmap);
+            Timber.d("RecipeWidgetManager - Finished the download: " + bitmap);
             if (bitmap == null) {
                 views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
             } else {

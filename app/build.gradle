@@ -11,6 +11,10 @@ android {
         versionName "1.0"
 
         vectorDrawables.useSupportLibrary = true
+
+        jackOptions {
+            enabled true
+        }
     }
 
     buildTypes {
@@ -31,52 +35,49 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation "com.android.support:support-v13:$rootProject.support_version"
-    implementation "com.android.support:design:$rootProject.support_version"
-    implementation "com.android.support.constraint:constraint-layout:$rootProject.constraint_layout_version"
-    implementation "com.android.support:cardview-v7:$rootProject.support_version"
+    compile "com.android.support:support-v13:$rootProject.support_version"
+    compile "com.android.support:design:$rootProject.support_version"
+    compile "com.android.support.constraint:constraint-layout:$rootProject.constraint_layout_version"
+    compile "com.android.support:cardview-v7:$rootProject.support_version"
 
     // Retrofit + Gson + Logging
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit_version"
-    implementation "com.google.code.gson:gson:$rootProject.gson_version"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp_logging_interceptor_version"
+    compile "com.squareup.retrofit2:retrofit:$rootProject.retrofit_version"
+    compile "com.google.code.gson:gson:$rootProject.gson_version"
+    compile "com.squareup.retrofit2:converter-gson:$rootProject.retrofit_version"
+    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttp_logging_interceptor_version"
 
     // Butterknife
-    implementation "com.jakewharton:butterknife:$rootProject.butterknife_version"
+    compile "com.jakewharton:butterknife:$rootProject.butterknife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknife_version"
 
     // RxJava + RxAndroid
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.7'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
 
     // Material Dialogs
-    implementation 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
 
     // Dagger
-    implementation "com.google.dagger:dagger:$rootProject.dagger_version"
+    compile "com.google.dagger:dagger:$rootProject.dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger_version"
 
     // Timber
-    implementation "com.jakewharton.timber:timber:$rootProject.timber_version"
+    compile "com.jakewharton.timber:timber:$rootProject.timber_version"
 
     // ReadMore TextView
-    implementation "com.borjabravo:readmoretextview:$rootProject.readmoreTextview_version"
+    compile "com.borjabravo:readmoretextview:$rootProject.readmoreTextview_version"
 
     // EventBus
-    implementation "org.greenrobot:eventbus:$rootProject.eventBus_version"
+    compile "org.greenrobot:eventbus:$rootProject.eventBus_version"
 
     // ExoPlayer
-    implementation "com.google.android.exoplayer:exoplayer-core:$rootProject.exoPlayer_version"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoPlayer_version"
+    compile "com.google.android.exoplayer:exoplayer-core:$rootProject.exoPlayer_version"
+    compile "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoPlayer_version"
 
     // LeakCanary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanary_version"
-    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanary_version"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary_version"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.leakcanary_version"
 
     // Glide
     compile "com.squareup.picasso:picasso:$rootProject.picasso_version"

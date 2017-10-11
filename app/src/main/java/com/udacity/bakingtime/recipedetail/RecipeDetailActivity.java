@@ -206,13 +206,17 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(SELECTED_STEP_INDEX_BUNDLE_KEY, mPresenter.recipeDetailViewModel.selectedStepIndex);
-        outState.putBoolean(INGREDIENT_LIST_DISMISSED_BUNDLE_KEY, mPresenter.recipeDetailViewModel.ingredientListDialogDismissed);
+        if (mPresenter.recipeDetailViewModel.selectedStepIndex != null) {
+            outState.putInt(SELECTED_STEP_INDEX_BUNDLE_KEY, mPresenter.recipeDetailViewModel.selectedStepIndex);
+        }
+
+        if (mPresenter.recipeDetailViewModel.ingredientListDialogDismissed != null) {
+            outState.putBoolean(INGREDIENT_LIST_DISMISSED_BUNDLE_KEY, mPresenter.recipeDetailViewModel.ingredientListDialogDismissed);
+        }
     }
 
     public static final String RECIPE_MODEL_BUNDLE_KEY = "recipe_model";
     public static final int VIEW_RECIPE_DETAIL_REQUEST_CODE = 1001;
-    public static final String VIEW_RECIPE_DETAIL_ACTION = "view_recipe_detail";
     private static final String SELECTED_STEP_INDEX_BUNDLE_KEY = "selected_step_index_bundle_key";
     private static final String INGREDIENT_LIST_DISMISSED_BUNDLE_KEY = "ingredient_list_dismissed_bundle_key";
 
