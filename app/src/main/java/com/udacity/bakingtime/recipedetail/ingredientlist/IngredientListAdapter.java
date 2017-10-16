@@ -12,8 +12,8 @@ import com.udacity.bakingtime.ui.recyclerview.CustomRecyclerViewAdapter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-class IngredientListAdapter extends CustomRecyclerViewAdapter<RecipeIngredientModel, IngredientListViewHolder> {
-    private static final NumberFormat QUANTITY_FORMAT = new DecimalFormat("##.###");
+public class IngredientListAdapter extends CustomRecyclerViewAdapter<RecipeIngredientModel, IngredientListViewHolder> {
+    public static final NumberFormat QUANTITY_FORMAT = new DecimalFormat("##.###");
 
     IngredientListAdapter(int emptyMessageResId, RequestStatusView.ITryAgainClickListener tryAgainClickListener) {
         super(emptyMessageResId, tryAgainClickListener);
@@ -21,7 +21,7 @@ class IngredientListAdapter extends CustomRecyclerViewAdapter<RecipeIngredientMo
 
     @Override
     protected IngredientListViewHolder onCreateItemViewHolder(ViewGroup parent) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_ingredient_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.ingredient_item, parent, false);
         return new IngredientListViewHolder(itemView);
     }
 

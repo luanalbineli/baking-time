@@ -3,6 +3,7 @@ package com.udacity.bakingtime.injector.components;
 import com.google.gson.Gson;
 import com.udacity.bakingtime.BakingTimeApplication;
 import com.udacity.bakingtime.injector.modules.ApplicationModule;
+import com.udacity.bakingtime.repository.RecipeRepository;
 
 import javax.inject.Singleton;
 
@@ -15,4 +16,5 @@ public interface ApplicationComponent {
     Retrofit retrofit();
     Gson gson();
     BakingTimeApplication popularMovieApplicationContext();
+    RecipeRepository recipeRepository();
 }

@@ -9,12 +9,13 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner 'com.udacity.bakingtime.MockTestRunner'
 
         vectorDrawables.useSupportLibrary = true
 
-        jackOptions {
+        /*jackOptions {
             enabled true
-        }
+        }*/
     }
 
     buildTypes {
@@ -51,12 +52,12 @@ dependencies {
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknife_version"
 
     // RxJava + RxAndroid
-    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    compile "io.reactivex.rxjava2:rxjava:$rootProject.rxjava_version"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroid_version"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofit_rxjava_adapter_version"
 
     // Material Dialogs
-    compile 'com.afollestad.material-dialogs:core:0.9.4.1'
+    compile "com.afollestad.material-dialogs:core:$rootProject.materialdialog_version"
 
     // Dagger
     compile "com.google.dagger:dagger:$rootProject.dagger_version"
@@ -82,5 +83,14 @@ dependencies {
     // Glide
     compile "com.squareup.picasso:picasso:$rootProject.picasso_version"
 
-    compile 'org.jetbrains:annotations:15.0'
+    compile "org.jetbrains:annotations:$rootProject.annotations_version"
+
+    // Android UI Tests
+    androidTestCompile "com.android.support.test:runner:$rootProject.runner_version"
+    androidTestCompile "com.android.support.test:rules:$rootProject.runner_version"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espresso_version"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espresso_version"
+    androidTestCompile "org.mockito:mockito-android:$rootProject.mockito_version"
+
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger_version"
 }

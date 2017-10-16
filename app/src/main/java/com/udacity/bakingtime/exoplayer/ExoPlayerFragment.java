@@ -30,6 +30,7 @@ import timber.log.Timber;
 
 public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.EventListener {
     private static String VIDEO_URL_BUNDLE_KEY = "video_url";
+    private long mCurrentPlayerPosition = Long.MIN_VALUE;
 
     public static ExoPlayerFragment getInstance(String videoUrl) {
         Bundle bundle = new Bundle();
@@ -73,18 +74,35 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         configurePlayer();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mVideoUrl != null) {
+            playVideo();
+        }
+
+        if (mCurrentPlayerPosition != Long.MIN_VALUE) {
+            mPlayer.seekTo(mCurrentPlayerPosition);
+        }
+        mPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPlayer.stop();
+        mPlayer.release();
+
+        mCurrentPlayerPosition = mPlayer.getCurrentPosition();
+    }
+
     private void configurePlayer() {
         BandwidthMeter bandwidthMeter = null;
         TrackSelector trackSelector = new DefaultTrackSelector(bandwidthMeter);
 
         mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
-        mPlayer.setPlayWhenReady(true);
 
         mPlayerView.setPlayer(mPlayer);
-
-        if (mVideoUrl != null) {
-            playVideo();
-        }
     }
 
     private void playVideo() {
@@ -95,12 +113,6 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         MediaSource videoSource = new ExtractorMediaSource(mp4VideoUri, dataSourceFactory, new DefaultExtractorsFactory(), null, this);
 
         mPlayer.prepare(videoSource);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPlayer.release();
     }
 
     @Override

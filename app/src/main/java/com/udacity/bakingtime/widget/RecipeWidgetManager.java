@@ -24,62 +24,20 @@ abstract class RecipeWidgetManager {
         Timber.d("bindLayout - recipeModel: " + recipeModel);
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_final_layout);
 
-        Intent intent = new Intent(context, RecipeDetailActivity.class);
-        intent.setAction(String.valueOf(widgetId)); // For some reason, if we put the same action for the widgets, the first one overrides (recipeModel) the  the others' values.
-        intent.putExtra(RecipeDetailActivity.RECIPE_MODEL_BUNDLE_KEY, recipeModel);
+        Intent intentWidgetClick = new Intent(context, RecipeDetailActivity.class);
+        intentWidgetClick.setAction(String.valueOf(widgetId)); // For some reason, if we put the same action for the widgets, the first one overrides (recipeModel) the  the others' values.
+        intentWidgetClick.putExtra(RecipeDetailActivity.RECIPE_MODEL_BUNDLE_KEY, recipeModel);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, RecipeDetailActivity.VIEW_RECIPE_DETAIL_REQUEST_CODE, intent, 0);
+        PendingIntent pendingIntentWidgetClick = PendingIntent.getActivity(context, RecipeDetailActivity.VIEW_RECIPE_DETAIL_REQUEST_CODE, intentWidgetClick, 0);
 
-        views.setTextViewText(R.id.tvWidgetRecipeDescription, recipeModel.getName());
+        views.setTextViewText(R.id.tvWidgetRecipeName, recipeModel.getName());
 
-        views.setOnClickPendingIntent(R.id.llWidgetRecipeContainer, pendingIntent);
+        views.setOnClickPendingIntent(R.id.llWidgetRecipeContainer, pendingIntentWidgetClick);
 
-        if (TextUtils.isEmpty(recipeModel.getImage())) {
-            views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
-            appWidgetManager.updateAppWidget(widgetId, views);
-        } else {
-            new FetchWidgetImageAsyncTask(appWidgetManager, widgetId, views).execute(recipeModel.getImage());
-        }
-    }
+        Intent intentAdapter = new Intent(context, RecipeIngredientListViewService.class);
+        intentAdapter.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+        views.setRemoteAdapter(R.id.lvWidgetIngredientList, intentAdapter);
 
-    static class FetchWidgetImageAsyncTask extends AsyncTask<String, Void, Bitmap> {
-        private final AppWidgetManager appWidgetManager;
-        private final int widgetId;
-        private final RemoteViews views;
-
-        FetchWidgetImageAsyncTask(AppWidgetManager appWidgetManager, int widgetId, RemoteViews views) {
-            this.appWidgetManager = appWidgetManager;
-            this.widgetId = widgetId;
-            this.views = views;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Timber.i("RecipeWidgetManager - 1 - Init the download");
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... strings) {
-            Timber.i("RecipeWidgetManager - Started the download");
-            try {
-                URL url = new URL(strings[0]);
-                return BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            } catch (Exception e) {
-                Timber.e("RecipeWidgetManager - An error occurred while tried to load the image");
-                return null;
-            }
-        }
-
-        protected void onPostExecute(Bitmap bitmap) {
-            Timber.d("RecipeWidgetManager - Finished the download: " + bitmap);
-            if (bitmap == null) {
-                views.setImageViewResource(R.id.ivWidgetRecipeImage, R.drawable.default_image_widget);
-            } else {
-                views.setImageViewBitmap(R.id.ivWidgetRecipeImage, bitmap);
-            }
-            appWidgetManager.updateAppWidget(widgetId, views);
-
-        }
+        appWidgetManager.updateAppWidget(widgetId, views);
     }
 }

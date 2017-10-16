@@ -13,7 +13,7 @@ import com.udacity.bakingtime.injector.modules.ApplicationModule;
 import timber.log.Timber;
 
 public class BakingTimeApplication extends Application {
-    private ApplicationComponent mApplicationComponent;
+    protected ApplicationComponent mApplicationComponent;
 
     @Override
     public void onCreate() {
@@ -31,11 +31,15 @@ public class BakingTimeApplication extends Application {
         LeakCanary.install(this);
 
         // Dagger2
-        mApplicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
+        mApplicationComponent = buildComponent();
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
+    protected ApplicationComponent buildComponent() {
+        return DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
     }
 
     public ApplicationComponent getApplicationComponent() {

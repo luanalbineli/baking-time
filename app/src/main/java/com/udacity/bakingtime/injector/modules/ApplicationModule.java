@@ -3,6 +3,7 @@ package com.udacity.bakingtime.injector.modules;
 import com.google.gson.Gson;
 import com.udacity.bakingtime.BakingTimeApplication;
 import com.udacity.bakingtime.BuildConfig;
+import com.udacity.bakingtime.repository.RecipeRepository;
 
 import javax.inject.Singleton;
 
@@ -54,5 +55,11 @@ public class ApplicationModule {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .client(httpClient.build())
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    RecipeRepository provideRepository(Retrofit retrofit, BakingTimeApplication bakingTimeApplication, Gson gson) {
+        return new RecipeRepository(retrofit, bakingTimeApplication, gson);
     }
 }
