@@ -3,4 +3,6 @@
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="default_ingredient_dialog_width">420dp</dimen>
     <dimen name="default_ingredient_dialog_height">540dp</dimen>
+    <dimen name="recipe_image_height">180dp</dimen>
+    <dimen name="dialog_video_height">360dp</dimen>
 </resources>

@@ -30,7 +30,7 @@ class StepListViewHolder extends StepListShortTitleViewHolder {
 
         StepListViewHolder stepListViewHolder = (StepListViewHolder) stepListShortTitleViewHolder;
         stepListViewHolder.mRecipeIngredientLongDescriptionTextView.setText(recipeStepModel.getDescripton());
-        if (TextUtils.isEmpty(recipeStepModel.getRealVideoUrl())) {
+        if (TextUtils.isEmpty(recipeStepModel.getVideoURL())) {
             stepListViewHolder.mRecipeStepVideoButton.setVisibility(View.INVISIBLE);
         } else {
             stepListViewHolder.mRecipeStepVideoButton.setVisibility(View.VISIBLE);

@@ -6,4 +6,5 @@
     <color name="recipeItemBackground">#9c050505</color>
 
     <color name="colorButtonSecondary">#c5c5c5</color>
+    <color name="colorThumbnailPlayButton">#B3000000</color>
 </resources>

@@ -70,9 +70,10 @@ public class RecipeStepDetailFragment extends BaseFragment<RecipeStepDetailContr
             mDescriptionTextView.setText(recipeStepModel.getDescripton());
         }
 
-        if (recipeStepModel.getRealVideoUrl() != null) {
+        if (recipeStepModel.getVideoURL() != null) {
             mExoPlayerFragment.setVisibility(View.VISIBLE);
-            mExoPlayerFragment.setVideoUrl(recipeStepModel.getRealVideoUrl());
+            mExoPlayerFragment.setVideoUrl(recipeStepModel.getVideoURL());
+            mExoPlayerFragment.setThumbnailUrl(recipeStepModel.getThumbnailUrl());
         } else {
             mExoPlayerFragment.setVisibility(View.GONE);
         }

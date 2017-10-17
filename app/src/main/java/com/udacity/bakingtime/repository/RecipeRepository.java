@@ -53,6 +53,7 @@ public class RecipeRepository extends RepositoryBase {
         Observable<List<RecipeModel>> request = Observable.just(result);
         return observeOnMainThread(request).map(recipeModels -> {
             recipeModels.get(0).setImage("https://github.com/bumptech/glide/blob/master/static/glide_logo.png?raw=true");
+            recipeModels.get(0).getRecipeStepList().get(0).setThumbnailUrl("https://www.smashingmagazine.com/wp-content/uploads/2015/06/10-dithering-opt.jpg");
             return recipeModels;
         });
     }

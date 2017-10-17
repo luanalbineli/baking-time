@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/player_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/flPlayerThumbnailContainer">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:id="@+id/ivPlayerThumbnailImage" />
+            <ImageView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@color/colorThumbnailPlayButton"
+                android:id="@+id/ivPlayerThumbnailPlay"
+                app:srcCompat="@drawable/play"
+                android:layout_gravity="center"/>
+        </FrameLayout>
+    </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 </FrameLayout>

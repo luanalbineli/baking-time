@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/ivRecipeItemPicture"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/recipe_image_height"
             android:layout_marginBottom="8dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/content_description_recipe_item"

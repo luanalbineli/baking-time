@@ -179,6 +179,8 @@ public class RecipeDetailActivity extends BaseActivity<RecipeDetailContract.View
 
         Picasso.with(this)
                 .load(recipeModel.getImage())
+                .placeholder(R.drawable.loading_image_placeholder)
+                .error(R.drawable.default_image)
                 .into(mRecipeImageView);
     }
 

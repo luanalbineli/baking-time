@@ -27,16 +27,18 @@ public class StepVideoDialog extends DialogFragment {
 
     private String mVideoUrl;
     private String mTitle;
+    private String mThumbnailUrl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() == null || !getArguments().containsKey(VIDEO_URL_BUNDLE) || !getArguments().containsKey(TITLE_BUNDLE)) {
+        if (getArguments() == null || !getArguments().containsKey(VIDEO_URL_BUNDLE) || !getArguments().containsKey(TITLE_BUNDLE) || !getArguments().containsKey(THUMBNAIL_URL_BUNDLE)) {
             throw new InvalidParameterException("Missing some required parameters");
         }
 
         mVideoUrl = getArguments().getString(VIDEO_URL_BUNDLE);
+        mThumbnailUrl = getArguments().getString(THUMBNAIL_URL_BUNDLE);
         mTitle = getArguments().getString(TITLE_BUNDLE);
     }
 
@@ -72,17 +74,18 @@ public class StepVideoDialog extends DialogFragment {
 
         Fragment fragment = getChildFragmentManager().findFragmentByTag(EXO_PLAYER_FRAGMENT_TAG);
         if (fragment == null) {
-            fragment = ExoPlayerFragment.getInstance(mVideoUrl);
+            fragment = ExoPlayerFragment.getInstance(mVideoUrl, mThumbnailUrl);
             getChildFragmentManager().beginTransaction()
                     .add(R.id.flStepVideoContainer, fragment, EXO_PLAYER_FRAGMENT_TAG)
                     .commit();
         }
     }
 
-    public static StepVideoDialog getInstance(String title, String videoUrl) {
+    public static StepVideoDialog getInstance(String title, String videoUrl, String thumbnailUrl) {
         Bundle bundle = new Bundle();
         bundle.putString(TITLE_BUNDLE, title);
         bundle.putString(VIDEO_URL_BUNDLE, videoUrl);
+        bundle.putString(THUMBNAIL_URL_BUNDLE, thumbnailUrl);
 
         StepVideoDialog instance = new StepVideoDialog();
         instance.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.AppTheme_DialogFullscreen);
@@ -93,4 +96,5 @@ public class StepVideoDialog extends DialogFragment {
 
     private static String TITLE_BUNDLE = "title_bundle";
     private static String VIDEO_URL_BUNDLE = "video_url_bundle";
+    private static String THUMBNAIL_URL_BUNDLE = "thumbnail_url_bundle";
 }

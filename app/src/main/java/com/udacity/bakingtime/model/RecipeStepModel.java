@@ -58,6 +58,14 @@ public class RecipeStepModel implements Parcelable {
         return descripton;
     }
 
+    public String getVideoURL() {
+        return videoURL;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -81,11 +89,7 @@ public class RecipeStepModel implements Parcelable {
                 + "\nthumbnailUrl: " + thumbnailUrl;
     }
 
-    @Nullable
-    public String getRealVideoUrl() {
-        if (videoURL == null) {
-            return thumbnailUrl;
-        }
-        return videoURL;
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

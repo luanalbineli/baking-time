@@ -41,7 +41,11 @@ class RecipeItemViewHolder extends CustomRecyclerViewHolder {
         mRecipeServingTextView.setText(servingText);
 
         if (!TextUtils.isEmpty(recipeModel.getImage())) {
-            Picasso.with(getContext()).load(recipeModel.getImage()).into(mRecipeImageView);
+            Picasso.with(getContext())
+                    .load(recipeModel.getImage())
+                    .placeholder(R.drawable.loading_image_placeholder)
+                    .error(R.drawable.default_image)
+                    .into(mRecipeImageView);
         }
     }
 }
