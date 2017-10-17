@@ -13,9 +13,9 @@ android {
 
         vectorDrawables.useSupportLibrary = true
 
-        /*jackOptions {
+        jackOptions {
             enabled true
-        }*/
+        }
     }
 
     buildTypes {
@@ -91,6 +91,7 @@ dependencies {
     androidTestCompile "com.android.support.test.espresso:espresso-core:$rootProject.espresso_version"
     androidTestCompile "com.android.support.test.espresso:espresso-intents:$rootProject.espresso_version"
     androidTestCompile "org.mockito:mockito-android:$rootProject.mockito_version"
+    androidTestCompile "com.android.support:support-annotations:$rootProject.support_version"
 
     androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.dagger_version"
 }

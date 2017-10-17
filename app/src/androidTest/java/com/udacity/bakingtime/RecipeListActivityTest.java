@@ -79,8 +79,6 @@ public class RecipeListActivityTest {
 
         activityRule.launchActivity(new Intent());
 
-        matchToolbarTitle(activityRule.getActivity().getString(R.string.recipe_list));
-
         RecyclerViewMatcher recyclerViewMatcher = new RecyclerViewMatcher(R.id.rvFragment);
         for (int index = 0; index < result.size(); index++) {
             RecipeModel recipeModel = result.get(index);
@@ -94,6 +92,8 @@ public class RecipeListActivityTest {
             recyclerViewMatcher.atPositionOnView(index, R.id.tvRecipeItemServing)
                     .matches(withText(servingText));
         }
+
+        matchToolbarTitle(activityRule.getActivity().getString(R.string.recipe_list));
     }
 
     private static ViewInteraction matchToolbarTitle(CharSequence title) {
