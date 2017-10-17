@@ -90,20 +90,7 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
             return;
         }
 
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelector trackSelector = new DefaultTrackSelector(bandwidthMeter);
-
-        mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
-
-        mPlayerView.setPlayer(mPlayer);
-
-        playVideo();
-
-        if (mCurrentPlayerPosition != Long.MIN_VALUE) {
-            mPlayer.seekTo(mCurrentPlayerPosition);
-        }
-
-        configureThumbnail();
+        configureVideoPlayer();
     }
 
     private Target mThumbnailTarget;
@@ -123,7 +110,7 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
 
                 @Override
                 public void onPrepareLoad(Drawable drawable) {
-
+                    mThumbnailImageView.setImageDrawable(drawable);
                 }
             };
         }
@@ -131,7 +118,6 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         Timber.i("mThumbnailUrl: " + mThumbnailUrl);
         if (TextUtils.isEmpty(mThumbnailUrl)) {
             mThumbnailContainer.setVisibility(View.GONE);
-            configureThumbnail();
             mPlayer.setPlayWhenReady(true);
             mThumbnailPlayImageView.setOnClickListener(null);
         } else {
@@ -167,7 +153,16 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         outState.putLong(CURRENT_VIDEO_POSITION_BUNDLE_KEY, mCurrentPlayerPosition);
     }
 
-    private void playVideo() {
+    private void configureVideoPlayer() {
+        if (mPlayer == null) {
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+            TrackSelector trackSelector = new DefaultTrackSelector(bandwidthMeter);
+
+            mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+
+            mPlayerView.setPlayer(mPlayer);
+        }
+
         Uri mp4VideoUri = Uri.parse(mVideoUrl);
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getActivity(), Util.getUserAgent(getActivity(), "exoPlayerFragment"));
@@ -175,6 +170,12 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         MediaSource videoSource = new ExtractorMediaSource(mp4VideoUri, dataSourceFactory, new DefaultExtractorsFactory(), null, this);
 
         mPlayer.prepare(videoSource);
+
+        if (mCurrentPlayerPosition != Long.MIN_VALUE) {
+            mPlayer.seekTo(mCurrentPlayerPosition);
+        }
+
+        configureThumbnail();
     }
 
     @Override
@@ -188,15 +189,13 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         }
     }
 
-    public void setVideoUrl(String videoUrl) {
+    public void showVideo(String videoUrl, String thumbnailUrl) {
         this.mVideoUrl = videoUrl;
-        if (mVideoUrl != null) {
-            playVideo();
-        }
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
         this.mThumbnailUrl = thumbnailUrl;
+
+        if (!TextUtils.isEmpty(mVideoUrl)) {
+            configureVideoPlayer();
+        }
     }
 
     public static ExoPlayerFragment getInstance(String videoUrl, String thumbnailUrl) {

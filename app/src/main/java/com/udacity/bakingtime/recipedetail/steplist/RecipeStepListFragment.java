@@ -97,8 +97,17 @@ public class RecipeStepListFragment extends BaseRecyclerViewFragment<RecipeStepL
 
     @Override
     public void openStepVideo(String title, String videoUrl, String thumbnailUrl) {
-        StepVideoDialog stepVideoDialog = StepVideoDialog.getInstance(title, videoUrl, thumbnailUrl);
-        stepVideoDialog.show(getChildFragmentManager(), "video_dialog");
+        final String videoDialogTag = "video_dialog";
+        StepVideoDialog stepVideoDialog;
+        if (getChildFragmentManager().findFragmentByTag(videoDialogTag) != null) {
+            stepVideoDialog = (StepVideoDialog) getChildFragmentManager().findFragmentByTag(videoDialogTag);
+            stepVideoDialog.reloadVideoInfo(title, videoUrl, thumbnailUrl);
+        } else {
+            stepVideoDialog = StepVideoDialog.getInstance(title, videoUrl, thumbnailUrl);
+        }
+
+
+        stepVideoDialog.show(getChildFragmentManager(), videoDialogTag);
     }
 
     @Override

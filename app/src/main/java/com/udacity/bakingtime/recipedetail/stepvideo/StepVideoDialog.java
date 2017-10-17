@@ -81,6 +81,12 @@ public class StepVideoDialog extends DialogFragment {
         }
     }
 
+    public void reloadVideoInfo(String title, String videoUrl, String thumbnailUrl) {
+        mTitle = title;
+        mVideoUrl = videoUrl;
+        mThumbnailUrl = thumbnailUrl;
+    }
+
     public static StepVideoDialog getInstance(String title, String videoUrl, String thumbnailUrl) {
         Bundle bundle = new Bundle();
         bundle.putString(TITLE_BUNDLE, title);
