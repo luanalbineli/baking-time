@@ -4,8 +4,10 @@ package com.udacity.bakingtime;
 import android.app.Application;
 import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.picasso.Picasso;
 import com.udacity.bakingtime.injector.components.ApplicationComponent;
 import com.udacity.bakingtime.injector.components.DaggerApplicationComponent;
 import com.udacity.bakingtime.injector.modules.ApplicationModule;
@@ -33,6 +35,12 @@ public class BakingTimeApplication extends Application {
         // Dagger2
         mApplicationComponent = buildComponent();
 
+        // Picasso.
+        Picasso picasso = new Picasso.Builder(this).build();
+        picasso.setLoggingEnabled(BuildConfig.DEBUG);
+        Picasso.setSingletonInstance(picasso);
+
+        // Vector compat.
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 

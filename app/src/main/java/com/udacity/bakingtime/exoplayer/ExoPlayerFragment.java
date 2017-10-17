@@ -54,6 +54,7 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
     private String mVideoUrl;
     private String mThumbnailUrl;
     private long mCurrentPlayerPosition = Long.MIN_VALUE;
+    private boolean mStarted = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
     @Override
     public void onStart() {
         super.onStart();
+        mStarted = true;
         if (TextUtils.isEmpty(mVideoUrl)) {
             return;
         }
@@ -101,33 +103,34 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     mThumbnailImageView.setImageBitmap(bitmap);
+                    Timber.i("configureThumbnail() - An successfully loaded.");
                 }
 
                 @Override
                 public void onBitmapFailed(Drawable drawable) {
                     mThumbnailContainer.setVisibility(View.GONE);
+                    Timber.i("configureThumbnail() - An error occurred while tried to load the thumbnail");
                 }
 
                 @Override
                 public void onPrepareLoad(Drawable drawable) {
                     mThumbnailImageView.setImageDrawable(drawable);
+                    Timber.i("configureThumbnail() - Started the download of the thumbnail.");
                 }
             };
         }
 
-        Timber.i("mThumbnailUrl: " + mThumbnailUrl);
+        Timber.i("configureThumbnail() - URL: " + mThumbnailUrl);
         if (TextUtils.isEmpty(mThumbnailUrl)) {
             mThumbnailContainer.setVisibility(View.GONE);
             mPlayer.setPlayWhenReady(true);
             mThumbnailPlayImageView.setOnClickListener(null);
         } else {
             mThumbnailContainer.setVisibility(View.VISIBLE);
-            if (mThumbnailImageView.getDrawable() == null) { // Didn't download the thumbnail yet.
-                Picasso.with(getActivity())
-                        .load(mThumbnailUrl)
-                        .placeholder(R.drawable.loading_image_placeholder)
-                        .into(mThumbnailTarget);
-            }
+            Picasso.with(getActivity())
+                    .load(mThumbnailUrl)
+                    .placeholder(R.drawable.loading_image_placeholder)
+                    .into(mThumbnailTarget);
 
             mThumbnailPlayImageView.setOnClickListener(v -> {
                 mThumbnailContainer.setVisibility(View.GONE);
@@ -193,7 +196,7 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
         this.mVideoUrl = videoUrl;
         this.mThumbnailUrl = thumbnailUrl;
 
-        if (!TextUtils.isEmpty(mVideoUrl)) {
+        if (mStarted && !TextUtils.isEmpty(mVideoUrl)) {
             configureVideoPlayer();
         }
     }
