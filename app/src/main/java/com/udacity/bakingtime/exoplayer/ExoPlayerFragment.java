@@ -142,10 +142,19 @@ public class ExoPlayerFragment extends Fragment implements ExtractorMediaSource.
     @Override
     public void onStop() {
         super.onStop();
+        mCurrentPlayerPosition = Long.MIN_VALUE;
+        if (mPlayer != null) {
+            mCurrentPlayerPosition = mPlayer.getCurrentPosition();
+        }
+        releasePlayer();
+    }
+
+    public void releasePlayer() {
+        if (mPlayer == null) {
+            return;
+        }
         mPlayer.stop();
         mPlayer.release();
-
-        mCurrentPlayerPosition = mPlayer.getCurrentPosition();
         mPlayer = null;
     }
 

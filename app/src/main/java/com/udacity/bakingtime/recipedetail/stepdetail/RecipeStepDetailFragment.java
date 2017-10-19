@@ -73,6 +73,7 @@ public class RecipeStepDetailFragment extends BaseFragment<RecipeStepDetailContr
 
         if (TextUtils.isEmpty(recipeStepModel.getVideoURL())) {
             mExoPlayerFragment.setVisibility(View.GONE);
+            mExoPlayerFragment.releasePlayer();
         } else {
             mExoPlayerFragment.setVisibility(View.VISIBLE);
             mExoPlayerFragment.showVideo(recipeStepModel.getVideoURL(), recipeStepModel.getThumbnailUrl());
